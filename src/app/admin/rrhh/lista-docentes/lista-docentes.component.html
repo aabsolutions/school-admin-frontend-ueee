@@ -1,0 +1,191 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <!-- Panel de filtros -->
+    <div class="row">
+      <div class="col-12">
+        <mat-card class="mb-3">
+          <mat-card-content>
+            <div class="row align-items-end g-3 pt-2">
+              <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput [(ngModel)]="filterNombre" placeholder="Buscar por nombre...">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Género</mat-label>
+                  <mat-select [(ngModel)]="filterGenero">
+                    <mat-option value="">Todos</mat-option>
+                    @for (g of generoOptions; track g) {
+                      <mat-option [value]="g">{{ g }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Tipo Relación Laboral</mat-label>
+                  <mat-select [(ngModel)]="filterDependencia">
+                    <mat-option value="">Todos</mat-option>
+                    @for (d of dependenciaOptions; track d) {
+                      <mat-option [value]="d">{{ d }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-1 col-lg-1 col-md-3 col-sm-6 mb-3">
+                <button mat-flat-button color="primary" class="w-100" style="height:56px"
+                  (click)="buscar()" matTooltip="Aplicar filtros">
+                  <mat-icon>filter_list</mat-icon>
+                </button>
+              </div>
+              <div class="col-xl-1 col-lg-1 col-md-3 col-sm-6 mb-3">
+                <button mat-stroked-button class="w-100" style="height:56px"
+                  (click)="limpiar()" matTooltip="Limpiar filtros">
+                  <mat-icon>clear</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Tabla de docentes -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card" id="printable-section">
+
+          <div class="materialTableHeader no-print">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title">
+                  <h2>Lista de Docentes</h2>
+                </li>
+                @if (!isLoading) {
+                  <li class="tbl-search-box">
+                    <label for="doc-search"><i class="material-icons search-icon">search</i></label>
+                    <input id="doc-search" placeholder="Buscar en tabla..." type="text"
+                      (keyup)="applySearch($event)"
+                      class="browser-default search-field" aria-label="Buscar">
+                  </li>
+                }
+              </ul>
+            </div>
+            <div class="right">
+              <div class="right-side-btn">
+                @if (dataSource.filteredData.length > 0) {
+                  <app-table-show-hide-column [columnDefinitions]="columnDefinitions"></app-table-show-hide-column>
+                  <button mat-icon-button (click)="exportXls()" class="tbl-header-btn col-green"
+                    matTooltip="Exportar XLS">
+                    <mat-icon class="material-icons-outlined">file_download</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="exportPdf()" class="tbl-header-btn col-blue"
+                    matTooltip="Imprimir / PDF">
+                    <mat-icon class="material-icons-outlined">print</mat-icon>
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Encabezado imprimible -->
+          <div class="print-header">
+            <h3>Lista de Docentes — Recursos Humanos</h3>
+          </div>
+
+          @if (isLoading) {
+            <div class="d-flex justify-content-center p-5">
+              <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+            </div>
+          } @else {
+            <div class="overflow-auto">
+              <div class="responsive_table">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table w-100">
+
+                  @for (column of columnDefinitions; track column) {
+                    @if (column.type === 'date') {
+                      <ng-container [matColumnDef]="column.def">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <span class="truncate-text">{{ column.label }}</span>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <span class="mobile-label">{{ column.label }}:</span>
+                          <span class="truncate-text">{{ row[column.def] | date: 'dd/MM/yyyy' }}</span>
+                        </mat-cell>
+                      </ng-container>
+                    } @else if (column.def === 'gender') {
+                      <ng-container [matColumnDef]="column.def">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <span class="truncate-text">{{ column.label }}</span>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <span class="mobile-label">{{ column.label }}:</span>
+                          @switch (row.gender) {
+                            @case ('Male')   { <span class="badge badge-solid-green">{{ row.gender }}</span> }
+                            @case ('Female') { <span class="badge badge-solid-purple">{{ row.gender }}</span> }
+                            @default         { <span class="badge badge-solid-orange">{{ row.gender }}</span> }
+                          }
+                        </mat-cell>
+                      </ng-container>
+                    } @else if (column.def === 'laboralDependency') {
+                      <ng-container [matColumnDef]="column.def">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <span class="truncate-text">{{ column.label }}</span>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <span class="mobile-label">{{ column.label }}:</span>
+                          @switch (row.laboralDependency) {
+                            @case ('Contrato')          { <span class="badge badge-solid-orange">{{ row.laboralDependency }}</span> }
+                            @case ('Nomb. Definitivo')  { <span class="badge badge-solid-green">{{ row.laboralDependency }}</span> }
+                            @case ('Nomb. Provisional') { <span class="badge badge-solid-blue">{{ row.laboralDependency }}</span> }
+                            @default                    { <span class="truncate-text">{{ row.laboralDependency }}</span> }
+                          }
+                        </mat-cell>
+                      </ng-container>
+                    } @else {
+                      <ng-container [matColumnDef]="column.def">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <span class="truncate-text">{{ column.label }}</span>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <span class="mobile-label">{{ column.label }}:</span>
+                          <span class="truncate-text">{{ row[column.def] }}</span>
+                        </mat-cell>
+                      </ng-container>
+                    }
+                  }
+
+                  <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: getDisplayedColumns();"></mat-row>
+
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" [attr.colspan]="getDisplayedColumns().length"
+                      style="text-align:center; padding:32px">
+                      No se encontraron docentes con los filtros aplicados.
+                    </td>
+                  </tr>
+                </table>
+
+                <mat-paginator [length]="dataSource.filteredData.length"
+                  [pageIndex]="0" [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 100]">
+                </mat-paginator>
+              </div>
+            </div>
+          }
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

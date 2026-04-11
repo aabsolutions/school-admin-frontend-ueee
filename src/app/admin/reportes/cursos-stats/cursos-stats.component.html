@@ -1,0 +1,287 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <!-- Panel de filtros -->
+    <div class="row">
+      <div class="col-12">
+        <mat-card class="mb-3">
+          <mat-card-content>
+
+            @if (loading) {
+              <div class="d-flex justify-content-center p-4">
+                <mat-progress-spinner color="primary" [diameter]="36" mode="indeterminate"></mat-progress-spinner>
+              </div>
+            } @else {
+
+              <div class="row align-items-end g-3 pt-2">
+                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Año Lectivo</mat-label>
+                    <mat-select [(ngModel)]="filterYear">
+                      <mat-option value="">Todos</mat-option>
+                      @for (y of academicYears; track y) {
+                        <mat-option [value]="y">{{ y }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nivel</mat-label>
+                    <mat-select [(ngModel)]="filterNivel">
+                      <mat-option value="">Todos</mat-option>
+                      @for (n of nivelOptions; track n) {
+                        <mat-option [value]="n">{{ n }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Subnivel</mat-label>
+                    <mat-select [(ngModel)]="filterSubnivel">
+                      <mat-option value="">Todos</mat-option>
+                      @for (s of subnivelOptions; track s) {
+                        <mat-option [value]="s">{{ s }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Especialidad</mat-label>
+                    <input matInput [(ngModel)]="filterEspecialidad" placeholder="Ej: Informática">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Jornada</mat-label>
+                    <mat-select [(ngModel)]="filterJornada">
+                      <mat-option value="">Todas</mat-option>
+                      @for (j of jornadaOptions; track j) {
+                        <mat-option [value]="j">{{ j }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-2 col-lg-12 col-md-12 col-sm-12 mb-3">
+                  <div class="d-flex gap-2">
+                    <button mat-stroked-button (click)="limpiar()" class="flex-fill" style="height:56px">
+                      <mat-icon>clear</mat-icon> Limpiar
+                    </button>
+                    <button mat-flat-button color="primary" (click)="generar()" class="flex-fill" style="height:56px" [disabled]="loadingReport">
+                      <mat-icon>assessment</mat-icon> Generar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Tabla de resultados -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card" id="printable-section">
+
+          @if (loadingReport) {
+            <div class="d-flex justify-content-center p-5">
+              <mat-progress-spinner color="primary" [diameter]="48" mode="indeterminate"></mat-progress-spinner>
+            </div>
+          } @else if (!hasGenerated) {
+            <div class="p-4 text-muted">
+              <mat-icon style="vertical-align:middle;margin-right:8px">info_outline</mat-icon>
+              Aplicá los filtros y presioná <strong>Generar</strong> para ver las estadísticas.
+            </div>
+          } @else {
+
+            <div class="materialTableHeader no-print">
+              <div class="left">
+                <ul class="header-buttons-left ms-0">
+                  <li class="tbl-title">
+                    <h2>Estadísticas de Cursos Lectivos
+                      <span class="badge badge-solid-blue ms-2" style="font-size:13px">
+                        {{ dataSource.filteredData.length }} curso(s)
+                      </span>
+                    </h2>
+                  </li>
+                  @if (dataSource.data.length > 0) {
+                    <li class="tbl-search-box">
+                      <label for="search-stats"><i class="material-icons search-icon">search</i></label>
+                      <input id="search-stats" placeholder="Buscar en tabla..." type="text"
+                        (keyup)="applyFilter($event)" class="browser-default search-field">
+                    </li>
+                  }
+                </ul>
+              </div>
+              <div class="right">
+                <div class="right-side-btn">
+                  @if (dataSource.filteredData.length > 0) {
+                    <button mat-icon-button (click)="exportXls()" class="tbl-header-btn col-green" matTooltip="Exportar XLS">
+                      <mat-icon class="material-icons-outlined">file_download</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="exportPdf()" class="tbl-header-btn col-blue" matTooltip="Imprimir / PDF">
+                      <mat-icon class="material-icons-outlined">print</mat-icon>
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Encabezado de impresión -->
+            <div class="print-header">
+              <h3>Estadísticas de Cursos Lectivos</h3>
+              <p>Generado el {{ today | date:'dd/MM/yyyy' }}</p>
+            </div>
+
+            @if (dataSource.data.length === 0) {
+              <div class="p-4 text-muted text-center">
+                <mat-icon style="font-size:48px;height:48px;width:48px;color:#ccc">school</mat-icon>
+                <p class="mt-2">No se encontraron cursos con los filtros aplicados.</p>
+              </div>
+            } @else {
+
+              <!-- Tarjetas de totales -->
+              <div class="row g-3 px-3 pt-3 no-print">
+                <div class="col-xl-3 col-md-6">
+                  <div class="stat-card stat-card--primary">
+                    <div class="stat-card__icon"><mat-icon>school</mat-icon></div>
+                    <div class="stat-card__body">
+                      <div class="stat-card__value">{{ dataSource.filteredData.length }}</div>
+                      <div class="stat-card__label">Cursos</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                  <div class="stat-card stat-card--success">
+                    <div class="stat-card__icon"><mat-icon>group</mat-icon></div>
+                    <div class="stat-card__body">
+                      <div class="stat-card__value">{{ totales.total }}</div>
+                      <div class="stat-card__label">Total Matriculados</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                  <div class="stat-card stat-card--info">
+                    <div class="stat-card__icon"><mat-icon>male</mat-icon></div>
+                    <div class="stat-card__body">
+                      <div class="stat-card__value">{{ totales.male }}</div>
+                      <div class="stat-card__label">Hombres</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                  <div class="stat-card stat-card--purple">
+                    <div class="stat-card__icon"><mat-icon>female</mat-icon></div>
+                    <div class="stat-card__body">
+                      <div class="stat-card__value">{{ totales.female }}</div>
+                      <div class="stat-card__label">Mujeres</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="overflow-auto mt-3">
+                <div class="responsive_table">
+                  <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table w-100">
+
+                    <ng-container matColumnDef="nivel">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Nivel</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="truncate-text">{{ row.nivel }}</span></mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="subnivel">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Subnivel</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="truncate-text">{{ row.subnivel }}</span></mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="especialidad">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Especialidad</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="truncate-text">{{ row.especialidad }}</span></mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="paralelo">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Paralelo</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{ row.paralelo }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="jornada">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Jornada</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{ row.jornada }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="academicYear">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Año Lectivo</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{ row.academicYear }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="tutorName">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Tutor</mat-header-cell>
+                      <mat-cell *matCellDef="let row"><span class="truncate-text">{{ row.tutorName }}</span></mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="total">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header style="justify-content:center">Total</mat-header-cell>
+                      <mat-cell *matCellDef="let row" style="justify-content:center">
+                        <span class="badge badge-solid-blue">{{ row.total }}</span>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="male">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header style="justify-content:center">Hombres</mat-header-cell>
+                      <mat-cell *matCellDef="let row" style="justify-content:center">
+                        <span class="badge badge-solid-green">{{ row.male }}</span>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="female">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header style="justify-content:center">Mujeres</mat-header-cell>
+                      <mat-cell *matCellDef="let row" style="justify-content:center">
+                        <span class="badge badge-solid-purple">{{ row.female }}</span>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="avgAge">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header style="justify-content:center">Prom. Edad</mat-header-cell>
+                      <mat-cell *matCellDef="let row" style="justify-content:center">
+                        @if (row.avgAge !== null) {
+                          <span>{{ row.avgAge }} años</span>
+                        } @else {
+                          <span class="text-muted">N/D</span>
+                        }
+                      </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="displayedColumns.length"
+                        style="text-align:center;padding:24px">
+                        No hay resultados para el filtro aplicado.
+                      </td>
+                    </tr>
+                  </table>
+
+                  <mat-paginator [length]="dataSource.filteredData.length"
+                    [pageIndex]="0" [pageSize]="15"
+                    [pageSizeOptions]="[10, 15, 25, 50]">
+                  </mat-paginator>
+                </div>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

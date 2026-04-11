@@ -1,0 +1,83 @@
+<div class="nuevo-exp-container">
+
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">Nuevo Expediente DECE</div>
+      <div class="modalSubTitle">Buscá al estudiante para crear o abrir su expediente</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="dialog-content">
+
+    <!-- Buscador -->
+    <mat-form-field appearance="outline" class="w-100 mt-2">
+      <mat-label>Buscar estudiante</mat-label>
+      <mat-icon matPrefix class="me-1">search</mat-icon>
+      <input matInput type="text" [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearch($event)"
+        placeholder="Nombre, cédula o email..."
+        [disabled]="creating"
+        autocomplete="off">
+      @if (searching) {
+        <mat-progress-spinner matSuffix [diameter]="18" mode="indeterminate"></mat-progress-spinner>
+      }
+    </mat-form-field>
+
+    <!-- Spinner de creación -->
+    @if (creating) {
+      <div class="creating-overlay">
+        <mat-progress-spinner color="primary" [diameter]="36" mode="indeterminate"></mat-progress-spinner>
+        <p>Creando expediente DECE...</p>
+      </div>
+    }
+
+    <!-- Resultados -->
+    @if (!creating) {
+      @if (hasSearched && students.length === 0 && !searching) {
+        <div class="empty-search">
+          <mat-icon>person_search</mat-icon>
+          <p>No se encontraron estudiantes con ese criterio.</p>
+        </div>
+      }
+
+      @if (students.length > 0) {
+        <div class="student-list">
+          @for (s of students; track s.id) {
+            <div class="student-row" (click)="selectStudent(s)" matTooltip="Crear / abrir expediente DECE">
+              <div class="student-avatar">
+                @if (s.img) {
+                  <img [src]="s.img" [alt]="s.name" class="avatar-img">
+                } @else {
+                  <div class="avatar-placeholder">
+                    <mat-icon>person</mat-icon>
+                  </div>
+                }
+              </div>
+              <div class="student-data">
+                <span class="student-name">{{ s.name }}</span>
+                <span class="student-meta">
+                  <mat-icon class="tiny-icon">badge</mat-icon> {{ s.dni }}
+                  &nbsp;·&nbsp;
+                  <mat-icon class="tiny-icon">email</mat-icon> {{ s.email }}
+                </span>
+              </div>
+              <mat-icon class="select-arrow">chevron_right</mat-icon>
+            </div>
+            <mat-divider></mat-divider>
+          }
+        </div>
+      }
+
+      @if (!hasSearched && !searching) {
+        <div class="hint-state">
+          <mat-icon>psychology</mat-icon>
+          <p>Escribí el nombre o cédula del estudiante para buscarlo.</p>
+        </div>
+      }
+    }
+
+  </div>
+</div>

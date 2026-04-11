@@ -1,0 +1,287 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    @if (loading) {
+      <div class="text-center p-5">
+        <mat-progress-spinner mode="indeterminate" [diameter]="48" style="margin:0 auto"></mat-progress-spinner>
+      </div>
+    } @else {
+      <mat-card class="p-3">
+        <mat-tab-group animationDuration="200ms">
+
+          <!-- ─── Tab: Información Médica ─────────────────────────────── -->
+          <mat-tab label="Información Médica">
+            <div class="p-3">
+              <div class="row g-3 mt-1">
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Tipo de sangre</mat-label>
+                    <mat-select [(ngModel)]="medicalInfo.bloodType">
+                      <mat-option value="">-- Sin especificar --</mat-option>
+                      @for (bt of bloodTypeOptions; track bt) {
+                        <mat-option [value]="bt">{{ bt }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Seguro médico</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.healthInsurance" placeholder="IESS, Privado...">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>N° de póliza</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.policyNumber">
+                  </mat-form-field>
+                </div>
+
+                <!-- Alergias -->
+                <div class="col-md-12">
+                  <mat-checkbox [(ngModel)]="medicalInfo.hasAllergies" color="primary">
+                    ¿Tiene alergias?
+                  </mat-checkbox>
+                  @if (medicalInfo.hasAllergies) {
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                      <mat-label>Detalle de alergias</mat-label>
+                      <textarea matInput [(ngModel)]="medicalInfo.allergiesDetail" rows="2"></textarea>
+                    </mat-form-field>
+                  }
+                </div>
+
+                <!-- Enfermedades crónicas -->
+                <div class="col-md-12">
+                  <mat-checkbox [(ngModel)]="medicalInfo.hasChronicCondition" color="primary">
+                    ¿Tiene enfermedades crónicas?
+                  </mat-checkbox>
+                  @if (medicalInfo.hasChronicCondition) {
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                      <mat-label>Detalle de condición crónica</mat-label>
+                      <textarea matInput [(ngModel)]="medicalInfo.chronicConditionDetail" rows="2"></textarea>
+                    </mat-form-field>
+                  }
+                </div>
+
+                <!-- Discapacidad -->
+                <div class="col-md-12">
+                  <mat-checkbox [(ngModel)]="medicalInfo.hasDisability" color="primary">
+                    ¿Tiene discapacidad?
+                  </mat-checkbox>
+                  @if (medicalInfo.hasDisability) {
+                    <div class="row g-2 mt-1">
+                      <div class="col-md-6">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-label>Detalle de discapacidad</mat-label>
+                          <input matInput [(ngModel)]="medicalInfo.disabilityDetail">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                        <mat-checkbox [(ngModel)]="medicalInfo.hasConadis" color="primary">
+                          ¿Tiene carnet CONADIS?
+                        </mat-checkbox>
+                      </div>
+                      @if (medicalInfo.hasConadis) {
+                        <div class="col-md-3">
+                          <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>N° CONADIS</mat-label>
+                            <input matInput [(ngModel)]="medicalInfo.conadisNumber">
+                          </mat-form-field>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Medicamentos actuales</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.currentMedications" placeholder="Ninguno si no aplica">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Médico de cabecera</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.doctorName">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Teléfono del médico</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.doctorPhone">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Contacto de emergencia</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.emergencyContactName">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Teléfono de emergencia</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.emergencyContactPhone">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Relación con el contacto</mat-label>
+                    <input matInput [(ngModel)]="medicalInfo.emergencyContactRelation" placeholder="Madre, Padre...">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Notas médicas adicionales</mat-label>
+                    <textarea matInput [(ngModel)]="medicalInfo.medicalNotes" rows="3"></textarea>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 d-flex justify-content-end">
+                  <button mat-raised-button color="primary" (click)="saveMedical()" [disabled]="saving">
+                    <mat-icon>save</mat-icon>
+                    {{ saving ? 'Guardando...' : 'Guardar información médica' }}
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </mat-tab>
+
+          <!-- ─── Tab: Información Familiar ──────────────────────────── -->
+          <mat-tab label="Información Familiar">
+            <div class="p-3">
+              <div class="row g-3 mt-1">
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Situación familiar</mat-label>
+                    <mat-select [(ngModel)]="familyInfo.familySituation">
+                      <mat-option value="">-- Sin especificar --</mat-option>
+                      @for (op of familySituationOptions; track op) {
+                        <mat-option [value]="op">{{ op }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Vive con</mat-label>
+                    <input matInput [(ngModel)]="familyInfo.livesWithWhom" placeholder="Ambos padres, madre, abuelos...">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Ocupación del padre</mat-label>
+                    <input matInput [(ngModel)]="familyInfo.fatherOccupation">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nivel de educación del padre</mat-label>
+                    <mat-select [(ngModel)]="familyInfo.fatherEducationLevel">
+                      <mat-option value="">-- Sin especificar --</mat-option>
+                      @for (op of educationOptions; track op) {
+                        <mat-option [value]="op">{{ op }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Ocupación de la madre</mat-label>
+                    <input matInput [(ngModel)]="familyInfo.motherOccupation">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nivel de educación de la madre</mat-label>
+                    <mat-select [(ngModel)]="familyInfo.motherEducationLevel">
+                      <mat-option value="">-- Sin especificar --</mat-option>
+                      @for (op of educationOptions; track op) {
+                        <mat-option [value]="op">{{ op }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>N° de hermanos</mat-label>
+                    <input matInput type="number" min="0" [(ngModel)]="familyInfo.numberOfSiblings">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Lugar entre hermanos</mat-label>
+                    <input matInput type="number" min="1" [(ngModel)]="familyInfo.studentBirthOrder" placeholder="1=primogénito">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nivel socioeconómico</mat-label>
+                    <mat-select [(ngModel)]="familyInfo.socioeconomicLevel">
+                      <mat-option value="">-- Sin especificar --</mat-option>
+                      @for (op of socioeconomicOptions; track op) {
+                        <mat-option [value]="op">{{ op }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Tipo de vivienda</mat-label>
+                    <mat-select [(ngModel)]="familyInfo.housingType">
+                      <mat-option value="">-- Sin especificar --</mat-option>
+                      @for (op of housingOptions; track op) {
+                        <mat-option [value]="op">{{ op }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Notas familiares</mat-label>
+                    <textarea matInput [(ngModel)]="familyInfo.familyNotes" rows="3"></textarea>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12 d-flex justify-content-end">
+                  <button mat-raised-button color="primary" (click)="saveFamily()" [disabled]="saving">
+                    <mat-icon>save</mat-icon>
+                    {{ saving ? 'Guardando...' : 'Guardar información familiar' }}
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
+      </mat-card>
+    }
+
+  </div>
+</section>

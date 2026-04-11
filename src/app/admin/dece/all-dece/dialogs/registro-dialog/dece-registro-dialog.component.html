@@ -1,0 +1,134 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{ isEditMode ? 'Editar Registro DECE' : 'Nuevo Registro DECE' }}</div>
+      <div class="modalSubTitle">{{ data.studentName }}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="form" (ngSubmit)="submit()">
+
+      <!-- Tipo + Fecha -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Tipo de atención</mat-label>
+            <mat-select formControlName="tipo" required>
+              @for (t of tipoOptions; track t) {
+                <mat-option [value]="t">{{ t }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get('tipo')?.hasError('required') && form.get('tipo')?.touched) {
+              <mat-error>El tipo es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fecha" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (form.get('fecha')?.hasError('required') && form.get('fecha')?.touched) {
+              <mat-error>La fecha es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="row">
+        <div class="col-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="descripcion" rows="4"
+              placeholder="Describa detalladamente la atención o intervención realizada..." required></textarea>
+            @if (form.get('descripcion')?.hasError('required') && form.get('descripcion')?.touched) {
+              <mat-error>La descripción es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Registrado por (docente) -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Registrado por</mat-label>
+            @if (loadingTeachers) {
+              <mat-select formControlName="creadoPor" required [disabled]="true">
+                <mat-option value="">Cargando docentes...</mat-option>
+              </mat-select>
+            } @else {
+              <mat-select formControlName="creadoPor" required>
+                @for (t of teachers; track t.id) {
+                  <mat-option [value]="t.name">{{ t.name }}</mat-option>
+                }
+              </mat-select>
+            }
+            @if (form.get('creadoPor')?.hasError('required') && form.get('creadoPor')?.touched) {
+              <mat-error>El responsable es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Evidencias -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <label class="upload-label mb-2 d-block">
+            <mat-icon style="vertical-align:middle;margin-right:6px">attach_file</mat-icon>
+            <strong>Evidencias</strong>
+            <span class="text-muted ms-1" style="font-size:12px">(imágenes, PDF, Word — máx. 10 MB c/u)</span>
+          </label>
+          <input type="file" #fileInput multiple accept="image/*,.pdf,.doc,.docx"
+            (change)="onFilesSelected($event)" style="display:none">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon> Adjuntar archivos
+          </button>
+
+          @if (selectedFiles.length > 0) {
+            <div class="file-list mt-2">
+              @for (file of selectedFiles; track file.name; let i = $index) {
+                <div class="file-chip d-flex align-items-center gap-1 mb-1">
+                  <mat-icon style="font-size:16px;height:16px;width:16px">
+                    {{ file.type.startsWith('image') ? 'image' : 'description' }}
+                  </mat-icon>
+                  <span class="text-truncate" style="max-width:200px;font-size:13px">{{ file.name }}</span>
+                  <span class="text-muted" style="font-size:11px">({{ (file.size / 1024).toFixed(0) }} KB)</span>
+                  <button mat-icon-button type="button" (click)="removeFile(i)"
+                    style="width:24px;height:24px;line-height:24px">
+                    <mat-icon style="font-size:14px;height:14px;width:14px">close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (uploading) {
+        <mat-progress-bar mode="indeterminate" class="mb-3"></mat-progress-bar>
+      }
+
+      <div class="row">
+        <div class="col-12">
+          <div class="example-button-row">
+            <button mat-flat-button class="formSubmitBtn"
+              [disabled]="!form.valid || uploading" type="submit">
+              {{ isEditMode ? 'Guardar Cambios' : 'Guardar Registro' }}
+            </button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" type="button" tabindex="-1">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

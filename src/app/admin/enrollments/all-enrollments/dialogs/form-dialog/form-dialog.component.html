@@ -1,0 +1,82 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{ dialogTitle }}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Cerrar" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="enrollmentForm" (ngSubmit)="submit()">
+
+      @if (action === 'add') {
+        <!-- Búsqueda de estudiante con autocomplete -->
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Buscar Estudiante (nombre o DNI)</mat-label>
+              <mat-icon matPrefix class="material-icons-outlined" style="margin-right:6px">search</mat-icon>
+              <input matInput [formControl]="studentSearch" [matAutocomplete]="autoStudent"
+                placeholder="Escriba nombre o DNI...">
+              <mat-autocomplete #autoStudent="matAutocomplete" (optionSelected)="selectStudent($event.option.value)">
+                @for (s of filteredStudents; track s.id) {
+                  <mat-option [value]="s">{{ s.label }}</mat-option>
+                }
+              </mat-autocomplete>
+              @if (enrollmentForm.get('studentId')?.hasError('required') && enrollmentForm.get('studentId')?.touched) {
+                <mat-error>Debe seleccionar un estudiante</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Selector de Curso Lectivo -->
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Curso — Año Lectivo</mat-label>
+              <mat-select formControlName="cursoLectivoId" required>
+                @for (cl of cursosLectivos; track cl.id) {
+                  <mat-option [value]="cl.id">{{ cl.label }}</mat-option>
+                }
+              </mat-select>
+              @if (enrollmentForm.get('cursoLectivoId')?.hasError('required')) {
+                <mat-error>El curso lectivo es requerido</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+      }
+
+      <!-- Estado + Observaciones -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="enrolled">Matriculado</mat-option>
+              <mat-option value="withdrawn">Retirado</mat-option>
+              <mat-option value="transferred">Transferido</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Observaciones</mat-label>
+            <textarea matInput formControlName="notes" rows="2"></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-flat-button class="formSubmitBtn" [disabled]="!enrollmentForm.valid" type="submit">Guardar</button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,98 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{ dialogTitle }}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Close dialog" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="cursoForm" (ngSubmit)="submit()">
+
+      <!-- Nivel + Especialidad -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Nivel</mat-label>
+            <mat-select formControlName="nivel" required>
+              @for (n of nivelOptions; track n) {
+                <mat-option [value]="n">{{ n }}</mat-option>
+              }
+            </mat-select>
+            @if (cursoForm.get('nivel')?.hasError('required')) {
+              <mat-error>El nivel es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Especialidad</mat-label>
+            <input matInput formControlName="especialidad" placeholder="Ej: Informática">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Paralelo + Jornada -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Paralelo</mat-label>
+            <input matInput formControlName="paralelo" placeholder="Ej: A" required>
+            @if (cursoForm.get('paralelo')?.hasError('required')) {
+              <mat-error>El paralelo es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Jornada</mat-label>
+            <mat-select formControlName="jornada" required>
+              @for (j of jornadaOptions; track j) {
+                <mat-option [value]="j">{{ j }}</mat-option>
+              }
+            </mat-select>
+            @if (cursoForm.get('jornada')?.hasError('required')) {
+              <mat-error>La jornada es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Subnivel + Status -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Subnivel</mat-label>
+            <mat-select formControlName="subnivel" required>
+              @for (s of subnivelOptions; track s) {
+                <mat-option [value]="s">{{ s }}</mat-option>
+              }
+            </mat-select>
+            @if (cursoForm.get('subnivel')?.hasError('required')) {
+              <mat-error>El subnivel es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="active">Activo</mat-option>
+              <mat-option value="inactive">Inactivo</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-flat-button class="formSubmitBtn" [disabled]="!cursoForm.valid" type="submit">Guardar</button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

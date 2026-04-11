@@ -1,0 +1,109 @@
+<section class="content">
+  <div class="content-block">
+    @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+    <div class="row clearfix">
+      <div class="col-xl-8 col-lg-10 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="header">
+            <h2>Profile Information</h2>
+          </div>
+          <div class="body">
+
+            @if (isLoading) {
+            <div class="d-flex justify-content-center p-4">
+              <mat-spinner diameter="40"></mat-spinner>
+            </div>
+            } @else {
+            <div class="d-flex align-items-center mb-4">
+              <img [src]="userImg" alt="avatar" width="72" height="72"
+                style="border-radius:50%; object-fit:cover; margin-right:16px;">
+              <div>
+                <div class="font-weight-bold">{{ profileForm.get('name')?.value }}</div>
+                <div class="text-muted small">{{ profileForm.get('email')?.value }}</div>
+              </div>
+            </div>
+
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Full Name</mat-label>
+                    <input matInput formControlName="name" required>
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>person</mat-icon>
+                    @if (profileForm.get('name')?.hasError('required')) {
+                    <mat-error>Name is required</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" required>
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
+                    @if (profileForm.get('email')?.hasError('required') || profileForm.get('email')?.hasError('email')) {
+                    <mat-error>Please enter a valid email</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <h5 class="mt-2 mb-3">
+                Change Password
+                <span class="text-muted small">(leave blank to keep current)</span>
+              </h5>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>New Password</mat-label>
+                    <input matInput [type]="hideNew ? 'password' : 'text'"
+                      [formControl]="$any(passwordForm.get('newPassword'))"
+                      autocomplete="new-password">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix
+                      (click)="hideNew = !hideNew" style="cursor:pointer">
+                      {{ hideNew ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                    @if (passwordForm.get('newPassword')?.hasError('minlength')) {
+                    <mat-error>Minimum 6 characters</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput [type]="hideConfirm ? 'password' : 'text'"
+                      [formControl]="$any(passwordForm.get('confirmPassword'))"
+                      autocomplete="new-password">
+                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix
+                      (click)="hideConfirm = !hideConfirm" style="cursor:pointer">
+                      {{ hideConfirm ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+                  <button mat-flat-button class="formSubmitBtn"
+                    [disabled]="profileForm.invalid || isSaving"
+                    type="submit">
+                    @if (isSaving) {
+                      <mat-spinner diameter="18" style="display:inline-block; margin-right:8px;"></mat-spinner>
+                    }
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </form>
+            }
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

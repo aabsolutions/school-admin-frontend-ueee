@@ -1,0 +1,29 @@
+.print-header { display: none; }
+
+@media print {
+  body > * { visibility: hidden; }
+  #printable-section, #printable-section * { visibility: visible; }
+  #printable-section { position: fixed; top: 0; left: 0; width: 100%; }
+
+  .no-print { display: none !important; }
+
+  .print-header {
+    display: block;
+    text-align: center;
+    margin-bottom: 16px;
+    h3 { margin: 0; font-size: 18px; font-weight: 700; }
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { border: 1px solid #ccc; padding: 6px 10px; font-size: 12px; }
+  th { background: #f0f0f0; font-weight: 600; }
+}
+
+.badge-solid-blue {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}

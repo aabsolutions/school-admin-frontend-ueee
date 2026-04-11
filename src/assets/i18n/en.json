@@ -1,0 +1,106 @@
+{
+  "LOGIN": {
+    "TITLE": "Welcome to Smart"
+  },
+  "MENUITEMS": {
+    "MAIN": {
+      "TEXT": "Main"
+    },
+    "DASHBOARD": {
+      "TEXT": "Dashboard",
+      "LIST": {
+        "DASHBOARD1": "Dashboard 1",
+        "DASHBOARD2": "Dashboard 2",
+        "TEACHER-DASHBOARD": "Teacher Dashboard",
+        "STUDENT-DASHBOARD": "Student Dashboard"
+      }
+    },
+    "ACADEMIC": {
+      "TEXT": "Academic Management"
+    },
+    "STUDENTS": {
+      "TEXT": "Students",
+      "LIST": {
+        "ALL-STUDENTS": "All Students",
+        "ADD-STUDENT": "Add Student",
+        "EDIT-STUDENT": "Edit Student",
+        "ABOUT-STUDENT": "About Student",
+        "ATTENDANCE": "Student Attendance"
+      }
+    },
+    "TEACHERS": {
+      "TEXT": "Teachers",
+      "LIST": {
+        "ALL-TEACHERS": "All Teachers",
+        "ADD-TEACHER": "Add Teacher",
+        "EDIT-TEACHER": "Edit Teacher",
+        "ABOUT-TEACHER": "About Teacher",
+        "TEACHER-TIMETABLE": "Teacher Timetable",
+        "ASSIGN-CLASS": "Assign Class Teacher"
+      }
+    },
+    "COURSES": {
+      "TEXT": "Courses",
+      "LIST": {
+        "ALL-COURSES": "All Courses",
+        "ADD-COURSE": "Add Course",
+        "EDIT-COURSE": "Edit Course",
+        "ABOUT-COURSE": "About Course"
+      }
+    },
+    "CLASS-SECTIONS": {
+      "TEXT": "Class Sections",
+      "LIST": {
+        "ALL-SECTIONS": "All Sections",
+        "TIMETABLE": "Class Timetable"
+      }
+    },
+    "ENROLLMENTS": {
+      "TEXT": "Enrollments",
+      "LIST": {
+        "ALL-ENROLLMENTS": "All Enrollments"
+      }
+    },
+    "ADMINISTRATION": {
+      "TEXT": "Administration"
+    },
+    "DEPARTMENTS": {
+      "TEXT": "Departments",
+      "LIST": {
+        "ALL-DEPARTMENTS": "All Departments",
+        "ADD-DEPARTMENT": "Add Department",
+        "EDIT-DEPARTMENT": "Edit Department"
+      }
+    },
+    "USER-MANAGEMENT": {
+      "TEXT": "User Management"
+    },
+    "USERS": {
+      "TEXT": "Users",
+      "LIST": {
+        "ALL-USERS": "All Users",
+        "ADD-USER": "Add User"
+      }
+    },
+    "TEACHER-PORTAL": {
+      "TEXT": "Teacher Portal",
+      "LIST": {
+        "DASHBOARD": "Dashboard",
+        "LECTURES": "Lectures",
+        "LEAVE-REQUEST": "Leave Request",
+        "EXAM-SCHEDULE": "Exam Schedule",
+        "SETTINGS": "Settings"
+      }
+    },
+    "STUDENT-PORTAL": {
+      "TEXT": "Student Portal",
+      "LIST": {
+        "DASHBOARD": "Dashboard",
+        "HOMEWORK": "Homework",
+        "LEAVE-REQUEST": "Leave Request",
+        "TIMETABLE": "Timetable",
+        "SETTINGS": "Settings"
+      }
+    }
+  }
+}

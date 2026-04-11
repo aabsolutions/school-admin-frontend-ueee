@@ -1,0 +1,88 @@
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 mb-2">
+      <h2 class="mb-0">{{ dialogTitle }}</h2>
+    </div>
+    <form [formGroup]="courseForm">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Course Code</mat-label>
+            <input matInput formControlName="courseCode" required placeholder="e.g. CS101" />
+            @if (courseForm.get('courseCode')?.hasError('required') && courseForm.get('courseCode')?.touched) {
+            <mat-error>Course Code is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Course Name</mat-label>
+            <input matInput formControlName="courseName" required />
+            @if (courseForm.get('courseName')?.hasError('required') && courseForm.get('courseName')?.touched) {
+            <mat-error>Course Name is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-12 col-lg-12">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="departmentId" required
+              (selectionChange)="onDepartmentChange($event.value)">
+              @for (dept of departmentOptions; track dept.id) {
+              <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+              }
+            </mat-select>
+            @if (courseForm.get('department')?.hasError('required') && courseForm.get('department')?.touched) {
+            <mat-error>Department is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Credits</mat-label>
+            <input matInput type="number" formControlName="credits" required min="1" max="6" />
+            @if (courseForm.get('credits')?.invalid && courseForm.get('credits')?.touched) {
+            <mat-error>Credits must be between 1 and 6</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Duration (Weeks)</mat-label>
+            <input matInput type="number" formControlName="durationWeeks" />
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6">
+          <mat-form-field class="example-full-width" appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              @for (s of statusOptions; track s) {
+              <mat-option [value]="s">{{ s | titlecase }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-xl-12 col-lg-12 mt-1 ms-2">
+          <mat-checkbox formControlName="isElective" color="primary">
+            Elective Course
+          </mat-checkbox>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div mat-dialog-actions class="mb-1">
+  <button mat-flat-button color="warn" (click)="onNoClick()">
+    <mat-icon>close</mat-icon> Cancel
+  </button>
+  <button mat-flat-button color="primary" [disabled]="!courseForm.valid" (click)="submit()">
+    <mat-icon>check</mat-icon>
+    {{ action === 'edit' ? 'Update' : 'Save' }}
+  </button>
+</div>

@@ -1,0 +1,259 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <!-- Panel de filtros -->
+    <div class="row">
+      <div class="col-12">
+        <mat-card class="mb-3">
+          <mat-card-content>
+            <div class="row align-items-end g-3 pt-2">
+              <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Nivel</mat-label>
+                  <mat-select [(ngModel)]="filterNivel">
+                    <mat-option value="">Todos</mat-option>
+                    @for (n of nivelOptions; track n) {
+                      <mat-option [value]="n">{{ n }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Subnivel</mat-label>
+                  <mat-select [(ngModel)]="filterSubnivel">
+                    <mat-option value="">Todos</mat-option>
+                    @for (s of subnivelOptions; track s) {
+                      <mat-option [value]="s">{{ s }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Especialidad</mat-label>
+                  <input matInput [(ngModel)]="filterEspecialidad" placeholder="Ej: Informática">
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Jornada</mat-label>
+                  <mat-select [(ngModel)]="filterJornada">
+                    <mat-option value="">Todas</mat-option>
+                    @for (j of jornadaOptions; track j) {
+                      <mat-option [value]="j">{{ j }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-xl-1 col-lg-2 col-md-6 col-sm-12">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Paralelo</mat-label>
+                  <input matInput [(ngModel)]="filterParalelo" placeholder="Ej: A">
+                </mat-form-field>
+              </div>
+              <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3">
+                <button mat-flat-button color="primary" class="w-100" style="height:56px" (click)="buscar()">
+                  <mat-icon>search</mat-icon> Buscar
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Lista de cursos encontrados -->
+      <div class="col-xl-4 col-lg-4 col-md-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Cursos Lectivos</mat-card-title>
+            @if (hasSearched) {
+              <mat-card-subtitle>{{ filteredCursos.length }} resultado(s)</mat-card-subtitle>
+            }
+          </mat-card-header>
+          <mat-card-content>
+            @if (loadingCursos) {
+              <div class="d-flex justify-content-center p-4">
+                <mat-progress-spinner color="primary" [diameter]="36" mode="indeterminate"></mat-progress-spinner>
+              </div>
+            } @else if (!hasSearched) {
+              <p class="text-muted p-3">
+                <mat-icon style="vertical-align:middle;margin-right:6px;font-size:18px">search</mat-icon>
+                Aplique los filtros y presione <strong>Buscar</strong> para ver los cursos disponibles.
+              </p>
+            } @else if (filteredCursos.length === 0) {
+              <p class="text-muted p-3">No se encontraron cursos con esos filtros.</p>
+            } @else {
+              <div class="curso-list">
+                @for (cl of filteredCursos; track cl.id) {
+                  <div class="curso-item"
+                    [class.selected]="selectedCurso?.id === cl.id"
+                    (click)="selectCurso(cl)">
+                    <div class="curso-title">{{ cl.nivel }}</div>
+                    <div class="curso-sub">{{ cl.subnivel }}</div>
+                    <div class="curso-sub">{{ cl.especialidad }} — Paralelo {{ cl.paralelo }}</div>
+                    <div class="curso-meta">{{ cl.jornada }} | {{ cl.academicYear }}</div>
+                    <div class="curso-stats">
+                      <span class="stat-badge stat-total" matTooltip="Total matriculados">
+                        <mat-icon>group</mat-icon> {{ cl.total }}
+                      </span>
+                      <span class="stat-badge stat-male" matTooltip="Varones">
+                        <mat-icon>male</mat-icon> {{ cl.male }}
+                      </span>
+                      <span class="stat-badge stat-female" matTooltip="Mujeres">
+                        <mat-icon>female</mat-icon> {{ cl.female }}
+                      </span>
+                      <span class="stat-tutor" matTooltip="Tutor">
+                        <mat-icon>person</mat-icon> {{ cl.tutorName }}
+                      </span>
+                    </div>
+                  </div>
+                  <mat-divider></mat-divider>
+                }
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Tabla de estudiantes -->
+      <div class="col-xl-8 col-lg-8 col-md-12">
+        <div class="card" id="printable-section">
+
+          @if (!selectedCurso) {
+            <div class="p-4 text-muted">
+              <mat-icon style="vertical-align:middle;margin-right:8px">info_outline</mat-icon>
+              Seleccione un curso lectivo de la lista para ver su nómina.
+            </div>
+          } @else {
+
+            <!-- Encabezado de la tabla con búsqueda y acciones -->
+            <div class="materialTableHeader no-print">
+              <div class="left">
+                <ul class="header-buttons-left ms-0">
+                  <li class="tbl-title">
+                    <h2>Nómina de Estudiantes</h2>
+                  </li>
+                  @if (dataSource.data.length > 0) {
+                    <li class="tbl-search-box">
+                      <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                      <input id="search-input" placeholder="Buscar..." type="text"
+                        (keyup)="applyFilter($event)"
+                        class="browser-default search-field" aria-label="Buscar">
+                    </li>
+                  }
+                </ul>
+              </div>
+              <div class="right">
+                <div class="right-side-btn">
+                  @if (dataSource.filteredData.length > 0) {
+                    <app-table-show-hide-column [columnDefinitions]="columnDefinitions"></app-table-show-hide-column>
+                    <button mat-icon-button (click)="exportXls()" class="tbl-header-btn col-green"
+                      matTooltip="Exportar XLS">
+                      <mat-icon class="material-icons-outlined">file_download</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="exportPdf()" class="tbl-header-btn col-blue"
+                      matTooltip="Imprimir / PDF">
+                      <mat-icon class="material-icons-outlined">print</mat-icon>
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Encabezado imprimible (solo visible al imprimir) -->
+            <div class="print-header">
+              <h3>Nómina de Estudiantes</h3>
+              <p>{{ cursoLabel }}</p>
+              <p>Tutor: {{ selectedCurso.tutorName }}</p>
+            </div>
+
+            @if (loadingStudents) {
+              <div class="d-flex justify-content-center p-4">
+                <mat-progress-spinner color="primary" [diameter]="36" mode="indeterminate"></mat-progress-spinner>
+              </div>
+            } @else {
+
+              <div class="overflow-auto">
+                <div class="responsive_table">
+                  <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table w-100">
+
+                    @for (column of columnDefinitions; track column) {
+                      @if (column.type === 'date') {
+                        <ng-container [matColumnDef]="column.def">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            <span class="truncate-text">{{ column.label }}</span>
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let row">
+                            <span class="mobile-label">{{ column.label }}:</span>
+                            <span class="truncate-text">{{ row[column.def] | date: 'dd/MM/yyyy' }}</span>
+                          </mat-cell>
+                        </ng-container>
+                      } @else if (column.def === 'gender') {
+                        <ng-container [matColumnDef]="column.def">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            <span class="truncate-text">{{ column.label }}</span>
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let row">
+                            <span class="mobile-label">{{ column.label }}:</span>
+                            @switch (row.gender) {
+                              @case ('Male') {
+                                <span class="badge badge-solid-green">{{ row.gender }}</span>
+                              }
+                              @case ('Female') {
+                                <span class="badge badge-solid-purple">{{ row.gender }}</span>
+                              }
+                              @default {
+                                <span class="badge badge-solid-orange">{{ row.gender }}</span>
+                              }
+                            }
+                          </mat-cell>
+                        </ng-container>
+                      } @else {
+                        <ng-container [matColumnDef]="column.def">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header>
+                            <span class="truncate-text">{{ column.label }}</span>
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let row">
+                            <span class="mobile-label">{{ column.label }}:</span>
+                            <span class="truncate-text">{{ row[column.def] }}</span>
+                          </mat-cell>
+                        </ng-container>
+                      }
+                    }
+
+                    <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: getDisplayedColumns();"></mat-row>
+
+                    <!-- No data row -->
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="getDisplayedColumns().length" style="text-align:center;padding:24px">
+                        No hay estudiantes matriculados en este curso.
+                      </td>
+                    </tr>
+
+                  </table>
+
+                  <mat-paginator [length]="dataSource.filteredData.length"
+                    [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 100]">
+                  </mat-paginator>
+                </div>
+              </div>
+
+            }
+          }
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

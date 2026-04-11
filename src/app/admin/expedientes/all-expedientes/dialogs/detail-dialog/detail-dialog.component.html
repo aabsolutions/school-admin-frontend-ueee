@@ -1,0 +1,113 @@
+<div class="expediente-detail-container">
+
+  <!-- Header del estudiante -->
+  <div class="detail-header">
+    <div class="student-avatar">
+      @if (studentInfo?.img) {
+        <img [src]="studentInfo?.img" [alt]="studentInfo?.name" class="avatar-img">
+      } @else {
+        <div class="avatar-placeholder">
+          <mat-icon>person</mat-icon>
+        </div>
+      }
+    </div>
+    <div class="student-info">
+      <h2 class="student-name">{{ studentInfo?.name }}</h2>
+      <div class="student-meta">
+        <span><mat-icon class="meta-icon">badge</mat-icon> {{ studentInfo?.dni || '—' }}</span>
+        <span><mat-icon class="meta-icon">email</mat-icon> {{ studentInfo?.email }}</span>
+        @if (studentInfo?.mobile) {
+          <span><mat-icon class="meta-icon">phone</mat-icon> {{ studentInfo?.mobile }}</span>
+        }
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-flat-button color="primary" (click)="openRegistroDialog()">
+        <mat-icon>add</mat-icon> Agregar registro
+      </button>
+      <button mat-icon-button class="close-btn" matTooltip="Cerrar" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Timeline de registros -->
+  <div class="detail-body">
+    @if (loading) {
+      <div class="d-flex justify-content-center p-5">
+        <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else if (registros.length === 0) {
+      <div class="empty-state">
+        <mat-icon>folder_open</mat-icon>
+        <p>Sin registros aún. Presioná <strong>Agregar registro</strong> para comenzar.</p>
+      </div>
+    } @else {
+      <div class="timeline">
+        @for (reg of registros; track reg._id) {
+          <div class="timeline-item">
+            <div class="timeline-icon" [class]="'tipo-' + reg.tipo.replace(' ', '-').toLowerCase()">
+              <mat-icon>{{ getTipoIcon(reg.tipo) }}</mat-icon>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-header">
+                <span class="badge {{ getTipoClass(reg.tipo) }}">{{ reg.tipo }}</span>
+                <span class="timeline-date">{{ reg.fecha | date:'dd/MM/yyyy' }}</span>
+                <span class="timeline-spacer"></span>
+                @if (reg.creadoPor) {
+                  <span class="timeline-author">
+                    <mat-icon class="author-icon">person</mat-icon>
+                    {{ reg.creadoPor }}
+                  </span>
+                }
+                <button mat-icon-button class="action-btn edit-btn"
+                  matTooltip="Editar registro" (click)="openRegistroDialog(reg)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="action-btn delete-btn"
+                  matTooltip="Eliminar registro" (click)="deleteRegistro(reg)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <p class="timeline-desc">{{ reg.descripcion }}</p>
+
+              <!-- Evidencias -->
+              @if (reg.evidencias.length > 0) {
+                <div class="evidencias">
+                  <span class="evidencias-label">
+                    <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle">attach_file</mat-icon>
+                    Evidencias:
+                  </span>
+                  <div class="evidencias-list">
+                    @for (ev of reg.evidencias; track ev) {
+                      <div class="evidencia-wrapper">
+                        @if (isImage(ev)) {
+                          <a [href]="getFileUrl(ev)" target="_blank" class="evidencia-thumb" matTooltip="Ver imagen">
+                            <img [src]="getFileUrl(ev)" [alt]="getFileName(ev)" class="thumb-img">
+                          </a>
+                        } @else {
+                          <a [href]="getFileUrl(ev)" target="_blank" class="evidencia-doc" matTooltip="{{ getFileName(ev) }}">
+                            <mat-icon>description</mat-icon>
+                            <span>{{ getFileName(ev) }}</span>
+                          </a>
+                        }
+                        @if (isSuperAdmin) {
+                          <button mat-icon-button color="warn" class="evidencia-delete-btn"
+                            matTooltip="Eliminar evidencia" (click)="deleteEvidencia(reg, ev)">
+                            <mat-icon style="font-size:14px;height:14px;width:14px">delete</mat-icon>
+                          </button>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
