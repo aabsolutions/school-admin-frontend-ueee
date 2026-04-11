@@ -1,0 +1,616 @@
+{
+  "routes": [
+    {
+      "path": "",
+      "title": "MENUITEMS.MAIN.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/dashboard/main",
+      "title": "MENUITEMS.DASHBOARD.TEXT",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.ACADEMIC.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "MENUITEMS.STUDENTS.TEXT",
+      "iconType": "material-icons-outlined",
+      "icon": "people_alt",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/students/all-students",
+          "title": "MENUITEMS.STUDENTS.LIST.ALL-STUDENTS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/students/add-student",
+          "title": "MENUITEMS.STUDENTS.LIST.ADD-STUDENT",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/students/student-attendance",
+          "title": "MENUITEMS.STUDENTS.LIST.ATTENDANCE",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
+      "title": "MENUITEMS.TEACHERS.TEXT",
+      "iconType": "material-icons-outlined",
+      "icon": "person",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/teachers/all-teachers",
+          "title": "MENUITEMS.TEACHERS.LIST.ALL-TEACHERS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/teachers/add-teacher",
+          "title": "MENUITEMS.TEACHERS.LIST.ADD-TEACHER",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/teachers/assign-class-teacher",
+          "title": "MENUITEMS.TEACHERS.LIST.ASSIGN-CLASS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
+      "title": "Reportes",
+      "iconType": "material-icons-outlined",
+      "icon": "assessment",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN", "TEACHER"],
+      "submenu": [
+        {
+          "path": "/admin/lista-nomina",
+          "title": "Nómina de Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/teacher/lista-nomina",
+          "title": "Nómina de Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["TEACHER"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/directorio-docentes",
+          "title": "Directorio de Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/directorio-estudiantes",
+          "title": "Directorio de Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/cursos-stats",
+          "title": "Estadísticas de Cursos",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-expedientes",
+          "title": "Reporte Expedientes Disciplinarios",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-dece",
+          "title": "Reporte Atención DECE",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-medico-estudiantes",
+          "title": "Ficha Médica Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-medico-docentes",
+          "title": "Ficha Médica Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
+      "title": "Oferta Educativa",
+      "iconType": "material-icons-outlined",
+      "icon": "school",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/cursos/all-cursos",
+          "title": "Cursos",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/curso-lectivo/all",
+          "title": "Cursos Lectivos",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "/admin/expedientes",
+      "title": "Expedientes Disciplinarios",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_special",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/dece",
+      "title": "Atención Psicológica DECE",
+      "iconType": "material-icons-outlined",
+      "icon": "psychology",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "Matrículas",
+      "iconType": "material-icons-outlined",
+      "icon": "assignment_turned_in",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/enrollments/all-enrollments",
+          "title": "Todas las Matrículas",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.ADMINISTRATION.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "MENUITEMS.DEPARTMENTS.TEXT",
+      "iconType": "material-icons-outlined",
+      "icon": "account_tree",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/departments/all-departments",
+          "title": "MENUITEMS.DEPARTMENTS.LIST.ALL-DEPARTMENTS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/departments/add-department",
+          "title": "MENUITEMS.DEPARTMENTS.LIST.ADD-DEPARTMENT",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.USER-MANAGEMENT.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "MENUITEMS.USERS.TEXT",
+      "iconType": "material-icons-outlined",
+      "icon": "manage_accounts",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/users/all-users",
+          "title": "MENUITEMS.USERS.LIST.ALL-USERS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/users/add-user",
+          "title": "MENUITEMS.USERS.LIST.ADD-USER",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.TEACHER-PORTAL.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/dashboard",
+      "title": "MENUITEMS.TEACHER-PORTAL.LIST.DASHBOARD",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/lectures",
+      "title": "MENUITEMS.TEACHER-PORTAL.LIST.LECTURES",
+      "iconType": "material-icons-outlined",
+      "icon": "cast_for_education",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/exam-schedule",
+      "title": "MENUITEMS.TEACHER-PORTAL.LIST.EXAM-SCHEDULE",
+      "iconType": "material-icons-outlined",
+      "icon": "event_note",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/leave-request",
+      "title": "MENUITEMS.TEACHER-PORTAL.LIST.LEAVE-REQUEST",
+      "iconType": "material-icons-outlined",
+      "icon": "time_to_leave",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/ficha-medica",
+      "title": "Ficha Médica y Familiar",
+      "iconType": "material-icons-outlined",
+      "icon": "health_and_safety",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/settings",
+      "title": "MENUITEMS.TEACHER-PORTAL.LIST.SETTINGS",
+      "iconType": "material-icons-outlined",
+      "icon": "settings",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.STUDENT-PORTAL.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/dashboard",
+      "title": "MENUITEMS.STUDENT-PORTAL.LIST.DASHBOARD",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/homework",
+      "title": "MENUITEMS.STUDENT-PORTAL.LIST.HOMEWORK",
+      "iconType": "material-icons-outlined",
+      "icon": "book",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/timetable",
+      "title": "MENUITEMS.STUDENT-PORTAL.LIST.TIMETABLE",
+      "iconType": "material-icons-outlined",
+      "icon": "table_view",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/leave-request",
+      "title": "MENUITEMS.STUDENT-PORTAL.LIST.LEAVE-REQUEST",
+      "iconType": "material-icons-outlined",
+      "icon": "time_to_leave",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/ficha-medica",
+      "title": "Ficha Médica y Familiar",
+      "iconType": "material-icons-outlined",
+      "icon": "health_and_safety",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/settings",
+      "title": "MENUITEMS.STUDENT-PORTAL.LIST.SETTINGS",
+      "iconType": "material-icons-outlined",
+      "icon": "settings",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    }
+  ]
+}

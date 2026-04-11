@@ -1,0 +1,122 @@
+[
+  {
+    "id": 1,
+    "courseCode": "CS101",
+    "courseName": "Introduction to Computer Science",
+    "description": "Fundamentals of programming, algorithms, and computational thinking.",
+    "department": "Computer Science",
+    "departmentId": "005",
+    "credits": 3,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "courseCode": "MATH201",
+    "courseName": "Calculus I",
+    "description": "Limits, derivatives, integrals, and their applications.",
+    "department": "Mathematics",
+    "departmentId": "004",
+    "credits": 4,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "courseCode": "CS201",
+    "courseName": "Data Structures",
+    "description": "Arrays, linked lists, trees, graphs, and sorting algorithms.",
+    "department": "Computer Science",
+    "departmentId": "005",
+    "credits": 3,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "courseCode": "PHYS101",
+    "courseName": "Physics I",
+    "description": "Mechanics, thermodynamics, and wave motion.",
+    "department": "Science",
+    "departmentId": "003",
+    "credits": 4,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 5,
+    "courseCode": "MATH301",
+    "courseName": "Linear Algebra",
+    "description": "Vector spaces, matrices, eigenvalues, and linear transformations.",
+    "department": "Mathematics",
+    "departmentId": "004",
+    "credits": 3,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 6,
+    "courseCode": "CS301",
+    "courseName": "Database Systems",
+    "description": "Relational databases, SQL, normalization, and transaction management.",
+    "department": "Computer Science",
+    "departmentId": "005",
+    "credits": 3,
+    "durationWeeks": 14,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 7,
+    "courseCode": "CS401",
+    "courseName": "Machine Learning",
+    "description": "Supervised and unsupervised learning, neural networks, model evaluation.",
+    "department": "Computer Science",
+    "departmentId": "005",
+    "credits": 3,
+    "durationWeeks": 14,
+    "isElective": true,
+    "status": "active"
+  },
+  {
+    "id": 8,
+    "courseCode": "MECH101",
+    "courseName": "Engineering Mechanics",
+    "description": "Statics, dynamics, and mechanics of materials.",
+    "department": "Mechanical",
+    "departmentId": "001",
+    "credits": 4,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "active"
+  },
+  {
+    "id": 9,
+    "courseCode": "HIST101",
+    "courseName": "World History",
+    "description": "Overview of major world civilizations and historical events.",
+    "department": "Arts",
+    "departmentId": "006",
+    "credits": 2,
+    "durationWeeks": 12,
+    "isElective": true,
+    "status": "active"
+  },
+  {
+    "id": 10,
+    "courseCode": "CS350",
+    "courseName": "Software Engineering",
+    "description": "Software development lifecycle, design patterns, testing, and agile methodologies.",
+    "department": "Computer Science",
+    "departmentId": "005",
+    "credits": 3,
+    "durationWeeks": 16,
+    "isElective": false,
+    "status": "inactive"
+  }
+]

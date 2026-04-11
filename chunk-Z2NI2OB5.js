@@ -1,0 +1,1 @@
+import{c as n,d as t,e as i,f as e,g as r}from"./chunk-PT2JM3JA.js";var M=n("rowsAnimation",[r("void => *",[e({height:"*",opacity:"0",transform:"translateY(-50px)","box-shadow":"none"}),i([t(".30s ease",e({height:"*",opacity:".2",transform:"translateY(0)","box-shadow":"none"})),t(".30s ease",e({height:"*",opacity:1,transform:"translateY(0)"}))])])]);export{M as a};
