@@ -1,0 +1,106 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    @if (loading) {
+      <div class="text-center p-5">
+        <mat-progress-spinner mode="indeterminate" diameter="48" class="m-auto"></mat-progress-spinner>
+      </div>
+    } @else if (record) {
+      <div class="row">
+        <div class="col-lg-10 col-xl-8">
+
+          <!-- Resumen -->
+          <mat-card class="mb-3">
+            <mat-card-content class="py-3">
+              <div class="d-flex align-items-center gap-3 flex-wrap">
+                @if (record.nivelActual) {
+                  <mat-chip-set>
+                    <mat-chip color="accent" selected>Nivel: {{ record.nivelActual }}</mat-chip>
+                  </mat-chip-set>
+                }
+                <div>
+                  <span class="fw-semibold">{{ entregados }}</span> de
+                  <span class="fw-semibold">{{ dataSource.data.length }}</span> documentos entregados
+                </div>
+                @if (pendientesObligatorios > 0) {
+                  <mat-chip-set>
+                    <mat-chip color="warn" selected>
+                      {{ pendientesObligatorios }} obligatorio(s) pendiente(s)
+                    </mat-chip>
+                  </mat-chip-set>
+                } @else {
+                  <mat-chip-set>
+                    <mat-chip color="primary" selected>Documentos obligatorios completos ✓</mat-chip>
+                  </mat-chip-set>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Tabla de documentos -->
+          <mat-card>
+            <mat-card-content>
+              <table mat-table [dataSource]="dataSource" class="w-100">
+
+                <!-- Documento -->
+                <ng-container matColumnDef="label">
+                  <th mat-header-cell *matHeaderCellDef>Documento</th>
+                  <td mat-cell *matCellDef="let row">
+                    <span class="fw-semibold">{{ row.label }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Tipo -->
+                <ng-container matColumnDef="tipo">
+                  <th mat-header-cell *matHeaderCellDef style="width:130px">Requerimiento</th>
+                  <td mat-cell *matCellDef="let row">
+                    @if (row.tipo === 'Opcional') {
+                      <span class="badge badge-solid-orange">Opcional</span>
+                    } @else {
+                      <span class="badge badge-solid-blue">Obligatorio</span>
+                    }
+                  </td>
+                </ng-container>
+
+                <!-- Estado -->
+                <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef style="width:130px">Estado</th>
+                  <td mat-cell *matCellDef="let row">
+                    @if (row.entregado) {
+                      <span class="text-success d-flex align-items-center gap-1">
+                        <mat-icon style="font-size:18px;height:18px;width:18px">check_circle</mat-icon> Entregado
+                      </span>
+                    } @else {
+                      <span class="text-danger d-flex align-items-center gap-1">
+                        <mat-icon style="font-size:18px;height:18px;width:18px">cancel</mat-icon> Pendiente
+                      </span>
+                    }
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                  [class.row-missing]="!row.entregado && row.tipo !== 'Opcional'"></tr>
+              </table>
+
+              <!-- Notas -->
+              @if (record.notas) {
+                <mat-divider class="my-3"></mat-divider>
+                <div class="text-muted">
+                  <mat-icon style="vertical-align:middle;font-size:16px">info</mat-icon>
+                  <strong> Notas:</strong> {{ record.notas }}
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+
+        </div>
+      </div>
+    }
+  </div>
+</section>

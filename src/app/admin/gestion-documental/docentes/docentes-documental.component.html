@@ -1,0 +1,94 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title"><h2>Documentos Profesionales — Docentes</h2></li>
+                <li class="tbl-search-box">
+                  <label for="doc-teach-search"><i class="material-icons search-icon">search</i></label>
+                  <input id="doc-teach-search" placeholder="Buscar por nombre, DNI..." type="text"
+                    [value]="searchTerm" (input)="onSearch($any($event.target).value)"
+                    class="browser-default search-field" aria-label="Buscar">
+                </li>
+              </ul>
+            </div>
+            <div class="right">
+              <div class="right-side-btn">
+                <button mat-icon-button (click)="loadData()" class="tbl-header-btn col-brown" matTooltip="Refrescar">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-auto">
+            <div class="responsive_table">
+              @if (isLoading) {
+                <div class="text-center p-4">
+                  <mat-progress-spinner mode="indeterminate" diameter="40" class="m-auto"></mat-progress-spinner>
+                </div>
+              } @else {
+                <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+
+                  <!-- Docente -->
+                  <ng-container matColumnDef="teacher">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Docente</mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                      <div class="student-cell">
+                        <div class="student-avatar-sm">
+                          @if (row.img) {
+                            <img [src]="row.img" class="avatar-sm" alt="">
+                          } @else {
+                            <mat-icon class="avatar-icon-sm">person</mat-icon>
+                          }
+                        </div>
+                        <span class="truncate-text">{{ row.name }}</span>
+                      </div>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- DNI -->
+                  <ng-container matColumnDef="dni">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Cédula</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.dni || '—' }}</mat-cell>
+                  </ng-container>
+
+                  <!-- Email -->
+                  <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.email }}</mat-cell>
+                  </ng-container>
+
+                  <!-- Acciones -->
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef style="justify-content:center">Acciones</mat-header-cell>
+                    <mat-cell *matCellDef="let row" style="justify-content:center">
+                      <button mat-icon-button color="primary" (click)="openDocumentos(row)"
+                        matTooltip="Gestionar documentos">
+                        <mat-icon>folder_open</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </table>
+
+                <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

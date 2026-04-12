@@ -319,6 +319,43 @@
     },
     {
       "path": "",
+      "title": "Gestión Documental",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/gestion-documental/docentes",
+          "title": "Documentos Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/gestion-documental/estudiantes",
+          "title": "Documentos Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
       "title": "Matrículas",
       "iconType": "material-icons-outlined",
       "icon": "assignment_turned_in",
@@ -516,6 +553,18 @@
       "submenu": []
     },
     {
+      "path": "/teacher/gestion-documental",
+      "title": "Mis Documentos",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
       "path": "/teacher/settings",
       "title": "MENUITEMS.TEACHER-PORTAL.LIST.SETTINGS",
       "iconType": "material-icons-outlined",
@@ -593,6 +642,18 @@
       "title": "Ficha Médica y Familiar",
       "iconType": "material-icons-outlined",
       "icon": "health_and_safety",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/gestion-documental",
+      "title": "Mis Documentos",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
       "class": "",
       "groupTitle": false,
       "badge": "",

@@ -6,6 +6,7 @@ import { LeaveRequestComponent } from './leave-request/leave-request.component';
 import { TimetableComponent } from './timetable/timetable.component';
 import { SettingsComponent } from './settings/settings.component';
 import { FichaMedicaStudentComponent } from './ficha-medica/ficha-medica.component';
+import { GestionDocumentalStudentComponent } from './gestion-documental/gestion-documental-student.component';
 
 export const STUDENT_ROUTE: Route[] = [
   {
@@ -27,6 +28,10 @@ export const STUDENT_ROUTE: Route[] = [
   {
     path: 'ficha-medica',
     component: FichaMedicaStudentComponent,
+  },
+  {
+    path: 'gestion-documental',
+    component: GestionDocumentalStudentComponent,
   },
   {
     path: 'settings',

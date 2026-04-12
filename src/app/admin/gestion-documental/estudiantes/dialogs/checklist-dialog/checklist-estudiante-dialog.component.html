@@ -1,0 +1,106 @@
+<h2 mat-dialog-title>
+  <mat-icon style="vertical-align:middle;margin-right:8px">checklist</mat-icon>
+  Documentos Académicos — {{ data.studentName }}
+</h2>
+
+@if (saving) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+<mat-dialog-content style="min-width:480px; max-height:70vh; overflow-y:auto;">
+
+  <!-- Resumen -->
+  <div class="mb-3" style="display:flex; align-items:center; gap:12px;">
+    @if (data.record.nivelActual) {
+      <mat-chip-set>
+        <mat-chip color="primary" selected>Nivel: {{ data.record.nivelActual }}</mat-chip>
+      </mat-chip-set>
+    }
+    <span [class.text-danger]="pendientesObligatorios > 0" [class.text-success]="pendientesObligatorios === 0">
+      <strong>{{ pendientesObligatorios }}</strong> documento(s) obligatorio(s) pendiente(s)
+    </span>
+  </div>
+
+  <mat-divider class="mb-3"></mat-divider>
+
+  <!-- Boletas/Certificados — Opcionales -->
+  <h6 class="text-muted mb-2">Boletas / Certificados — Opcionales</h6>
+  <div class="row">
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta2do">2do Grado <span class="text-muted">(opcional)</span></mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta3ro">3ro Grado <span class="text-muted">(opcional)</span></mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta4to">4to Grado <span class="text-muted">(opcional)</span></mat-checkbox>
+    </div>
+  </div>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Boletas/Certificados — Obligatorios -->
+  <h6 class="text-muted mb-2">Boletas / Certificados — Obligatorios</h6>
+  <div class="row">
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta5to">5to Grado</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta6to">6to Grado</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta7mo">7mo Grado</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta8vo">8vo Año EGB</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta9no">9no Año EGB</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta10mo">10mo Año EGB</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta1roBach">1ro Bach.</mat-checkbox>
+    </div>
+    <div class="col-6">
+      <mat-checkbox [(ngModel)]="form.boleta2doBach">2do Bach.</mat-checkbox>
+    </div>
+  </div>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Documentos de identidad -->
+  <h6 class="text-muted mb-2">Documentos de Identidad</h6>
+  <div class="row">
+    <div class="col-12">
+      <mat-checkbox [(ngModel)]="form.copiaCedulaEstudiante">Copia de cédula del estudiante</mat-checkbox>
+    </div>
+    <div class="col-12">
+      <mat-checkbox [(ngModel)]="form.copiaCedulaRepresentante">Copia de cédula del representante</mat-checkbox>
+    </div>
+  </div>
+
+  <!-- Certificado de participación — solo Bach -->
+  @if (isBach) {
+    <mat-divider class="my-3"></mat-divider>
+    <h6 class="text-muted mb-2">Bachillerato</h6>
+    <mat-checkbox [(ngModel)]="form.certificadoParticipacion">
+      Certificado de participación estudiantil
+    </mat-checkbox>
+  }
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Notas -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Notas / Observaciones</mat-label>
+    <textarea matInput [(ngModel)]="form.notas" rows="2" placeholder="Notas adicionales..."></textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" [disabled]="saving">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+    <mat-icon>save</mat-icon> Guardar
+  </button>
+</mat-dialog-actions>

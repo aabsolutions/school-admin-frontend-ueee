@@ -7,6 +7,7 @@ import { LeaveRequestComponent } from './leave-request/leave-request.component';
 import { SettingsComponent } from './settings/settings.component';
 import { ListaNominaComponent } from '../admin/lista-nomina/lista-nomina.component';
 import { FichaMedicaTeacherComponent } from './ficha-medica/ficha-medica.component';
+import { GestionDocumentalTeacherComponent } from './gestion-documental/gestion-documental-teacher.component';
 
 export const TEACHER_ROUTE: Route[] = [
   {
@@ -36,6 +37,10 @@ export const TEACHER_ROUTE: Route[] = [
   {
     path: 'ficha-medica',
     component: FichaMedicaTeacherComponent,
+  },
+  {
+    path: 'gestion-documental',
+    component: GestionDocumentalTeacherComponent,
   },
   { path: '**', component: Page404Component },
 ];
