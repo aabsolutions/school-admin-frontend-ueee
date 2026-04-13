@@ -1,0 +1,119 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card" id="printable-section">
+
+          @if (loading) {
+            <div class="d-flex justify-content-center p-5">
+              <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+            </div>
+          } @else if (!esTutor) {
+            <div class="p-5 text-center text-muted">
+              <mat-icon style="font-size:48px;height:48px;width:48px;color:#ccc">group_off</mat-icon>
+              <p class="mt-2">No estás asignado como tutor de ningún curso activo.</p>
+            </div>
+          } @else {
+
+            <div class="materialTableHeader no-print">
+              <div class="left">
+                <ul class="header-buttons-left ms-0">
+                  <li class="tbl-title">
+                    <h2>{{ cursoLabel }}
+                      <span class="badge badge-solid-blue ms-2" style="font-size:13px">
+                        {{ dataSource.filteredData.length }} estudiante(s)
+                      </span>
+                    </h2>
+                  </li>
+                  @if (dataSource.data.length > 0) {
+                    <li class="tbl-search-box">
+                      <label for="search-nom"><i class="material-icons search-icon">search</i></label>
+                      <input id="search-nom" placeholder="Buscar en tabla..." type="text"
+                        (keyup)="applyFilter($event)" class="browser-default search-field">
+                    </li>
+                  }
+                </ul>
+              </div>
+              <div class="right">
+                <div class="right-side-btn">
+                  @if (dataSource.filteredData.length > 0) {
+                    <app-table-show-hide-column [columnDefinitions]="columnDefinitions"></app-table-show-hide-column>
+                    <button mat-icon-button (click)="exportXls()" class="tbl-header-btn col-green" matTooltip="Exportar XLS">
+                      <mat-icon class="material-icons-outlined">file_download</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="exportPdf()" class="tbl-header-btn col-blue" matTooltip="Imprimir / PDF">
+                      <mat-icon class="material-icons-outlined">print</mat-icon>
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="print-header">
+              <h3>Nómina de Estudiantes — {{ cursoLabel }}</h3>
+            </div>
+
+            @if (dataSource.data.length === 0) {
+              <div class="p-4 text-muted text-center">
+                <mat-icon style="font-size:48px;height:48px;width:48px;color:#ccc">people</mat-icon>
+                <p class="mt-2">No hay estudiantes matriculados en este curso.</p>
+              </div>
+            } @else {
+              <div class="overflow-auto">
+                <div class="responsive_table">
+                  <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table w-100">
+
+                    @for (column of columnDefinitions; track column) {
+                      <ng-container [matColumnDef]="column.def">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                          <span class="truncate-text">{{ column.label }}</span>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let row">
+                          <span class="mobile-label">{{ column.label }}:</span>
+                          @if (column.type === 'date') {
+                            <span class="truncate-text">{{ row[column.def] | date:'dd/MM/yyyy' }}</span>
+                          } @else if (column.type === 'gender') {
+                            @switch (row.gender) {
+                              @case ('Male')   { <span class="badge badge-solid-blue">Masculino</span> }
+                              @case ('Female') { <span class="badge badge-solid-purple">Femenino</span> }
+                              @default         { <span class="badge badge-solid-orange">{{ row.gender }}</span> }
+                            }
+                          } @else {
+                            <span class="truncate-text">{{ row[column.def] || '—' }}</span>
+                          }
+                        </mat-cell>
+                      </ng-container>
+                    }
+
+                    <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: getDisplayedColumns();"></mat-row>
+
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="getDisplayedColumns().length"
+                        style="text-align:center;padding:24px">
+                        No hay resultados para la búsqueda.
+                      </td>
+                    </tr>
+                  </table>
+
+                  <mat-paginator [length]="dataSource.filteredData.length"
+                    [pageIndex]="0" [pageSize]="25"
+                    [pageSizeOptions]="[10, 25, 50, 100]">
+                  </mat-paginator>
+                </div>
+              </div>
+            }
+
+          }
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

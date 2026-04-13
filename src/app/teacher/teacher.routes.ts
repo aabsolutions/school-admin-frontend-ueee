@@ -5,7 +5,7 @@ import { Route } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LeaveRequestComponent } from './leave-request/leave-request.component';
 import { SettingsComponent } from './settings/settings.component';
-import { ListaNominaComponent } from '../admin/lista-nomina/lista-nomina.component';
+import { ListaNominaTeacherComponent } from './lista-nomina/lista-nomina.component';
 import { FichaMedicaTeacherComponent } from './ficha-medica/ficha-medica.component';
 import { GestionDocumentalTeacherComponent } from './gestion-documental/gestion-documental-teacher.component';
 
@@ -32,7 +32,7 @@ export const TEACHER_ROUTE: Route[] = [
   },
   {
     path: 'lista-nomina',
-    component: ListaNominaComponent,
+    component: ListaNominaTeacherComponent,
   },
   {
     path: 'ficha-medica',

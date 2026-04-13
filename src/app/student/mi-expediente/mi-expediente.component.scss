@@ -1,0 +1,14 @@
+.print-header { display: none; }
+
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.15s;
+
+  &:hover { background-color: #f0f7ff; }
+}
+
+@media print {
+  .no-print    { display: none !important; }
+  .print-header { display: block; text-align: center; margin-bottom: 16px; }
+  mat-paginator { display: none !important; }
+}

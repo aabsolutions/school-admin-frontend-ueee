@@ -7,6 +7,8 @@ import { TimetableComponent } from './timetable/timetable.component';
 import { SettingsComponent } from './settings/settings.component';
 import { FichaMedicaStudentComponent } from './ficha-medica/ficha-medica.component';
 import { GestionDocumentalStudentComponent } from './gestion-documental/gestion-documental-student.component';
+import { MiExpedienteComponent } from './mi-expediente/mi-expediente.component';
+import { MiDeceComponent } from './mi-dece/mi-dece.component';
 
 export const STUDENT_ROUTE: Route[] = [
   {
@@ -32,6 +34,14 @@ export const STUDENT_ROUTE: Route[] = [
   {
     path: 'gestion-documental',
     component: GestionDocumentalStudentComponent,
+  },
+  {
+    path: 'mi-expediente',
+    component: MiExpedienteComponent,
+  },
+  {
+    path: 'mi-dece',
+    component: MiDeceComponent,
   },
   {
     path: 'settings',

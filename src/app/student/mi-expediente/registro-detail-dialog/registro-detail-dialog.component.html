@@ -1,0 +1,73 @@
+<div class="detail-container">
+
+  <!-- Header -->
+  <div class="detail-header">
+    <div class="tipo-icon" [class]="'tipo-' + data.tipo.toLowerCase().replace(' ', '-')">
+      <mat-icon>{{ getTipoIcon(data.tipo) }}</mat-icon>
+    </div>
+    <div class="header-info">
+      <span class="badge {{ getTipoClass(data.tipo) }} tipo-badge">{{ data.tipo }}</span>
+      <span class="fecha">{{ data.fecha | date:'dd/MM/yyyy' }}</span>
+    </div>
+    <button mat-icon-button class="close-btn" matTooltip="Cerrar" (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Cuerpo -->
+  <div class="detail-body">
+
+    <!-- Registrado por -->
+    @if (data.creadoPor) {
+      <div class="meta-row">
+        <mat-icon class="meta-icon">person</mat-icon>
+        <span class="meta-label">Registrado por:</span>
+        <span class="meta-value">{{ data.creadoPor }}</span>
+      </div>
+    }
+
+    <!-- Descripción -->
+    <div class="descripcion-section">
+      <p class="descripcion-text">{{ data.descripcion }}</p>
+    </div>
+
+    <!-- Evidencias -->
+    @if (data.evidenciasUrls.length > 0) {
+      <mat-divider></mat-divider>
+      <div class="evidencias-section">
+        <span class="evidencias-label">
+          <mat-icon class="ev-label-icon">attach_file</mat-icon>
+          Evidencias ({{ data.evidenciasUrls.length }})
+        </span>
+        <div class="evidencias-list">
+          @for (ev of data.evidenciasUrls; track ev) {
+            @if (isImage(ev)) {
+              <a [href]="ev" target="_blank" class="evidencia-thumb" matTooltip="Ver imagen">
+                <img [src]="ev" [alt]="getFileName(ev)" class="thumb-img">
+              </a>
+            } @else {
+              <a [href]="ev" target="_blank" class="evidencia-doc" [matTooltip]="getFileName(ev)">
+                <mat-icon>description</mat-icon>
+                <span>{{ getFileName(ev) }}</span>
+              </a>
+            }
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="no-evidencias">
+        <mat-icon>attach_file</mat-icon>
+        <span>Sin evidencias adjuntas</span>
+      </div>
+    }
+
+  </div>
+
+  <!-- Footer -->
+  <div class="detail-footer">
+    <button mat-stroked-button (click)="dialogRef.close()">Cerrar</button>
+  </div>
+
+</div>
