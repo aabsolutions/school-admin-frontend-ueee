@@ -662,6 +662,30 @@
       "submenu": []
     },
     {
+      "path": "/student/mi-expediente",
+      "title": "Mi Expediente Disciplinario",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_special",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/mi-dece",
+      "title": "Mi Atención DECE",
+      "iconType": "material-icons-outlined",
+      "icon": "psychology",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
       "path": "/student/settings",
       "title": "MENUITEMS.STUDENT-PORTAL.LIST.SETTINGS",
       "iconType": "material-icons-outlined",
