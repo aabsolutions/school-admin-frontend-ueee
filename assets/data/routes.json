@@ -280,6 +280,30 @@
           "submenu": []
         },
         {
+          "path": "/admin/materias/all-materias",
+          "title": "Materias",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/carga-horaria",
+          "title": "Carga Horaria",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
           "path": "/admin/curso-lectivo/all",
           "title": "Cursos Lectivos",
           "iconType": "",
