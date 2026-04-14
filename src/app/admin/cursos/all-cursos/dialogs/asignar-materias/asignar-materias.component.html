@@ -1,0 +1,62 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">Materias — {{ curso.nivel }} {{ curso.especialidad }} {{ curso.paralelo }}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Close dialog" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    @if (isLoading) {
+      <div class="d-flex justify-content-center align-items-center p-4">
+        <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else {
+      <!-- Buscador -->
+      <div class="mx-4 mt-3 mb-2">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Buscar materia</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Ej: Matemáticas">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Contador -->
+      <div class="mx-4 mb-2 text-muted" style="font-size: 13px;">
+        {{ selectedIds.size }} materia(s) seleccionada(s) de {{ allMaterias.length }}
+      </div>
+
+      <!-- Lista de materias -->
+      <div class="materia-list mx-4" style="max-height: 360px; overflow-y: auto;">
+        @if (filteredMaterias.length === 0) {
+          <p class="text-center text-muted py-3">No se encontraron materias</p>
+        }
+        @for (materia of filteredMaterias; track materia.id) {
+          <div class="materia-item d-flex align-items-center py-2 px-2"
+               style="border-bottom: 1px solid #f0f0f0; cursor: pointer;"
+               (click)="toggle(materia)">
+            <mat-checkbox [checked]="isSelected(materia)" color="primary"
+              (click)="$event.stopPropagation()" (change)="toggle(materia)">
+            </mat-checkbox>
+            <div class="ms-2">
+              <div style="font-weight: 500;">{{ materia.nombre }}</div>
+              @if (materia.codigo) {
+                <div style="font-size: 12px; color: #888;">{{ materia.codigo }}</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Acciones -->
+      <div class="d-flex justify-content-end gap-2 mx-4 mt-3 mb-2">
+        <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">Cancelar</button>
+        <button mat-flat-button class="formSubmitBtn" [disabled]="isSaving" (click)="save()">
+          @if (isSaving) { Guardando... } @else { Guardar }
+        </button>
+      </div>
+    }
+  </div>
+</div>

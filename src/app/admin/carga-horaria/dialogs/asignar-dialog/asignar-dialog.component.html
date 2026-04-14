@@ -1,0 +1,79 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle" style="font-size: 15px; line-height: 1.4;">
+        <strong>{{ data.docenteName }}</strong>
+        <div style="font-size: 12px; color: #888; margin-top: 2px;">
+          {{ data.cursoDisplay }} · {{ data.academicYear }}
+        </div>
+      </div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content style="min-height: 200px;">
+    @if (isLoading) {
+      <div class="d-flex justify-content-center align-items-center p-5">
+        <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else if (disponibles.length === 0) {
+      <div class="text-center p-4 text-muted">
+        <mat-icon style="font-size:40px; width:40px; height:40px; opacity:.4;">menu_book</mat-icon>
+        <p class="mt-2">No hay materias disponibles para asignar.<br>
+          Todas las materias del curso están asignadas a otros docentes,<br>
+          o el curso no tiene materias configuradas.
+        </p>
+      </div>
+    } @else {
+      <!-- Buscador -->
+      <div class="mx-4 mt-3 mb-1">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Buscar materia</mat-label>
+          <input matInput [(ngModel)]="searchTerm" placeholder="Nombre o código">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Contador -->
+      <div class="mx-4 mb-2" style="font-size: 12px; color: #666;">
+        {{ selectedIds.size }} seleccionada(s) · {{ disponibles.length }} disponible(s)
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Lista -->
+      <div style="max-height: 340px; overflow-y: auto;">
+        @if (filtered.length === 0) {
+          <p class="text-center text-muted py-3">Sin resultados</p>
+        }
+        @for (m of filtered; track m._id) {
+          <div class="d-flex align-items-center px-4 py-2"
+               style="cursor: pointer; border-bottom: 1px solid #f0f0f0;"
+               (click)="toggle(m)">
+            <mat-checkbox [checked]="isSelected(m)" color="primary"
+              (click)="$event.stopPropagation()" (change)="toggle(m)">
+            </mat-checkbox>
+            <div class="ms-2">
+              <div style="font-weight: 500;">{{ m.nombre }}</div>
+              @if (m.codigo) {
+                <div style="font-size: 11px; color: #999;">{{ m.codigo }}</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Acciones -->
+  <div class="d-flex justify-content-end gap-2 px-4 py-3" style="border-top: 1px solid #eee;">
+    <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">Cancelar</button>
+    @if (disponibles.length > 0) {
+      <button mat-flat-button class="formSubmitBtn" [disabled]="isSaving" (click)="save()">
+        {{ isSaving ? 'Guardando...' : 'Guardar asignación' }}
+      </button>
+    }
+  </div>
+</div>

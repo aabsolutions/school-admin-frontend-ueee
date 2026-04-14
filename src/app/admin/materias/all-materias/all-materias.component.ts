@@ -6,12 +6,11 @@ import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarVerticalPosition
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
-import { CursoFormComponent } from './dialogs/form-dialog/form-dialog.component';
-import { CursoDeleteComponent } from './dialogs/delete/delete.component';
-import { AsignarMateriasComponent } from './dialogs/asignar-materias/asignar-materias.component';
+import { MateriaFormComponent } from './dialogs/form-dialog/form-dialog.component';
+import { MateriaDeleteComponent } from './dialogs/delete/delete.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
-import { CursosService } from './cursos.service';
-import { Curso } from './curso.model';
+import { MateriasService } from './materias.service';
+import { Materia } from './materia.model';
 import { rowsAnimation, TableExportUtil } from '@shared';
 import { CommonModule, NgClass } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -31,9 +30,9 @@ import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.co
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
 
 @Component({
-  selector: 'app-all-cursos',
-  templateUrl: './all-cursos.component.html',
-  styleUrls: ['./all-cursos.component.scss'],
+  selector: 'app-all-materias',
+  templateUrl: './all-materias.component.html',
+  styleUrls: ['./all-materias.component.scss'],
   animations: [rowsAnimation],
   imports: [
     BreadcrumbComponent, FeatherIconsComponent, CommonModule, MatCardModule,
@@ -44,20 +43,18 @@ import { TableShowHideColumnComponent } from '@shared/components/table-show-hide
     MatPaginatorModule, TableShowHideColumnComponent,
   ],
 })
-export class AllCursosComponent implements OnInit, OnDestroy {
+export class AllMateriasComponent implements OnInit, OnDestroy {
   columnDefinitions = [
-    { def: 'select',       label: 'Checkbox',     type: 'check',     visible: true },
-    { def: 'nivel',        label: 'Nivel',         type: 'text',      visible: true },
-    { def: 'especialidad', label: 'Especialidad',  type: 'text',      visible: true },
-    { def: 'paralelo',     label: 'Paralelo',      type: 'text',      visible: true },
-    { def: 'jornada',      label: 'Jornada',       type: 'text',      visible: true },
-    { def: 'subnivel',     label: 'Subnivel',      type: 'text',      visible: true },
-    { def: 'status',       label: 'Estado',        type: 'text',      visible: true },
-    { def: 'actions',      label: 'Acciones',      type: 'actionBtn', visible: true },
+    { def: 'select',      label: 'Checkbox',     type: 'check',     visible: true },
+    { def: 'nombre',      label: 'Nombre',        type: 'text',      visible: true },
+    { def: 'codigo',      label: 'Código',        type: 'text',      visible: true },
+    { def: 'descripcion', label: 'Descripción',   type: 'text',      visible: true },
+    { def: 'status',      label: 'Estado',        type: 'text',      visible: true },
+    { def: 'actions',     label: 'Acciones',      type: 'actionBtn', visible: true },
   ];
 
-  dataSource = new MatTableDataSource<Curso>([]);
-  selection = new SelectionModel<Curso>(true, []);
+  dataSource = new MatTableDataSource<Materia>([]);
+  selection = new SelectionModel<Materia>(true, []);
   contextMenuPosition = { x: '0px', y: '0px' };
   isLoading = true;
   private destroy$ = new Subject<void>();
@@ -67,11 +64,11 @@ export class AllCursosComponent implements OnInit, OnDestroy {
   @ViewChild('filter') filter!: ElementRef;
   @ViewChild(MatMenuTrigger) contextMenu?: MatMenuTrigger;
 
-  breadscrums = [{ title: 'Cursos', items: ['Oferta Educativa'], active: 'Cursos' }];
+  breadscrums = [{ title: 'Materias', items: ['Oferta Educativa'], active: 'Materias' }];
 
   constructor(
     public dialog: MatDialog,
-    public cursosService: CursosService,
+    public materiasService: MateriasService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -85,12 +82,12 @@ export class AllCursosComponent implements OnInit, OnDestroy {
   }
 
   loadData() {
-    this.cursosService.getAll().subscribe({
+    this.materiasService.getAll().subscribe({
       next: (data) => {
         this.dataSource.data = data;
         this.isLoading = false;
         this.refreshTable();
-        this.dataSource.filterPredicate = (row: Curso, filter: string) =>
+        this.dataSource.filterPredicate = (row: Materia, filter: string) =>
           Object.values(row).some(v => v != null && v.toString().toLowerCase().includes(filter));
       },
       error: (err) => console.error(err),
@@ -108,13 +105,13 @@ export class AllCursosComponent implements OnInit, OnDestroy {
   }
 
   addNew() { this.openDialog('add'); }
-  editCall(row: Curso) { this.openDialog('edit', row); }
+  editCall(row: Materia) { this.openDialog('edit', row); }
 
-  openDialog(action: 'add' | 'edit', data?: Curso) {
+  openDialog(action: 'add' | 'edit', data?: Materia) {
     const varDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
-    const dialogRef = this.dialog.open(CursoFormComponent, {
+    const dialogRef = this.dialog.open(MateriaFormComponent, {
       width: '50vw', maxWidth: '100vw',
-      data: { curso: data, action },
+      data: { materia: data, action },
       direction: varDirection, autoFocus: false,
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -127,14 +124,14 @@ export class AllCursosComponent implements OnInit, OnDestroy {
         this.refreshTable();
         this.showNotification(
           action === 'add' ? 'snackbar-success' : 'black',
-          `Registro ${action === 'add' ? 'agregado' : 'actualizado'} correctamente`,
+          `Materia ${action === 'add' ? 'agregada' : 'actualizada'} correctamente`,
           'bottom', 'center'
         );
       }
     });
   }
 
-  private updateRecord(updated: Curso) {
+  private updateRecord(updated: Materia) {
     const idx = this.dataSource.data.findIndex(r => r.id === updated.id);
     if (idx !== -1) {
       this.dataSource.data[idx] = updated;
@@ -142,37 +139,22 @@ export class AllCursosComponent implements OnInit, OnDestroy {
     }
   }
 
-  asignarMaterias(row: Curso) {
-    const varDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
-    const dialogRef = this.dialog.open(AsignarMateriasComponent, {
-      width: '55vw', maxWidth: '700px',
-      data: { curso: row },
-      direction: varDirection, autoFocus: false,
-    });
-    dialogRef.afterClosed().subscribe((saved) => {
-      if (saved) {
-        this.showNotification('snackbar-success', 'Materias actualizadas correctamente', 'bottom', 'center');
-      }
-    });
-  }
-
-  deleteItem(row: Curso) {
-    const dialogRef = this.dialog.open(CursoDeleteComponent, { data: row });
+  deleteItem(row: Materia) {
+    const dialogRef = this.dialog.open(MateriaDeleteComponent, { data: row });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.dataSource.data = this.dataSource.data.filter(r => r.id !== row.id);
         this.refreshTable();
-        this.showNotification('snackbar-danger', 'Registro eliminado', 'bottom', 'center');
+        this.showNotification('snackbar-danger', 'Materia eliminada', 'bottom', 'center');
       }
     });
   }
 
   exportExcel() {
     const exportData = this.dataSource.filteredData.map(x => ({
-      Nivel: x.nivel, Especialidad: x.especialidad, Paralelo: x.paralelo,
-      Jornada: x.jornada, Subnivel: x.subnivel, Estado: x.status,
+      Nombre: x.nombre, Código: x.codigo, Descripción: x.descripcion, Estado: x.status,
     }));
-    TableExportUtil.exportToExcel(exportData, 'cursos_export');
+    TableExportUtil.exportToExcel(exportData, 'materias_export');
   }
 
   showNotification(colorName: string, text: string,
@@ -187,7 +169,7 @@ export class AllCursosComponent implements OnInit, OnDestroy {
       : this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  onContextMenu(event: MouseEvent, item: Curso) {
+  onContextMenu(event: MouseEvent, item: Materia) {
     event.preventDefault();
     this.contextMenuPosition = { x: `${event.clientX}px`, y: `${event.clientY}px` };
     if (this.contextMenu) {

@@ -39,6 +39,16 @@ export const ADMIN_ROUTE: Route[] = [
       import('./cursos/cursos.routes').then((m) => m.CURSOS_ROUTE),
   },
   {
+    path: 'materias',
+    loadChildren: () =>
+      import('./materias/materias.routes').then((m) => m.MATERIAS_ROUTE),
+  },
+  {
+    path: 'carga-horaria',
+    loadChildren: () =>
+      import('./carga-horaria/carga-horaria.routes').then((m) => m.CARGA_HORARIA_ROUTE),
+  },
+  {
     path: 'curso-lectivo',
     loadChildren: () =>
       import('./curso-lectivo/curso-lectivo.routes').then((m) => m.CURSO_LECTIVO_ROUTE),

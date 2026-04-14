@@ -11,7 +11,7 @@
           <div class="materialTableHeader">
             <div class="left">
               <ul class="header-buttons-left ms-0">
-                <li class="tbl-title"><h2>Cursos</h2></li>
+                <li class="tbl-title"><h2>Materias</h2></li>
                 <li class="tbl-search-box">
                   <label for="search-input"><i class="material-icons search-icon">search</i></label>
                   <input id="search-input" placeholder="Buscar..." type="text" #filter (keyup)="applyFilter($event)"
@@ -68,13 +68,10 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell class="pr-0" *matHeaderCellDef>Acciones</mat-header-cell>
                   <mat-cell *matCellDef="let row" class="pr-0">
-                    <button mat-icon-button color="accent" (click)="$event.stopPropagation(); editCall(row)" class="tbl-action-btn" matTooltip="Editar curso">
+                    <button mat-icon-button color="accent" (click)="$event.stopPropagation(); editCall(row)" class="tbl-action-btn">
                       <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                     </button>
-                    <button mat-icon-button color="primary" (click)="$event.stopPropagation(); asignarMaterias(row)" class="tbl-action-btn" matTooltip="Asignar materias">
-                      <app-feather-icons [icon]="'book'" [class]="'tbl-fav-edit'"></app-feather-icons>
-                    </button>
-                    <button mat-icon-button color="accent" (click)="$event.stopPropagation(); deleteItem(row)" class="tbl-action-btn" matTooltip="Eliminar curso">
+                    <button mat-icon-button color="accent" (click)="$event.stopPropagation(); deleteItem(row)" class="tbl-action-btn">
                       <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
                     </button>
                   </mat-cell>
@@ -96,7 +93,6 @@
                 <ng-template matMenuContent let-item="item">
                   <button mat-menu-item (click)="addNew()"><mat-icon>add_box</mat-icon><span>Agregar</span></button>
                   <button mat-menu-item (click)="editCall(item)"><mat-icon>create</mat-icon><span>Editar</span></button>
-                  <button mat-menu-item (click)="asignarMaterias(item)"><mat-icon>menu_book</mat-icon><span>Asignar Materias</span></button>
                   <button mat-menu-item (click)="deleteItem(item)"><mat-icon>delete</mat-icon><span>Eliminar</span></button>
                   <button mat-menu-item (click)="refresh()"><mat-icon>refresh</mat-icon><span>Refrescar</span></button>
                 </ng-template>
