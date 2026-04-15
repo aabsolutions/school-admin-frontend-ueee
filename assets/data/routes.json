@@ -417,41 +417,28 @@
       "submenu": []
     },
     {
-      "path": "",
-      "title": "MENUITEMS.DEPARTMENTS.TEXT",
+      "path": "/admin/area-estudio/all",
+      "title": "Áreas de Estudio",
       "iconType": "material-icons-outlined",
       "icon": "account_tree",
-      "class": "menu-toggle",
+      "class": "",
       "groupTitle": false,
       "badge": "",
       "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN"],
-      "submenu": [
-        {
-          "path": "/admin/departments/all-departments",
-          "title": "MENUITEMS.DEPARTMENTS.LIST.ALL-DEPARTMENTS",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": [""],
-          "submenu": []
-        },
-        {
-          "path": "/admin/departments/add-department",
-          "title": "MENUITEMS.DEPARTMENTS.LIST.ADD-DEPARTMENT",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": [""],
-          "submenu": []
-        }
-      ]
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/institucion",
+      "title": "Configuración Institucional",
+      "iconType": "material-icons-outlined",
+      "icon": "business",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
     },
 
     {
@@ -529,42 +516,6 @@
       "submenu": []
     },
     {
-      "path": "/teacher/lectures",
-      "title": "MENUITEMS.TEACHER-PORTAL.LIST.LECTURES",
-      "iconType": "material-icons-outlined",
-      "icon": "cast_for_education",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["TEACHER"],
-      "submenu": []
-    },
-    {
-      "path": "/teacher/exam-schedule",
-      "title": "MENUITEMS.TEACHER-PORTAL.LIST.EXAM-SCHEDULE",
-      "iconType": "material-icons-outlined",
-      "icon": "event_note",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["TEACHER"],
-      "submenu": []
-    },
-    {
-      "path": "/teacher/leave-request",
-      "title": "MENUITEMS.TEACHER-PORTAL.LIST.LEAVE-REQUEST",
-      "iconType": "material-icons-outlined",
-      "icon": "time_to_leave",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["TEACHER"],
-      "submenu": []
-    },
-    {
       "path": "/teacher/ficha-medica",
       "title": "Ficha Médica y Familiar",
       "iconType": "material-icons-outlined",
@@ -581,6 +532,30 @@
       "title": "Mis Documentos",
       "iconType": "material-icons-outlined",
       "icon": "folder_open",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/mi-carga-horaria",
+      "title": "Mi Carga Horaria",
+      "iconType": "material-icons-outlined",
+      "icon": "schedule",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/mis-fotos",
+      "title": "Mis Fotos",
+      "iconType": "material-icons-outlined",
+      "icon": "photo_camera",
       "class": "",
       "groupTitle": false,
       "badge": "",
@@ -618,42 +593,6 @@
       "title": "MENUITEMS.STUDENT-PORTAL.LIST.DASHBOARD",
       "iconType": "material-icons-outlined",
       "icon": "space_dashboard",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["STUDENT"],
-      "submenu": []
-    },
-    {
-      "path": "/student/homework",
-      "title": "MENUITEMS.STUDENT-PORTAL.LIST.HOMEWORK",
-      "iconType": "material-icons-outlined",
-      "icon": "book",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["STUDENT"],
-      "submenu": []
-    },
-    {
-      "path": "/student/timetable",
-      "title": "MENUITEMS.STUDENT-PORTAL.LIST.TIMETABLE",
-      "iconType": "material-icons-outlined",
-      "icon": "table_view",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["STUDENT"],
-      "submenu": []
-    },
-    {
-      "path": "/student/leave-request",
-      "title": "MENUITEMS.STUDENT-PORTAL.LIST.LEAVE-REQUEST",
-      "iconType": "material-icons-outlined",
-      "icon": "time_to_leave",
       "class": "",
       "groupTitle": false,
       "badge": "",
@@ -702,6 +641,30 @@
       "title": "Mi Atención DECE",
       "iconType": "material-icons-outlined",
       "icon": "psychology",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/mis-materias",
+      "title": "Mis Materias",
+      "iconType": "material-icons-outlined",
+      "icon": "menu_book",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/mis-fotos",
+      "title": "Mis Fotos",
+      "iconType": "material-icons-outlined",
+      "icon": "photo_camera",
       "class": "",
       "groupTitle": false,
       "badge": "",

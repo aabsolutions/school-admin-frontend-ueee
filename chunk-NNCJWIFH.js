@@ -1,0 +1,1 @@
+var t=class{constructor(s){this.id=s.id||this.getRandomID(),this.nombre=s.nombre||"",this.codigo=s.codigo||"",this.descripcion=s.descripcion||"",this.horas=s.horas??0,this.status=s.status||"active"}getRandomID(){let s=()=>(1+Math.random())*65536|0;return s()+s()}};export{t as a};
