@@ -29,10 +29,11 @@
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                   <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Department</mat-label>
-                    <mat-select formControlName="departmentId">
-                      @for (dept of departments; track dept.id) {
-                        <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+                    <mat-label>Área de Estudio</mat-label>
+                    <mat-select formControlName="areaEstudioId">
+                      <mat-option value="">— Sin asignar —</mat-option>
+                      @for (area of areasEstudio; track area.id) {
+                        <mat-option [value]="area.id">{{ area.nombre }}</mat-option>
                       }
                     </mat-select>
                   </mat-form-field>

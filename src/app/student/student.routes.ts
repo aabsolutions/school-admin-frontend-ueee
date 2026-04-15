@@ -9,6 +9,8 @@ import { FichaMedicaStudentComponent } from './ficha-medica/ficha-medica.compone
 import { GestionDocumentalStudentComponent } from './gestion-documental/gestion-documental-student.component';
 import { MiExpedienteComponent } from './mi-expediente/mi-expediente.component';
 import { MiDeceComponent } from './mi-dece/mi-dece.component';
+import { MisMateriasComponent } from './mis-materias/mis-materias.component';
+import { MisFotosStudentComponent } from './mis-fotos/mis-fotos.component';
 
 export const STUDENT_ROUTE: Route[] = [
   {
@@ -42,6 +44,14 @@ export const STUDENT_ROUTE: Route[] = [
   {
     path: 'mi-dece',
     component: MiDeceComponent,
+  },
+  {
+    path: 'mis-materias',
+    component: MisMateriasComponent,
+  },
+  {
+    path: 'mis-fotos',
+    component: MisFotosStudentComponent,
   },
   {
     path: 'settings',

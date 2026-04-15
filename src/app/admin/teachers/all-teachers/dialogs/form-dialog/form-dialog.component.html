@@ -1,9 +1,13 @@
 <div class="addContainer">
   <div class="modalHeader">
     <div class="avatarDetails">
-      <label class="hoverable" for="tableFileInput">
-        <img [src]='teachers.img' alt="avatar">
-      </label>
+      <div class="teacher-id-photo-frame">
+        <img [src]="teachers.img || 'assets/images/user/user1.jpg'"
+             alt="Foto credencial del docente" class="teacher-credential-photo">
+        <div class="photo-badge-overlay">
+          <mat-icon>badge</mat-icon>
+        </div>
+      </div>
       <div class="modalTitle">{{dialogTitle}}</div>
     </div>
     <button mat-icon-button mat-dialog-close class="modal-close-button" aria-label="Close dialog" type="button">
@@ -27,10 +31,11 @@
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width mb-3" appearance="outline">
-            <mat-label>Department</mat-label>
-            <mat-select formControlName="departmentId">
-              @for (dept of departments; track dept.id) {
-                <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
+            <mat-label>Área de Estudio</mat-label>
+            <mat-select formControlName="areaEstudioId">
+              <mat-option value="">— Sin asignar —</mat-option>
+              @for (area of areasEstudio; track area.id) {
+                <mat-option [value]="area.id">{{ area.nombre }}</mat-option>
               }
             </mat-select>
           </mat-form-field>

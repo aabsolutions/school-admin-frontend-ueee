@@ -46,27 +46,34 @@
       @if (students.length > 0) {
         <div class="student-list">
           @for (s of students; track s.id) {
-            <div class="student-row" (click)="selectStudent(s)" matTooltip="Crear / abrir expediente">
-              <div class="student-avatar">
+            <div class="student-card-row" (click)="selectStudent(s)" matTooltip="Crear / abrir expediente">
+              <div class="student-credential-photo">
                 @if (s.img) {
-                  <img [src]="s.img" [alt]="s.name" class="avatar-img">
+                  <img [src]="s.img" [alt]="s.name" class="credential-img">
                 } @else {
-                  <div class="avatar-placeholder">
+                  <div class="credential-placeholder">
                     <mat-icon>person</mat-icon>
                   </div>
                 }
               </div>
               <div class="student-data">
                 <span class="student-name">{{ s.name }}</span>
-                <span class="student-meta">
-                  <mat-icon class="tiny-icon">badge</mat-icon> {{ s.dni }}
-                  &nbsp;·&nbsp;
-                  <mat-icon class="tiny-icon">email</mat-icon> {{ s.email }}
-                </span>
+                <div class="student-meta-rows">
+                  <span class="meta-item">
+                    <mat-icon class="tiny-icon">badge</mat-icon> {{ s.dni }}
+                  </span>
+                  <span class="meta-item">
+                    <mat-icon class="tiny-icon">email</mat-icon> {{ s.email }}
+                  </span>
+                  @if (s.gender) {
+                    <span class="meta-item">
+                      <mat-icon class="tiny-icon">wc</mat-icon> {{ s.gender }}
+                    </span>
+                  }
+                </div>
               </div>
               <mat-icon class="select-arrow">chevron_right</mat-icon>
             </div>
-            <mat-divider></mat-divider>
           }
         </div>
       }

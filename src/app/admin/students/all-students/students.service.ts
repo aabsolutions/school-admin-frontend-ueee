@@ -42,6 +42,9 @@ export class StudentsService {
       fatherMobile: raw.fatherMobile ?? '',
       motherName: raw.motherName ?? '',
       motherMobile: raw.motherMobile ?? '',
+      imgCuerpoEntero: raw.imgCuerpoEntero ?? '',
+      peso: raw.peso ?? 0,
+      talla: raw.talla ?? 0,
     };
   }
 

@@ -40,6 +40,7 @@ export class MateriaFormComponent {
       nombre:      [this.materia.nombre, [Validators.required]],
       codigo:      [this.materia.codigo],
       descripcion: [this.materia.descripcion],
+      horas:       [this.materia.horas ?? 0, [Validators.min(0)]],
       status:      [this.materia.status || 'active'],
     });
   }

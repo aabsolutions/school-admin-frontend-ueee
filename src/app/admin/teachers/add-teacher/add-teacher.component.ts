@@ -41,7 +41,7 @@ import { environment } from '@environments/environment';
 export class AddTeacherComponent {
   proForm: UntypedFormGroup;
   isSaving = false;
-  departments: { id: string; name: string }[] = [];
+  areasEstudio: { id: string; nombre: string }[] = [];
 
   readonly salarialCategories = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -62,7 +62,7 @@ export class AddTeacherComponent {
       dni:               [''],
       gender:            [''],
       mobile:            [''],
-      departmentId:      [''],
+      areaEstudioId:     [''],
       laboralDependency: [''],
       salarialCategory:  [''],
       emergencyName:     [''],
@@ -76,12 +76,13 @@ export class AddTeacherComponent {
     });
 
     this.http
-      .get<{ data: any[] }>(`${environment.apiUrl}/departments`)
+      .get<any>(`${environment.apiUrl}/area-estudio`)
       .subscribe({
         next: (r) => {
-          this.departments = r.data.map((d) => ({
-            id: d._id ?? d.id,
-            name: d.departmentName ?? d.department_name,
+          const list = r.data?.data ?? r.data ?? r;
+          this.areasEstudio = list.map((a: any) => ({
+            id: a._id ?? a.id,
+            nombre: a.nombre,
           }));
         },
       });

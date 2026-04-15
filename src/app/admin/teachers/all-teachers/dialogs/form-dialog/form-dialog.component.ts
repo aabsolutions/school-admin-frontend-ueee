@@ -58,7 +58,7 @@ export class TeachersFormComponent implements OnInit {
   dialogTitle: string;
   teacherForm: UntypedFormGroup;
   teachers: Teachers;
-  departments: { id: string; name: string }[] = [];
+  areasEstudio: { id: string; nombre: string }[] = [];
 
   readonly salarialCategories = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
@@ -78,11 +78,12 @@ export class TeachersFormComponent implements OnInit {
 
   ngOnInit() {
     this.http
-      .get<{ data: any[] }>(`${environment.apiUrl}/departments`)
+      .get<any>(`${environment.apiUrl}/area-estudio`)
       .subscribe({ next: (r) => {
-        this.departments = r.data.map((d) => ({
-          id: d._id ?? d.id,
-          name: d.departmentName ?? d.department_name,
+        const list = r.data?.data ?? r.data ?? r;
+        this.areasEstudio = list.map((a: any) => ({
+          id: a._id ?? a.id,
+          nombre: a.nombre,
         }));
       }});
   }
@@ -102,8 +103,7 @@ export class TeachersFormComponent implements OnInit {
       dni:                   [this.teachers.dni, [Validators.required]],
       gender:                [this.teachers.gender],
       mobile:                [this.teachers.mobile],
-      departmentId:          [this.teachers.departmentId],
-      department:            [this.teachers.department],
+      areaEstudioId:         [this.teachers.areaEstudioId],
       laboralDependency:     [this.teachers.laboralDependency],
       salarialCategory:      [this.teachers.salarialCategory],
       emergencyName:         [this.teachers.emergencyName],

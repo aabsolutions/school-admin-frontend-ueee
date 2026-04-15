@@ -8,6 +8,8 @@ import { SettingsComponent } from './settings/settings.component';
 import { ListaNominaTeacherComponent } from './lista-nomina/lista-nomina.component';
 import { FichaMedicaTeacherComponent } from './ficha-medica/ficha-medica.component';
 import { GestionDocumentalTeacherComponent } from './gestion-documental/gestion-documental-teacher.component';
+import { MiCargaHorariaComponent } from './mi-carga-horaria/mi-carga-horaria.component';
+import { MisFotosTeacherComponent } from './mis-fotos/mis-fotos.component';
 
 export const TEACHER_ROUTE: Route[] = [
   {
@@ -41,6 +43,14 @@ export const TEACHER_ROUTE: Route[] = [
   {
     path: 'gestion-documental',
     component: GestionDocumentalTeacherComponent,
+  },
+  {
+    path: 'mi-carga-horaria',
+    component: MiCargaHorariaComponent,
+  },
+  {
+    path: 'mis-fotos',
+    component: MisFotosTeacherComponent,
   },
   { path: '**', component: Page404Component },
 ];

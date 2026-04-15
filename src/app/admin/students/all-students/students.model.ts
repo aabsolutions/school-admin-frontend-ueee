@@ -1,6 +1,9 @@
 export class Students {
   id: string | number;
   img: string;
+  imgCuerpoEntero: string;
+  peso: number;
+  talla: number;
   name: string;
   email: string;
   dni: string;
@@ -20,6 +23,9 @@ export class Students {
   constructor(students: Partial<Students>) {
     this.id = students.id || this.getRandomID();
     this.img = students.img || 'assets/images/user/user1.jpg';
+    this.imgCuerpoEntero = students.imgCuerpoEntero || '';
+    this.peso = students.peso || 0;
+    this.talla = students.talla || 0;
     this.name = students.name || '';
     this.email = students.email || '';
     this.dni = students.dni || '';

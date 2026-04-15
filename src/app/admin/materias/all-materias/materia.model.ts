@@ -3,6 +3,7 @@ export class Materia {
   nombre: string;
   codigo: string;
   descripcion: string;
+  horas: number;
   status: string;
 
   constructor(m: Partial<Materia>) {
@@ -10,6 +11,7 @@ export class Materia {
     this.nombre = m.nombre || '';
     this.codigo = m.codigo || '';
     this.descripcion = m.descripcion || '';
+    this.horas = m.horas ?? 0;
     this.status = m.status || 'active';
   }
 

@@ -1,0 +1,95 @@
+
+<section class="content">
+  <div class="content-block">
+        @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+  <div class="row">
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <div class="row align-items-center">
+              @if (loading) {
+                <div class="text-center py-5">
+                  <mat-spinner diameter="48" class="mx-auto" />
+                </div>
+              }
+
+              @if (!loading && grupos.length === 0) {
+                <mat-card class="p-4 text-center text-muted">
+                  <mat-icon class="mb-2" style="font-size:48px;height:48px;width:48px;color:#ccc">schedule</mat-icon>
+                  <p class="mb-0">No tenés materias asignadas aún.</p>
+                </mat-card>
+              }
+
+              @for (grupo of grupos; track grupo.cursoLectivo._id) {
+                <mat-card class="mb-4">
+                  <mat-card-header>
+                    <mat-card-title>
+                      <mat-icon class="me-2 align-middle" style="color:#5c6bc0">class</mat-icon>
+                      {{ getCursoLabel(grupo) }}
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                      <mat-chip-set>
+                        <mat-chip [style.background-color]="grupo.cursoLectivo.status === 'active' ? '#e8f5e9' : '#fce4ec'"
+                                  [style.color]="grupo.cursoLectivo.status === 'active' ? '#2e7d32' : '#c62828'">
+                          {{ grupo.cursoLectivo.status === 'active' ? 'Activo' : grupo.cursoLectivo.status }}
+                        </mat-chip>
+                      </mat-chip-set>
+                    </mat-card-subtitle>
+                  </mat-card-header>
+
+                  <mat-card-content>
+                    <table mat-table [dataSource]="grupo.materias" class="w-100">
+
+                      <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef>Materia</th>
+                        <td mat-cell *matCellDef="let m">{{ m.nombre }}</td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="codigo">
+                        <th mat-header-cell *matHeaderCellDef>Código</th>
+                        <td mat-cell *matCellDef="let m">
+                          <span class="badge bg-secondary">{{ m.codigo || '—' }}</span>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="horas">
+                        <th mat-header-cell *matHeaderCellDef class="text-end">Horas</th>
+                        <td mat-cell *matCellDef="let m" class="text-end">
+                          <strong>{{ m.horas ?? 0 }}</strong>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                      <!-- Footer: total horas -->
+                      <ng-container matColumnDef="totalLabel">
+                        <td mat-footer-cell *matFooterCellDef colspan="2" class="fw-bold text-end pe-3">
+                          Total de horas semanales:
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="totalValue">
+                        <td mat-footer-cell *matFooterCellDef class="text-end fw-bold" style="color:#5c6bc0;font-size:1.1rem">
+                          {{ grupo.totalHoras }}
+                        </td>
+                      </ng-container>
+                      <tr mat-footer-row *matFooterRowDef="['totalLabel', 'totalValue']"
+                          style="background:#f5f5f5;border-top:2px solid #5c6bc0"></tr>
+                    </table>
+                  </mat-card-content>
+                </mat-card>
+              }
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

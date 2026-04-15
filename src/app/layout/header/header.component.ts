@@ -17,6 +17,7 @@ import {
   Role,
   AuthService,
 } from '@core';
+import { ProfilePhotoService } from '@core/service/profile-photo.service';
 import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-icons.component';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { MatMenuModule } from '@angular/material/menu';
@@ -72,7 +73,8 @@ export class HeaderComponent
     private configService: ConfigService,
     private authService: AuthService,
     private router: Router,
-    public languageService: LanguageService
+    public languageService: LanguageService,
+    public profilePhotoService: ProfilePhotoService
   ) {
     super();
   }
@@ -137,8 +139,13 @@ export class HeaderComponent
 
     const currentUser = this.authService.currentUserValue;
     const userRole = currentUser.roles?.[0]?.name;
-    this.userImg = './assets/images/user/' + currentUser.avatar;
     this.userName = currentUser.name || currentUser['username'] || 'User';
+
+    // Carga foto real del perfil (Cloudinary para teacher/student, estática para admin)
+    this.profilePhotoService.load();
+    this.subs.sink = this.profilePhotoService.photo.subscribe(
+      (url) => (this.userImg = url)
+    );
     this.docElement = document.documentElement;
 
     if (userRole === Role.Admin) {

@@ -1,5 +1,5 @@
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
 import { EnrollmentService } from '../../enrollment.service';
@@ -20,11 +20,12 @@ export interface DialogData { id: number; action: string; enrollment: Enrollment
 @Component({
   selector: 'app-enrollment-form',
   templateUrl: './form-dialog.component.html',
+  styleUrls: ['./form-dialog.component.scss'],
   imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogContent, FormsModule,
     ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSelectModule,
     MatOptionModule, MatAutocompleteModule, MatDialogClose],
 })
-export class EnrollmentFormComponent implements OnInit {
+export class EnrollmentFormComponent {
   action: string;
   dialogTitle: string;
   enrollmentForm: UntypedFormGroup;
@@ -57,9 +58,7 @@ export class EnrollmentFormComponent implements OnInit {
       status:         [this.enrollment.status || 'enrolled'],
       notes:          [this.enrollment.notes],
     });
-  }
 
-  ngOnInit() {
     if (this.action === 'add') {
       this.http.get<any>(`${environment.apiUrl}/students?limit=500`).subscribe({
         next: r => {
@@ -79,13 +78,11 @@ export class EnrollmentFormComponent implements OnInit {
         }),
       });
 
-      // Filtrar lista a medida que el usuario tipea
       this.studentSearch.valueChanges.subscribe(val => {
         const term = (val ?? '').toLowerCase();
         this.filteredStudents = term
           ? this.allStudents.filter(s => s.label.toLowerCase().includes(term))
           : this.allStudents;
-        // Si el usuario borra el texto, limpiar el id seleccionado
         if (!val) this.enrollmentForm.patchValue({ studentId: '' });
       });
     }

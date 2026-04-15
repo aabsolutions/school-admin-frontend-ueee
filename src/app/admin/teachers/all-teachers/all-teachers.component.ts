@@ -76,7 +76,7 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     { def: 'select', label: 'Checkbox', type: 'check', visible: true },
     { def: 'id', label: 'ID', type: 'text', visible: false },
     { def: 'name', label: 'Name', type: 'text', visible: true },
-    { def: 'department', label: 'Department', type: 'text', visible: true },
+    { def: 'areaEstudio', label: 'Área de Estudio', type: 'text', visible: true },
     { def: 'email', label: 'Email', type: 'email', visible: true },
     { def: 'dni', label: 'DNI', type: 'text', visible: true },
     { def: 'gender', label: 'Gender', type: 'text', visible: true },
@@ -143,6 +143,7 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     this.teachersService.getAllTeachers().subscribe({
       next: (data) => {
         this.dataSource.data = data;
+        console.debug(data);
         this.isLoading = false;
         this.refreshTable();
         this.dataSource.filterPredicate = (data: Teachers, filter: string) =>
@@ -259,7 +260,7 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
       DNI: x.dni,
       Gender: x.gender,
       Mobile: x.mobile,
-      Department: x.department,
+      'Área de Estudio': x.areaEstudio,
       'Dep. Laboral': x.laboralDependency,
       'Cat. Salarial': x.salarialCategory,
       'Contacto Emergencia': x.emergencyName,

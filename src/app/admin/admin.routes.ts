@@ -91,6 +91,16 @@ export const ADMIN_ROUTE: Route[] = [
       import('./users/users.routes').then((m) => m.USERS_ROUTE),
   },
   {
+    path: 'area-estudio',
+    loadChildren: () =>
+      import('./area-estudio/area-estudio.routes').then((m) => m.AREA_ESTUDIO_ROUTE),
+  },
+  {
+    path: 'institucion',
+    loadChildren: () =>
+      import('./institucion/institucion.routes').then((m) => m.INSTITUCION_ROUTE),
+  },
+  {
     path: 'account',
     loadComponent: () =>
       import('./account/account.component').then((m) => m.AccountComponent),

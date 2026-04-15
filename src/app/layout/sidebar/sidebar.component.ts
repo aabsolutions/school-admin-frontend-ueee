@@ -16,6 +16,7 @@ import {
   DOCUMENT
 } from '@angular/core';
 import { AuthService, Role } from '@core';
+import { ProfilePhotoService } from '@core/service/profile-photo.service';
 import { RouteInfo } from './sidebar.metadata';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -54,7 +55,8 @@ export class SidebarComponent
     public elementRef: ElementRef,
     private authService: AuthService,
     private router: Router,
-    private sidebarService: SidebarService
+    private sidebarService: SidebarService,
+    public profilePhotoService: ProfilePhotoService
   ) {
     super();
     this.elementRef.nativeElement.closest('body');
@@ -93,8 +95,12 @@ export class SidebarComponent
       const userRole = this.authService.currentUserValue.roles?.[0]?.name;
       this.currentUserRole = userRole ?? '';
       this.userFullName = this.authService.currentUserValue.name;
-      this.userImg =
-        './assets/images/user/' + this.authService.currentUserValue.avatar;
+
+      // Foto real del perfil — el service ya fue inicializado por el header,
+      // solo nos suscribimos para recibir actualizaciones.
+      this.subs.sink = this.profilePhotoService.photo.subscribe(
+        (url) => (this.userImg = url)
+      );
 
       this.subs.sink = this.sidebarService
         .getRouteInfo()

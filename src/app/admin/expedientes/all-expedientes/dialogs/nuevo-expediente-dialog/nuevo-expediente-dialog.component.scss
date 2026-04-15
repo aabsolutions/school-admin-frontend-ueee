@@ -12,45 +12,60 @@
 
 // Student list
 .student-list {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.student-row {
+.student-card-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all .2s;
+  background: #fff;
 
   &:hover {
-    background: #f5faff;
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.03);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+    transform: translateY(-1px);
 
-    .select-arrow { color: #1f91f3; }
+    .select-arrow { color: #6366f1; }
   }
 }
 
-.student-avatar { flex-shrink: 0; }
-
-.avatar-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid #e0e0e0;
+// Credential-style photo — 4:5 aspect ratio, like an ID
+.student-credential-photo {
+  flex-shrink: 0;
+  width: 68px;
+  height: 85px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  background: #f3f4f6;
 }
 
-.avatar-placeholder {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #e8e8e8;
+.credential-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.credential-placeholder {
+  width: 100%;
+  height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  mat-icon { color: #999; font-size: 22px; height: 22px; width: 22px; }
+  gap: 4px;
+  color: #d1d5db;
+  mat-icon { font-size: 32px; height: 32px; width: 32px; }
 }
 
 .student-data {
@@ -58,15 +73,30 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 .student-name {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  color: #111827;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.student-meta-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.meta-item {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .student-meta {

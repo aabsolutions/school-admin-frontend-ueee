@@ -1,6 +1,9 @@
 export class Teachers {
   id: string | number;
   img: string;
+  imgCuerpoEntero: string;
+  peso: number;
+  talla: number;
   name: string;
   email: string;
   dni: string;
@@ -8,6 +11,8 @@ export class Teachers {
   mobile: string;
   department: string;
   departmentId: string;
+  areaEstudio: string;
+  areaEstudioId: string;
   address: string;
   laboralDependency: string;
   salarialCategory: string;
@@ -22,6 +27,9 @@ export class Teachers {
   constructor(teachers: Partial<Teachers>) {
     this.id = teachers.id || this.getRandomID();
     this.img = teachers.img || 'assets/images/user/user1.jpg';
+    this.imgCuerpoEntero = teachers.imgCuerpoEntero || '';
+    this.peso = teachers.peso || 0;
+    this.talla = teachers.talla || 0;
     this.name = teachers.name || '';
     this.email = teachers.email || '';
     this.dni = teachers.dni || '';
@@ -29,6 +37,8 @@ export class Teachers {
     this.mobile = teachers.mobile || '';
     this.department = teachers.department || '';
     this.departmentId = teachers.departmentId || '';
+    this.areaEstudio = teachers.areaEstudio || '';
+    this.areaEstudioId = teachers.areaEstudioId || '';
     this.address = teachers.address || '';
     this.laboralDependency = teachers.laboralDependency || '';
     this.salarialCategory = teachers.salarialCategory || '';

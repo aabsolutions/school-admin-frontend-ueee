@@ -1,0 +1,195 @@
+
+<section class="content">
+  <div class="content-block">
+    @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+    @if (loading) {
+      <div class="text-center py-5">
+        <mat-spinner diameter="48" class="mx-auto" />
+      </div>
+    } @else {
+    <div class="row">
+      <form [formGroup]="form" (ngSubmit)="save()">
+
+      <!-- ── Datos generales ── -->
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2 align-middle">business</mat-icon>
+            Datos Generales
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-12 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Nombre de la Institución</mat-label>
+                <input matInput formControlName="nombre" placeholder="Ej: Unidad Educativa Nacional">
+              </mat-form-field>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-12 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Código AMIE</mat-label>
+                <input matInput formControlName="codigoAMIE" placeholder="Ej: 08H02345">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-6 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Provincia</mat-label>
+                <input matInput formControlName="provincia">
+              </mat-form-field>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-6 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Cantón</mat-label>
+                <input matInput formControlName="canton">
+              </mat-form-field>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-6 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Distrito</mat-label>
+                <input matInput formControlName="distrito">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Teléfono de Contacto</mat-label>
+                <input matInput formControlName="contacto">
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Email Institucional</mat-label>
+                <input matInput type="email" formControlName="email">
+                @if (form.get('email')?.hasError('email')) {
+                  <mat-error>Email inválido</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Dirección</mat-label>
+                <textarea matInput formControlName="direccion" rows="2"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ── Autoridad y Período ── -->
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2 align-middle">manage_accounts</mat-icon>
+            Autoridad y Período Lectivo
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-12 mb-3">
+              <!-- Buscador de docentes (autocomplete) -->
+              <mat-form-field class="w-100 mb-2" appearance="outline">
+                <mat-label>Buscar y seleccionar Autoridad</mat-label>
+                <input matInput [matAutocomplete]="autoDocente" [(ngModel)]="docenteSearch"
+                        [ngModelOptions]="{standalone: true}"
+                        (input)="searchDocentes(docenteSearch)"
+                        placeholder="Escribí el nombre del docente (mín. 2 caracteres)">
+                <mat-autocomplete #autoDocente="matAutocomplete" (optionSelected)="onDocenteSelected($event)">
+                  @for (d of docentes; track d.id) {
+                    <mat-option [value]="d.id">
+                      <span>{{ d.name }}</span>
+                      <small class="text-muted ms-2">{{ d.email }}</small>
+                    </mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+              @if (autoridadNombre) {
+                <div class="d-flex align-items-center gap-2 mt-1">
+                  <mat-icon style="color:#5c6bc0;font-size:18px;height:18px;width:18px">person</mat-icon>
+                  <span class="text-muted small">Seleccionado: <strong>{{ autoridadNombre }}</strong></span>
+                  <button mat-icon-button type="button" (click)="clearAutoridad()" matTooltip="Quitar">
+                    <mat-icon style="font-size:16px;height:16px;width:16px">close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+
+            <div class="col-xl-4 col-lg-4 col-md-12 mb-3">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Período Lectivo Funcional</mat-label>
+                <mat-select formControlName="periodoLectivoFuncional">
+                  <mat-option value="">— Sin seleccionar —</mat-option>
+                  @for (p of periodosOptions; track p) {
+                    <mat-option [value]="p">{{ p }}</mat-option>
+                  }
+                </mat-select>
+                <mat-hint>Período activo del sistema</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ── Logotipo ── -->
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2 align-middle">image</mat-icon>
+            Logotipo Institucional
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="d-flex align-items-center gap-4 flex-wrap">
+            @if (logoPreview) {
+              <img [src]="logoPreview" alt="Logo institucional"
+                    style="max-height:100px;max-width:200px;object-fit:contain;border:1px solid #e0e0e0;border-radius:4px;padding:4px;">
+            } @else {
+              <div class="d-flex align-items-center justify-content-center"
+                    style="height:100px;width:200px;border:1px dashed #bbb;border-radius:4px;color:#bbb">
+                <mat-icon style="font-size:48px;height:48px;width:48px">add_photo_alternate</mat-icon>
+              </div>
+            }
+            <div>
+              <input #logoInput type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                      style="display:none" (change)="onLogoChange($event)">
+              <button mat-stroked-button type="button" [disabled]="uploadingLogo" (click)="logoInput.click()">
+                @if (uploadingLogo) {
+                  <mat-spinner diameter="20" style="display:inline-block" />
+                } @else {
+                  <mat-icon>upload</mat-icon>
+                }
+                {{ uploadingLogo ? 'Subiendo...' : 'Subir logotipo' }}
+              </button>
+              <p class="text-muted small mt-2 mb-0">JPG, PNG, WEBP o SVG — máx. 5 MB</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ── Botón guardar ── -->
+      <div class="d-flex justify-content-end mb-4">
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving || form.invalid">
+          @if (saving) { <mat-spinner diameter="20" style="display:inline-block;margin-right:8px" /> }
+          {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+      </form>
+    </div>
+
+    }
+
+  </div>
+</section>

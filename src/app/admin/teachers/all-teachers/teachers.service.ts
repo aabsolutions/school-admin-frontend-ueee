@@ -26,11 +26,16 @@ export class TeachersService {
       subject_specialization: raw.subject_specialization ?? raw.subjectSpecialization ?? '',
       department: raw.department ?? raw.departmentId?.departmentName ?? '',
       departmentId: raw.departmentId?._id ?? raw.departmentId?.id ?? raw.departmentId ?? '',
+      areaEstudio: raw.areaEstudioId?.nombre ?? '',
+      areaEstudioId: raw.areaEstudioId?._id ?? raw.areaEstudioId?.id ?? raw.areaEstudioId ?? '',
       dni: raw.dni ?? '',
       laboralDependency: raw.laboralDependency ?? '',
       salarialCategory: raw.salarialCategory ?? '',
       emergencyName: raw.emergencyName ?? '',
       emergencyMobile: raw.emergencyMobile ?? '',
+      imgCuerpoEntero: raw.imgCuerpoEntero ?? '',
+      peso: raw.peso ?? 0,
+      talla: raw.talla ?? 0,
     };
   }
 
@@ -43,6 +48,7 @@ export class TeachersService {
       gender: teacher.gender,
       mobile: teacher.mobile,
       departmentId: teacher.departmentId || undefined,
+      areaEstudioId: teacher.areaEstudioId || undefined,
       address: teacher.address,
       laboralDependency: teacher.laboralDependency || undefined,
       salarialCategory: teacher.salarialCategory || undefined,

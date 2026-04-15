@@ -1,0 +1,129 @@
+<section class="content">
+  <div class="content-block">
+        @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+  <div class="row">
+      <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12">
+        <div class="card">
+          <div class="body">
+            <div class="row align-items-center">
+              <div class="mis-fotos-page">
+                @if (loading) {
+                  <div class="loading-state">
+                    <mat-spinner diameter="48" />
+                    <p>Cargando tu perfil...</p>
+                  </div>
+                }
+
+                @if (!loading) {
+                  <div class="fotos-grid">
+
+                    <!-- ── FOTO CREDENCIAL ── -->
+                    <div class="photo-card glass-card">
+                      <div class="card-header">
+                        <div class="card-badge credencial-badge">
+                          <mat-icon>badge</mat-icon>
+                        </div>
+                        <div class="card-info">
+                          <h3>Foto Credencial</h3>
+                          <p>Foto tipo ID · proporción 4:5</p>
+                        </div>
+                      </div>
+
+                      <div class="photo-frame credencial-frame">
+                        @if (uploadingCredencial) {
+                          <mat-progress-bar mode="indeterminate" class="upload-bar" />
+                        }
+                        <img [src]="credencialSrc" alt="Foto credencial" class="photo-display"
+                            [class.uploading]="uploadingCredencial">
+                        <div class="photo-overlay" (click)="openCropper('credencial')">
+                          <mat-icon>edit</mat-icon>
+                          <span>Cambiar foto</span>
+                        </div>
+                      </div>
+
+                      <div class="card-actions">
+                        <button mat-raised-button color="primary" [disabled]="uploadingCredencial"
+                                (click)="openCropper('credencial')">
+                          <mat-icon>photo_camera</mat-icon>
+                          {{ uploadingCredencial ? 'Subiendo...' : 'Actualizar foto' }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- ── FOTO CUERPO ENTERO ── -->
+                    <div class="photo-card glass-card">
+                      <div class="card-header">
+                        <div class="card-badge cuerpo-badge">
+                          <mat-icon>accessibility_new</mat-icon>
+                        </div>
+                        <div class="card-info">
+                          <h3>Foto de Cuerpo Entero</h3>
+                          <p>Foto completa · proporción 3:7</p>
+                        </div>
+                      </div>
+
+                      <div class="photo-frame cuerpo-frame">
+                        @if (uploadingCuerpo) {
+                          <mat-progress-bar mode="indeterminate" class="upload-bar" />
+                        }
+                        @if (cuerpoSrc) {
+                          <img [src]="cuerpoSrc" alt="Foto de cuerpo entero" class="photo-display"
+                              [class.uploading]="uploadingCuerpo">
+                          <div class="photo-overlay" (click)="openCropper('cuerpo')">
+                            <mat-icon>edit</mat-icon>
+                            <span>Cambiar foto</span>
+                          </div>
+                        } @else {
+                          <div class="photo-empty" (click)="openCropper('cuerpo')">
+                            <mat-icon>person_add</mat-icon>
+                            <span>Sin foto aún</span>
+                            <small>Hacé click para subir</small>
+                          </div>
+                        }
+                      </div>
+
+                      @if (profile && (profile.peso || profile.talla)) {
+                        <div class="medidas-display">
+                          @if (profile.peso) {
+                            <div class="medida-chip">
+                              <mat-icon>monitor_weight</mat-icon>
+                              <span>{{ profile.peso }} kg</span>
+                            </div>
+                          }
+                          @if (profile.talla) {
+                            <div class="medida-chip">
+                              <mat-icon>height</mat-icon>
+                              <span>{{ profile.talla }} cm</span>
+                            </div>
+                          }
+                        </div>
+                      }
+
+                      <div class="card-actions">
+                        <button mat-raised-button color="accent" [disabled]="uploadingCuerpo"
+                                (click)="openCropper('cuerpo')">
+                          <mat-icon>accessibility_new</mat-icon>
+                          {{ uploadingCuerpo ? 'Subiendo...' : (cuerpoSrc ? 'Actualizar foto' : 'Subir foto') }}
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                }
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
