@@ -33,6 +33,7 @@ export class MisFotosStudentComponent implements OnInit {
 
   profile: ProfilePhotos | null = null;
   loading = true;
+  loadError = false;
   uploadingCredencial = false;
   uploadingCuerpo = false;
 
@@ -44,9 +45,20 @@ export class MisFotosStudentComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loadProfile();
+  }
+
+  retry() {
+    this.loading = true;
+    this.loadError = false;
+    this.profile = null;
+    this.loadProfile();
+  }
+
+  private loadProfile() {
     this.service.getMe().subscribe({
       next: (p) => { this.profile = p; this.loading = false; },
-      error: () => { this.loading = false; },
+      error: () => { this.loading = false; this.loadError = true; },
     });
   }
 
@@ -67,7 +79,13 @@ export class MisFotosStudentComponent implements OnInit {
     });
 
     ref.afterClosed().subscribe((result: CropDialogResult | undefined) => {
-      if (!result || !this.profile) return;
+      if (!result) return;
+      if (!this.profile) {
+        this.snackBar.open('No se pudo identificar tu perfil. Recargá la página.', '', {
+          duration: 4000, panelClass: 'snackbar-danger',
+        });
+        return;
+      }
       this.upload(type, result);
     });
   }

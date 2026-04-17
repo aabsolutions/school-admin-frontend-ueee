@@ -51,16 +51,25 @@ export interface CropDialogResult {
 
         @if (imageFile || imageChangedEvent) {
           <div class="cropper-wrapper">
-            <image-cropper
-              [imageChangedEvent]="imageChangedEvent"
-              [imageFile]="imageFile ?? undefined"
-              [maintainAspectRatio]="true"
-              [aspectRatio]="data.aspectRatio"
-              [resizeToWidth]="data.type === 'credencial' ? 600 : 480"
-              format="jpeg"
-              output="blob"
-              (imageCropped)="onCropped($event)"
-            />
+            @if (imageLoadError) {
+              <div style="text-align:center; padding: 32px; color: #ef4444;">
+                <mat-icon style="font-size:40px; width:40px; height:40px;">broken_image</mat-icon>
+                <p style="margin: 8px 0 4px;">No se pudo cargar la imagen.</p>
+                <small>Probá con otro archivo (JPG, PNG o WEBP).</small>
+              </div>
+            } @else {
+              <image-cropper
+                [imageChangedEvent]="imageChangedEvent"
+                [imageFile]="imageFile ?? undefined"
+                [maintainAspectRatio]="true"
+                [aspectRatio]="data.aspectRatio"
+                [resizeToWidth]="data.type === 'credencial' ? 600 : 480"
+                format="jpeg"
+                output="blob"
+                (imageCropped)="onCropped($event)"
+                (loadImageFailed)="onLoadFailed()"
+              />
+            }
           </div>
         }
 
@@ -133,6 +142,7 @@ export class CropDialogComponent {
   imageChangedEvent: Event | null = null;
   imageFile: File | null = null;
   croppedBlob: Blob | null = null;
+  imageLoadError = false;
   peso: number | null;
   talla: number | null;
 
@@ -148,6 +158,7 @@ export class CropDialogComponent {
     this.imageFile = null;
     this.imageChangedEvent = event;
     this.croppedBlob = null;
+    this.imageLoadError = false;
   }
 
   onDrop(event: DragEvent) {
@@ -157,16 +168,23 @@ export class CropDialogComponent {
     this.imageChangedEvent = null;
     this.imageFile = file;
     this.croppedBlob = null;
+    this.imageLoadError = false;
   }
 
   onCropped(event: ImageCroppedEvent) {
     if (event.blob) this.croppedBlob = event.blob;
   }
 
+  onLoadFailed() {
+    this.imageLoadError = true;
+    this.croppedBlob = null;
+  }
+
   reset() {
     this.imageChangedEvent = null;
     this.imageFile = null;
     this.croppedBlob = null;
+    this.imageLoadError = false;
     this.fileInput.nativeElement.value = '';
   }
 

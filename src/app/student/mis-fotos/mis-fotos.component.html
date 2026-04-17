@@ -20,7 +20,18 @@
                   </div>
                 }
 
-                @if (!loading) {
+                @if (!loading && loadError) {
+                  <div class="error-state">
+                    <mat-icon class="error-icon">error_outline</mat-icon>
+                    <p>No se pudo cargar tu perfil de fotos.</p>
+                    <small>Verificá tu conexión o contactá al administrador.</small>
+                    <button mat-stroked-button color="warn" (click)="retry()">
+                      <mat-icon>refresh</mat-icon> Reintentar
+                    </button>
+                  </div>
+                }
+
+                @if (!loading && !loadError) {
                   <div class="fotos-grid">
 
                     <!-- ── FOTO CREDENCIAL ── -->
