@@ -33,6 +33,14 @@ export class LoginService {
     );
   }
 
+  forgotPassword(email: string) {
+    return this.http.post<{ message: string }>(`${this.authUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, password: string) {
+    return this.http.post<{ message: string }>(`${this.authUrl}/reset-password`, { token, password });
+  }
+
   logout() {
     this.store.clear();
     return new Promise<void>((resolve) => resolve());
