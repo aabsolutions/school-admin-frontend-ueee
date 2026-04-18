@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgIf } from '@angular/common';
 import { LoginService } from '@core/service/login.service';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
@@ -19,7 +18,6 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.scss'],
   imports: [
-    NgIf,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -37,7 +35,7 @@ export class ResetPasswordComponent implements OnInit {
   error = '';
   hidePassword = true;
   hideConfirm = true;
-  private token = '';
+  token = '';
 
   constructor(
     private formBuilder: UntypedFormBuilder,
