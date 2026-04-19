@@ -516,10 +516,10 @@
       "submenu": []
     },
     {
-      "path": "/teacher/ficha-medica",
-      "title": "Ficha Médica y Familiar",
+      "path": "/teacher/settings",
+      "title": "Información General",
       "iconType": "material-icons-outlined",
-      "icon": "health_and_safety",
+      "icon": "person",
       "class": "",
       "groupTitle": false,
       "badge": "",
@@ -564,19 +564,6 @@
       "submenu": []
     },
     {
-      "path": "/teacher/settings",
-      "title": "MENUITEMS.TEACHER-PORTAL.LIST.SETTINGS",
-      "iconType": "material-icons-outlined",
-      "icon": "settings",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["TEACHER"],
-      "submenu": []
-    },
-
-    {
       "path": "",
       "title": "MENUITEMS.STUDENT-PORTAL.TEXT",
       "iconType": "",
@@ -601,10 +588,10 @@
       "submenu": []
     },
     {
-      "path": "/student/ficha-medica",
-      "title": "Ficha Médica y Familiar",
+      "path": "/student/settings",
+      "title": "Información General",
       "iconType": "material-icons-outlined",
-      "icon": "health_and_safety",
+      "icon": "person",
       "class": "",
       "groupTitle": false,
       "badge": "",
@@ -665,18 +652,6 @@
       "title": "Mis Fotos",
       "iconType": "material-icons-outlined",
       "icon": "photo_camera",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["STUDENT"],
-      "submenu": []
-    },
-    {
-      "path": "/student/settings",
-      "title": "MENUITEMS.STUDENT-PORTAL.LIST.SETTINGS",
-      "iconType": "material-icons-outlined",
-      "icon": "settings",
       "class": "",
       "groupTitle": false,
       "badge": "",
