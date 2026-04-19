@@ -75,6 +75,9 @@
                   <button mat-icon-button [matTooltip]="row.isActive ? 'Deactivate' : 'Activate'" (click)="toggleStatus(row)">
                     <mat-icon>{{ row.isActive ? 'toggle_on' : 'toggle_off' }}</mat-icon>
                   </button>
+                  <button mat-icon-button color="accent" [matTooltip]="'Reset Password'" (click)="resetPassword(row)">
+                    <mat-icon>lock_reset</mat-icon>
+                  </button>
                   <button mat-icon-button color="warn" [matTooltip]="'Delete'" (click)="deleteItem(row)">
                     <mat-icon>delete</mat-icon>
                   </button>

@@ -74,7 +74,11 @@
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row" (contextmenu)="onContextMenu($event, row)" [matTooltip]="row.name">
                     <span class="mobile-label">{{ column.label }}:</span>
-                    <img [src]="row.img" class="table-img" alt="image" />
+                    @if (row.img) {
+                      <img [src]="row.img" class="table-img" alt="image" />
+                    } @else {
+                      <mat-icon class="table-img-placeholder">person</mat-icon>
+                    }
                     <span class="truncate-text">
                       {{ row.name }}
                     </span>

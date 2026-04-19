@@ -67,6 +67,12 @@ export class UserService {
     );
   }
 
+  resetPasswordToUsername(id: string | number): Observable<void> {
+    return this.http.patch<void>(`${this.API_URL}/${id}/reset-password`, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   deleteUser(id: string | number): Observable<string | number> {
     return this.http.delete<void>(`${this.API_URL}/${id}`).pipe(
       map(() => id),

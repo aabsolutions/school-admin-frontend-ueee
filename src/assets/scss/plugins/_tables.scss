@@ -21,12 +21,23 @@
   border-radius: 50%;
   height: 30px;
   width: 30px;
+  min-width: 30px;
   background: #fff;
   position: inherit;
   margin-right: 10px;
+  object-fit: cover;
   img {
     border-radius: 50%;
   }
+}
+
+.table-img-placeholder {
+  font-size: 30px;
+  height: 30px;
+  width: 30px;
+  min-width: 30px;
+  color: #aaa;
+  margin-right: 10px;
 }
 .tbl-icon {
   min-width: 24px;
@@ -117,8 +128,24 @@
   }
 }
 
+.student-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .avatar-sm {
   width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-icon-sm {
+  font-size: 32px;
+  height: 32px;
+  width: 32px;
+  color: #aaa;
 }
 
 .list-inline {

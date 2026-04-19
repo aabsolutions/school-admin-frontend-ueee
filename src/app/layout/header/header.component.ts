@@ -56,6 +56,7 @@ export class HeaderComponent
   userImg?: string;
   userName = '';
   homePage?: string;
+  profileRoute = '/admin/account';
   isNavbarCollapsed = true;
   flagvalue: string | string[] | undefined;
   countryName: string | string[] = [];
@@ -150,12 +151,16 @@ export class HeaderComponent
 
     if (userRole === Role.Admin) {
       this.homePage = 'admin/dashboard/main';
+      this.profileRoute = '/admin/account';
     } else if (userRole === Role.Teacher) {
       this.homePage = 'teacher/dashboard';
+      this.profileRoute = '/teacher/settings';
     } else if (userRole === Role.Student) {
       this.homePage = 'student/dashboard';
+      this.profileRoute = '/student/settings';
     } else {
       this.homePage = 'admin/dashboard/main';
+      this.profileRoute = '/admin/account';
     }
 
     this.langStoreValue = localStorage.getItem('lang') as string;

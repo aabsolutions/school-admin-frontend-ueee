@@ -23,6 +23,7 @@ import { AppUser } from './user.model';
 import { UserService } from './user.service';
 import { UserFormDialogComponent } from './dialogs/form-dialog/form-dialog.component';
 import { UserDeleteComponent } from './dialogs/delete/delete.component';
+import { UserResetPasswordComponent } from './dialogs/reset-password/reset-password.component';
 
 @Component({
   selector: 'app-all-users',
@@ -128,6 +129,16 @@ export class AllUsersComponent implements OnInit, OnDestroy {
         }
       },
       error: console.error,
+    });
+  }
+
+  resetPassword(user: AppUser) {
+    const dialogRef = this.dialog.open(UserResetPasswordComponent, {
+      data: { id: user.id, name: user.name, username: user.username },
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+      this.notify('snackbar-success', `Password reset to username for ${user.username}`);
     });
   }
 
