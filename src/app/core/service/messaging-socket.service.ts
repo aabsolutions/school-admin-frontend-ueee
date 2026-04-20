@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '@environments/environment';
@@ -26,7 +26,7 @@ export class MessagingSocketService implements OnDestroy {
   readonly conversationUpdated$ = new Subject<any>();
   readonly connected$ = new BehaviorSubject<boolean>(false);
 
-  constructor(private tokenService: TokenService) {}
+  constructor(private tokenService: TokenService, private ngZone: NgZone) {}
 
   connect(): void {
     if (this.socket?.connected) return;
@@ -39,13 +39,15 @@ export class MessagingSocketService implements OnDestroy {
       transports: ['polling', 'websocket'],
     });
 
-    this.socket.on('connect', () => this.connected$.next(true));
-    this.socket.on('disconnect', () => this.connected$.next(false));
+    // Todos los handlers corren dentro de NgZone para que Angular
+    // detecte los cambios y actualice la UI sin esperar al próximo evento.
+    this.socket.on('connect', () => this.ngZone.run(() => this.connected$.next(true)));
+    this.socket.on('disconnect', () => this.ngZone.run(() => this.connected$.next(false)));
 
-    this.socket.on('new-message', (data) => this.newMessage$.next(data));
-    this.socket.on('typing', (data) => this.typing$.next(data));
-    this.socket.on('message-read', (data) => this.messageRead$.next(data));
-    this.socket.on('conversation-updated', (data) => this.conversationUpdated$.next(data));
+    this.socket.on('new-message', (data) => this.ngZone.run(() => this.newMessage$.next(data)));
+    this.socket.on('typing', (data) => this.ngZone.run(() => this.typing$.next(data)));
+    this.socket.on('message-read', (data) => this.ngZone.run(() => this.messageRead$.next(data)));
+    this.socket.on('conversation-updated', (data) => this.ngZone.run(() => this.conversationUpdated$.next(data)));
   }
 
   disconnect(): void {

@@ -72,7 +72,9 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
     this.subs.sink = this.socket.newMessage$.subscribe(({ message, conversationId }) => {
       if (this.selectedConversation?._id === conversationId) {
-        this.messages = [...this.messages, message];
+        if (!this.messages.some((m) => m._id === message._id)) {
+          this.messages = [...this.messages, message];
+        }
         this.socket.markRead(conversationId);
       }
       this.updateLastMessage(conversationId, message);
@@ -107,7 +109,10 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
     this.messagesSub = this.api.getMessages(conv._id).subscribe({
       next: ({ data }) => {
-        this.messages = data;
+        const pending = this.messages.filter((m) => !data.some((d) => d._id === m._id));
+        this.messages = [...data, ...pending].sort(
+          (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
         this.loadingMessages = false;
       },
       error: () => {
@@ -118,7 +123,15 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   sendMessage(content: string): void {
     if (!this.selectedConversation || !content.trim()) return;
-    this.socket.sendMessage(this.selectedConversation._id, content);
+    const convId = this.selectedConversation._id;
+    this.subs.sink = this.api.sendMessage(convId, content.trim()).subscribe({
+      next: (message) => {
+        if (!this.messages.some((m) => m._id === message._id)) {
+          this.messages = [...this.messages, message];
+        }
+        this.updateLastMessage(convId, message);
+      },
+    });
   }
 
   openNewConversationDialog(): void {

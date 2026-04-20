@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   ViewChild,
+  ElementRef,
   OnInit,
   OnChanges,
   AfterViewChecked,
@@ -34,6 +35,7 @@ export class ChatWindowComponent implements OnInit, OnChanges, AfterViewChecked,
   @Output() sendMessage = new EventEmitter<string>();
 
   @ViewChild(NgScrollbar) private scrollbarRef!: NgScrollbar;
+  @ViewChild('messagesEnd') private messagesEnd?: ElementRef;
 
   messageContent = '';
   typingUser = '';
@@ -106,9 +108,11 @@ export class ChatWindowComponent implements OnInit, OnChanges, AfterViewChecked,
   }
 
   private scrollToBottom(): void {
-    if (this.scrollbarRef) {
-      this.scrollbarRef.scrollTo({ bottom: 0, duration: 200 });
-    }
+    requestAnimationFrame(() => {
+      if (this.scrollbarRef) {
+        void this.scrollbarRef.scrollTo({ top: 999999 });
+      }
+    });
   }
 
   ngOnDestroy(): void {
