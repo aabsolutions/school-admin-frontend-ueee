@@ -10,6 +10,7 @@ import { FichaMedicaTeacherComponent } from './ficha-medica/ficha-medica.compone
 import { GestionDocumentalTeacherComponent } from './gestion-documental/gestion-documental-teacher.component';
 import { MiCargaHorariaComponent } from './mi-carga-horaria/mi-carga-horaria.component';
 import { MisFotosTeacherComponent } from './mis-fotos/mis-fotos.component';
+import { MessagingComponent } from '@shared/components/messaging/messaging.component';
 
 export const TEACHER_ROUTE: Route[] = [
   {
@@ -51,6 +52,10 @@ export const TEACHER_ROUTE: Route[] = [
   {
     path: 'mis-fotos',
     component: MisFotosTeacherComponent,
+  },
+  {
+    path: 'messaging',
+    component: MessagingComponent,
   },
   { path: '**', component: Page404Component },
 ];

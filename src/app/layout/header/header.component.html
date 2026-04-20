@@ -29,36 +29,43 @@
         <!-- #END# Full Screen Button -->
         <!-- #START# Notifications-->
         <li>
-          <button mat-icon-button [matMenuTriggerFor]="notificationMenu" class="nav-notification-icons"> <i
-              class="material-icons-outlined icon-color">
-              notifications_active
-            </i></button>
+          <button mat-icon-button [matMenuTriggerFor]="notificationMenu"
+            [class.has-notifications]="unreadCount > 0"
+            class="nav-notification-icons"
+            [matBadge]="unreadCount" [matBadgeHidden]="unreadCount === 0" matBadgeColor="warn" matBadgeSize="small">
+            <i class="material-icons-outlined icon-color">notifications_active</i>
+          </button>
           <mat-menu #notificationMenu="matMenu" class="nfc-menu">
             <div class="nfc-header">
-              <h5 class="mb-0">Notitications</h5>
-              <a class="nfc-mark-as-read">Mark all as read</a>
+              <h5 class="mb-0">Notificaciones</h5>
+              <a class="nfc-mark-as-read" onClick="return false;" (click)="markAllRead()">Marcar todo como leído</a>
             </div>
             <div class="nfc-dropdown">
               <ng-scrollbar style="height: 350px" visibility="hover">
                 <div class="noti-list header-menu">
                   <div class="menu">
                     <div>
-                      @for (notification of notifications; track notification) {
-                      <button mat-menu-item onClick="return false;" [ngClass]="[notification.status]">
-                        <span class="table-img msg-user ">
-                          <i class="material-icons-outlined nfc-type-icon"
-                            [ngClass]="[notification.color]">{{notification.icon}}</i>
-                        </span>
-                        <span class="menu-info">
-                          <span class="menu-title">{{notification.message}}</span>
-                          <span class="menu-desc mt-2">
-                            <i class="material-icons">access_time</i> {{notification.time}}
+                      @if (notifications.length === 0) {
+                        <div class="nfc-empty">No hay notificaciones</div>
+                      }
+                      @for (n of notifications; track n._id) {
+                        <button mat-menu-item onClick="return false;"
+                          [ngClass]="{ 'msg-unread': !n.read, 'msg-read': n.read }"
+                          (click)="onNotificationClick(n)">
+                          <span class="table-img msg-user">
+                            <i class="material-icons-outlined nfc-type-icon" [ngClass]="getColor(n.type)">{{ getIcon(n.type) }}</i>
                           </span>
-                        </span>
-                        <span class="nfc-close">
-                          <app-feather-icons [icon]="'x'" [class]="'user-menu-icons'"></app-feather-icons>
-                        </span>
-                      </button>
+                          <span class="menu-info">
+                            <span class="menu-title">{{ n.title }}</span>
+                            <span class="menu-desc">{{ n.body }}</span>
+                            <span class="menu-desc mt-2">
+                              <i class="material-icons">access_time</i> {{ timeAgo(n.createdAt) }}
+                            </span>
+                          </span>
+                          <span class="nfc-close" (click)="dismissNotification(n, $event)">
+                            <app-feather-icons [icon]="'x'" [class]="'user-menu-icons'"></app-feather-icons>
+                          </span>
+                        </button>
                       }
                     </div>
                   </div>
@@ -66,8 +73,7 @@
               </ng-scrollbar>
             </div>
             <div class="nfc-footer">
-              <a class="nfc-read-all">Read
-                All Notifications</a>
+              <a class="nfc-read-all" onClick="return false;" (click)="markAllRead()">Marcar todo como leído</a>
             </div>
           </mat-menu>
         </li>

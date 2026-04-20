@@ -101,6 +101,11 @@ export const ADMIN_ROUTE: Route[] = [
       import('./institucion/institucion.routes').then((m) => m.INSTITUCION_ROUTE),
   },
   {
+    path: 'messaging',
+    loadChildren: () =>
+      import('./messaging/messaging.routes').then((m) => m.ADMIN_MESSAGING_ROUTE),
+  },
+  {
     path: 'account',
     loadComponent: () =>
       import('./account/account.component').then((m) => m.AccountComponent),

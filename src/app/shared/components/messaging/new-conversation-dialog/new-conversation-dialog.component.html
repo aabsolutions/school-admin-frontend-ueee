@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>Nueva conversación</h2>
+
+<mat-dialog-content>
+  <mat-radio-group [(ngModel)]="type" class="type-toggle">
+    <mat-radio-button value="direct">Directa</mat-radio-button>
+    <mat-radio-button value="group">Grupo</mat-radio-button>
+  </mat-radio-group>
+
+  @if (type === 'group') {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre del grupo</mat-label>
+      <input matInput [(ngModel)]="groupName" placeholder="Ej: Docentes 3ro A" />
+    </mat-form-field>
+  }
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Buscar usuario</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Nombre o usuario..." />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  @if (loading) {
+    <div class="loading">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else {
+    <div class="user-list">
+      @for (user of filteredUsers; track user._id) {
+        <div
+          class="user-item"
+          [class.selected]="isSelected(user)"
+          (click)="toggleUser(user)"
+        >
+          <img class="avatar" [src]="user.avatar || 'assets/images/user/user1.jpg'" [alt]="user.name" />
+          <div class="user-info">
+            <span class="name">{{ user.name }}</span>
+            <span class="role">{{ user.role }}</span>
+          </div>
+          @if (isSelected(user)) {
+            <mat-icon class="check">check_circle</mat-icon>
+          }
+        </div>
+      }
+      @if (filteredUsers.length === 0) {
+        <p class="no-results">Sin resultados</p>
+      }
+    </div>
+  }
+
+  @if (selectedUsers.length > 0) {
+    <div class="selected-chips">
+      @for (user of selectedUsers; track user._id) {
+        <span class="chip">{{ user.name }} <span (click)="toggleUser(user)">✕</span></span>
+      }
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-flat-button color="primary" [disabled]="!canCreate()" (click)="create()">
+    Crear
+  </button>
+</mat-dialog-actions>

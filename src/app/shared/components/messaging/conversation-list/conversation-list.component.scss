@@ -1,0 +1,26 @@
+.group-avatar-circle {
+  float: left;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #90caf9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fff;
+  box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+
+  i {
+    color: #fff;
+    font-size: 22px;
+  }
+}
+
+.unread-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1976d2;
+  vertical-align: middle;
+}

@@ -1,0 +1,38 @@
+<ul class="chat-list list-unstyled m-b-0">
+
+  @for (conv of conversations; track conv._id) {
+    <li class="clearfix" [class.active]="conv._id === selectedId" (click)="selectConversation.emit(conv)">
+
+      @if (conv.type === 'group') {
+        <div class="group-avatar-circle">
+          <i class="material-icons">group</i>
+        </div>
+      } @else {
+        <img [src]="getAvatar(conv)" [alt]="getName(conv)" />
+      }
+
+      <div class="about">
+        <div class="name" [class.fw-bold]="hasUnread(conv)">
+          {{ getName(conv) }}
+          @if (hasUnread(conv)) {
+            <span class="unread-dot ms-1"></span>
+          }
+        </div>
+        <div class="status">
+          <i class="material-icons" [class.online]="conv.type === 'group'" [class.offline]="conv.type !== 'group'">
+            fiber_manual_record
+          </i>
+          {{ getLastMessage(conv) }}
+        </div>
+      </div>
+
+    </li>
+  }
+
+  @if (conversations.length === 0) {
+    <li class="text-muted text-center p-3" style="list-style:none">
+      Sin conversaciones
+    </li>
+  }
+
+</ul>

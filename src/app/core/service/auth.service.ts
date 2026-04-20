@@ -4,6 +4,8 @@ import { User } from '@core/models/interface';
 import { LocalStorageService } from '@shared/services';
 import { TokenService } from './token.service';
 import { LoginService } from './login.service';
+import { MessagingSocketService } from './messaging-socket.service';
+import { NotificationsSocketService } from './notifications-socket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,9 @@ export class AuthService {
   constructor(
     private tokenService: TokenService,
     private loginService: LoginService,
-    private store: LocalStorageService
+    private store: LocalStorageService,
+    private messagingSocket: MessagingSocketService,
+    private notificationsSocket: NotificationsSocketService,
   ) {}
 
   public get currentUserValue(): User {
@@ -70,9 +74,9 @@ export class AuthService {
   }
 
   logout() {
-    // remove user from local storage to log user out
+    this.messagingSocket.disconnect();
+    this.notificationsSocket.disconnect();
     this.store.clear();
-    // this.currentUserSubject.next(this.currentUserValue);
     return of({ success: false });
   }
 

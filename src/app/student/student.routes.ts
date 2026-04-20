@@ -1,5 +1,6 @@
 import { Page404Component } from '../authentication/page404/page404.component';
 import { Route } from '@angular/router';
+import { MessagingComponent } from '@shared/components/messaging/messaging.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeworkComponent } from './homework/homework.component';
 import { LeaveRequestComponent } from './leave-request/leave-request.component';
@@ -52,6 +53,10 @@ export const STUDENT_ROUTE: Route[] = [
   {
     path: 'mis-fotos',
     component: MisFotosStudentComponent,
+  },
+  {
+    path: 'messaging',
+    component: MessagingComponent,
   },
   {
     path: 'settings',

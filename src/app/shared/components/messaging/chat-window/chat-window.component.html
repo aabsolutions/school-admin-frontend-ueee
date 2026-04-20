@@ -1,0 +1,90 @@
+<div class="chat">
+
+  <!-- Header -->
+  <div class="chat-header clearfix">
+    @if (conversation.type === 'group') {
+      <div class="group-avatar-header">
+        <i class="material-icons">group</i>
+      </div>
+    } @else {
+      <img [src]="getAvatar()" alt="avatar" />
+    }
+    <div class="chat-about">
+      <div class="chat-with">{{ getConversationName() }}</div>
+      @if (conversation.type === 'group') {
+        <div class="chat-num-messages">{{ conversation.participants.length }} participantes</div>
+      } @else {
+        <div class="chat-num-messages">{{ messages.length }} mensajes</div>
+      }
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <ng-scrollbar #scrollbar style="height: 449px" visibility="hover">
+    <div class="chat-history">
+      <ul>
+
+        @for (msg of messages; track msg._id) {
+
+          @if (isMine(msg)) {
+            <!-- My message — left side -->
+            <li>
+              <div class="message-data">
+                <span class="message-data-name">Vos</span>
+                <span class="message-data-time">{{ msg.createdAt | date:'HH:mm' }}</span>
+              </div>
+              <div class="message my-message">{{ msg.content }}</div>
+            </li>
+
+          } @else {
+            <!-- Other's message — right side -->
+            <li class="clearfix">
+              <div class="message-data text-end">
+                <span class="message-data-time">{{ msg.createdAt | date:'HH:mm' }}</span>
+                &nbsp;&nbsp;
+                <span class="message-data-name">{{ msg.senderName }}</span>
+              </div>
+              <div class="message other-message float-end">{{ msg.content }}</div>
+            </li>
+          }
+
+        }
+
+        @if (typingUser) {
+          <li>
+            <div class="message-data">
+              <span class="message-data-name">{{ typingUser }}</span>
+            </div>
+            <div class="message my-message typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </li>
+        }
+
+        <div #messagesEnd></div>
+      </ul>
+    </div>
+  </ng-scrollbar>
+
+  <!-- Input -->
+  <div class="chat-message clearfix">
+    <div class="form-group mb-0">
+      <div class="form-line">
+        <mat-form-field class="example-full-width" appearance="outline">
+          <input matInput
+            [(ngModel)]="messageContent"
+            placeholder="Escribí un mensaje..."
+            (input)="onInput()"
+            (keydown)="onKeydown($event)"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="chat-send">
+      <button mat-mini-fab color="primary" [disabled]="!messageContent.trim()" (click)="submit()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+  </div>
+
+</div>
