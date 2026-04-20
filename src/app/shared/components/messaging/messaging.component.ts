@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { Subscription } from 'rxjs';
 import { SubSink } from '@shared/sub-sink';
 import {
   MessagingApiService,
@@ -47,6 +48,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   breadscrums = [{ title: 'Comunicaciones', items: [], active: 'Mensajes' }];
 
   private subs = new SubSink();
+  private messagesSub?: Subscription;
 
   constructor(
     private api: MessagingApiService,
@@ -93,14 +95,24 @@ export class MessagingComponent implements OnInit, OnDestroy {
     if (this.selectedConversation) {
       this.socket.leaveConversation(this.selectedConversation._id);
     }
+
+    // Cancelar la carga anterior para evitar race conditions.
+    this.messagesSub?.unsubscribe();
+
     this.selectedConversation = conv;
     this.loadingMessages = true;
+    this.messages = [];
     this.socket.joinConversation(conv._id);
     this.socket.markRead(conv._id);
 
-    this.subs.sink = this.api.getMessages(conv._id).subscribe(({ data }) => {
-      this.messages = data;
-      this.loadingMessages = false;
+    this.messagesSub = this.api.getMessages(conv._id).subscribe({
+      next: ({ data }) => {
+        this.messages = data;
+        this.loadingMessages = false;
+      },
+      error: () => {
+        this.loadingMessages = false;
+      },
     });
   }
 
@@ -144,6 +156,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     if (this.selectedConversation) {
       this.socket.leaveConversation(this.selectedConversation._id);
     }
+    this.messagesSub?.unsubscribe();
     this.subs.unsubscribe();
   }
 }
