@@ -1,0 +1,1 @@
+var t=class{constructor(){this._subs=[]}add(...s){this._subs=this._subs.concat(s)}set sink(s){this._subs.push(s)}unsubscribe(){this._subs.forEach(s=>s&&s.unsubscribe()),this._subs=[]}};export{t as a};

@@ -238,6 +238,15 @@
     }
   }
 }
+@keyframes bell-shake {
+  0%, 100% { transform: rotate(0deg); }
+  15%       { transform: rotate(18deg); }
+  30%       { transform: rotate(-14deg); }
+  45%       { transform: rotate(10deg); }
+  60%       { transform: rotate(-6deg); }
+  75%       { transform: rotate(3deg); }
+}
+
 .nav-notification-icons {
   min-width: 0 !important;
   flex-shrink: 0;
@@ -248,6 +257,23 @@
   }
   .material-icons-outlined {
     vertical-align: middle;
+  }
+  &.has-notifications {
+    .material-icons-outlined {
+      animation: bell-shake 1.2s ease infinite;
+      color: #ff5722 !important;
+    }
+  }
+  .mat-badge-content {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    line-height: 18px !important;
+    border-radius: 9px !important;
+    background-color: #ff1744 !important;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.55);
   }
 }
 .lang-dropdown {

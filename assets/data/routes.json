@@ -24,6 +24,18 @@
       "role": ["ADMIN", "SUPERADMIN"],
       "submenu": []
     },
+    {
+      "path": "/admin/messaging",
+      "title": "Mensajes",
+      "iconType": "material-icons-outlined",
+      "icon": "chat",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
 
     {
       "path": "",
@@ -564,6 +576,18 @@
       "submenu": []
     },
     {
+      "path": "/teacher/messaging",
+      "title": "Mensajes",
+      "iconType": "material-icons-outlined",
+      "icon": "chat",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
       "path": "",
       "title": "MENUITEMS.STUDENT-PORTAL.TEXT",
       "iconType": "",
@@ -652,6 +676,18 @@
       "title": "Mis Fotos",
       "iconType": "material-icons-outlined",
       "icon": "photo_camera",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/messaging",
+      "title": "Mensajes",
+      "iconType": "material-icons-outlined",
+      "icon": "chat",
       "class": "",
       "groupTitle": false,
       "badge": "",
