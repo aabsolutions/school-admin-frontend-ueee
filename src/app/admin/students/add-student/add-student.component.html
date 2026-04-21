@@ -114,54 +114,27 @@
                 </div>
               </div>
 
-              <!-- Parent / Guardian -->
+              <!-- Representante / Padre / Madre -->
               <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Parent / Guardian Name</mat-label>
-                    <input matInput formControlName="parentGuardianName">
-                  </mat-form-field>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                  <label class="form-label fw-semibold">Representante</label>
+                  <app-parent-single-select formControlName="guardianId" label="Buscar representante" [showAddButton]="false"></app-parent-single-select>
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Parent / Guardian Mobile</mat-label>
-                    <input matInput formControlName="parentGuardianMobile">
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
-                  </mat-form-field>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                  <label class="form-label fw-semibold">Padre</label>
+                  <app-parent-single-select formControlName="fatherId" label="Buscar padre" [showAddButton]="false"></app-parent-single-select>
+                </div>
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+                  <label class="form-label fw-semibold">Madre</label>
+                  <app-parent-single-select formControlName="motherId" label="Buscar madre" [showAddButton]="false"></app-parent-single-select>
                 </div>
               </div>
 
-              <!-- Father -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Father Name</mat-label>
-                    <input matInput formControlName="fatherName">
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Father Mobile</mat-label>
-                    <input matInput formControlName="fatherMobile">
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <!-- Mother -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Mother Name</mat-label>
-                    <input matInput formControlName="motherName">
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Mother Mobile</mat-label>
-                    <input matInput formControlName="motherMobile">
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
-                  </mat-form-field>
+              <div class="row mb-2">
+                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                  <button type="button" mat-stroked-button color="accent" (click)="openAddParentDialog()">
+                    <mat-icon>person_add</mat-icon> Dar de alta padre/madre
+                  </button>
                 </div>
               </div>
 

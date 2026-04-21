@@ -1,0 +1,86 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+    <div class="block-header">
+      <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+    </div>
+    }
+    <div class="card">
+      <div class="header"><h2>Nuevo Comunicado</h2></div>
+      <div class="body">
+        <form class="m-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- Estudiante -->
+          <div class="row">
+            <div class="col-xl-6 col-md-12 mb-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Estudiante</mat-label>
+                <input matInput placeholder="Buscar estudiante..."
+                       [matAutocomplete]="studentAuto"
+                       (input)="onStudentSearchInput($any($event.target).value)">
+                <mat-autocomplete #studentAuto [displayWith]="displayStudent"
+                                  (optionSelected)="selectStudent($event.option.value)">
+                  @for (s of studentSuggestions; track s._id) {
+                    <mat-option [value]="s">{{ s.name }} — {{ s.dni }}</mat-option>
+                  }
+                </mat-autocomplete>
+              </mat-form-field>
+            </div>
+            <div class="col-xl-6 col-md-12 mb-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Padre / Representante</mat-label>
+                <mat-select formControlName="parentId" [disabled]="!parentOptions.length">
+                  @for (p of parentOptions; track p._id) {
+                    <mat-option [value]="p._id">{{ p.name }} — {{ p.email }}</mat-option>
+                  }
+                </mat-select>
+                @if (!parentOptions.length && selectedStudent) {
+                  <mat-hint>Este estudiante no tiene padres vinculados</mat-hint>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Asunto -->
+          <div class="row">
+            <div class="col-12 mb-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Asunto *</mat-label>
+                <input matInput formControlName="subject" maxlength="200">
+                @if (form.get('subject')?.hasError('required')) {
+                  <mat-error>El asunto es requerido</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Cuerpo -->
+          <div class="row">
+            <div class="col-12 mb-2">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Mensaje *</mat-label>
+                <textarea matInput formControlName="body" rows="6" maxlength="2000"></textarea>
+                @if (form.get('body')?.hasError('required')) {
+                  <mat-error>El mensaje es requerido</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 mb-2">
+              <button mat-flat-button color="primary" class="btn-space"
+                [disabled]="form.invalid || isSaving" type="submit">
+                Enviar comunicado
+              </button>
+              <button type="button" mat-flat-button class="formCancelBtn"
+                routerLink="/teacher/communicados">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,125 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+    <div class="block-header">
+      <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+    </div>
+    }
+    <div class="row clearfix">
+      <div class="col-12">
+        <div class="card">
+          <div class="header"><h2>Agregar Padre de Familia</h2></div>
+          <div class="body">
+            <form class="m-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Nombre completo *</mat-label>
+                    <input matInput formControlName="name">
+                    @if (form.get('name')?.hasError('required')) {
+                      <mat-error>El nombre es requerido</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Email *</mat-label>
+                    <input matInput formControlName="email" type="email">
+                    @if (form.get('email')?.hasError('required') || form.get('email')?.hasError('email')) {
+                      <mat-error>Email válido requerido</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>DNI / Cédula</mat-label>
+                    <input matInput formControlName="dni">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Celular</mat-label>
+                    <input matInput formControlName="mobile">
+                    <mat-icon matSuffix>phone</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Género</mat-label>
+                    <mat-select formControlName="gender">
+                      <mat-option value="Male">Masculino</mat-option>
+                      <mat-option value="Female">Femenino</mat-option>
+                      <mat-option value="Other">Otro</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Nivel educativo</mat-label>
+                    <mat-select formControlName="educationLevel">
+                      <mat-option value="Ninguna">Ninguna</mat-option>
+                      <mat-option value="Primaria">Primaria</mat-option>
+                      <mat-option value="Secundaria">Secundaria</mat-option>
+                      <mat-option value="Superior">Superior</mat-option>
+                      <mat-option value="Posgrado">Posgrado</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Ocupación</mat-label>
+                    <input matInput formControlName="occupation">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Dirección</mat-label>
+                    <input matInput formControlName="address">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Usuario (opcional — default: DNI o email)</mat-label>
+                    <input matInput formControlName="username">
+                  </mat-form-field>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                  <mat-form-field class="example-full-width mb-3" appearance="outline">
+                    <mat-label>Contraseña (opcional — default: DNI o email)</mat-label>
+                    <input matInput formControlName="password" type="password">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 mb-2">
+                  <button mat-flat-button color="primary" class="btn-space"
+                    [disabled]="form.invalid || isSaving" type="submit">
+                    Guardar
+                  </button>
+                  <button type="button" mat-flat-button class="formCancelBtn"
+                    routerLink="/admin/parents/all-parents">
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -576,6 +576,18 @@
       "submenu": []
     },
     {
+      "path": "/teacher/communicados",
+      "title": "Comunicados a Padres",
+      "iconType": "material-icons-outlined",
+      "icon": "mail",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
       "path": "/teacher/messaging",
       "title": "Mensajes",
       "iconType": "material-icons-outlined",
@@ -693,6 +705,55 @@
       "badge": "",
       "badgeClass": "",
       "role": ["STUDENT"],
+      "submenu": []
+    },
+
+    {
+      "path": "",
+      "title": "Portal del Representante",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/hijos",
+      "title": "Mis Hijos",
+      "iconType": "material-icons-outlined",
+      "icon": "people",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/communicados",
+      "title": "Comunicados",
+      "iconType": "material-icons-outlined",
+      "icon": "mail",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/messaging",
+      "title": "Mensajes",
+      "iconType": "material-icons-outlined",
+      "icon": "chat",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
       "submenu": []
     }
   ]

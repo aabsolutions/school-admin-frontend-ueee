@@ -40,6 +40,15 @@ export const APP_ROUTE: Route[] = [
         loadChildren: () =>
           import('./student/student.routes').then((m) => m.STUDENT_ROUTE),
       },
+      {
+        path: 'parent',
+        canActivate: [AuthGuard],
+        data: {
+          role: Role.Parent,
+        },
+        loadChildren: () =>
+          import('./parent/parent.routes').then((m) => m.PARENT_ROUTE),
+      },
     ],
   },
   {

@@ -1,0 +1,36 @@
+<div class="parent-selector">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Padres / Representantes</mat-label>
+    <input matInput [formControl]="searchCtrl" [matAutocomplete]="auto"
+           placeholder="Buscar por nombre, email o DNI...">
+    <mat-icon matSuffix>search</mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="select($event.option.value)">
+      @for (p of suggestions; track p._id) {
+        <mat-option [value]="p">
+          <span>{{ p.name }}</span>
+          <small class="ms-2 text-muted">{{ p.email }}</small>
+          @if (p.dni) { <small class="ms-1 text-muted">({{ p.dni }})</small> }
+        </mat-option>
+      }
+      @if (!suggestions.length && searchCtrl.value) {
+        <mat-option disabled>Sin resultados</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+  @if (selectedParents.length) {
+    <mat-chip-set class="mb-3">
+      @for (p of selectedParents; track p._id) {
+        <mat-chip (removed)="remove(p._id)" [disabled]="isDisabled">
+          {{ p.name }}
+          <button matChipRemove [disabled]="isDisabled"><mat-icon>cancel</mat-icon></button>
+        </mat-chip>
+      }
+    </mat-chip-set>
+  }
+
+  <button type="button" mat-stroked-button color="accent" class="mb-3" (click)="openAddDialog()" [disabled]="isDisabled">
+    <mat-icon>person_add</mat-icon> Dar de alta nuevo padre
+  </button>
+</div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Students } from './students.model';
 import { environment } from '@environments/environment';
@@ -45,6 +45,9 @@ export class StudentsService {
       imgCuerpoEntero: raw.imgCuerpoEntero ?? '',
       peso: raw.peso ?? 0,
       talla: raw.talla ?? 0,
+      fatherId: raw.fatherId ?? null,
+      motherId: raw.motherId ?? null,
+      guardianId: raw.guardianId ?? null,
     };
   }
 
@@ -59,14 +62,11 @@ export class StudentsService {
       residenceZone: student.residenceZone || undefined,
       birthdate: student.birthdate || undefined,
       address: student.address,
-      parentGuardianName: student.parentGuardianName || undefined,
-      parentGuardianMobile: student.parentGuardianMobile || undefined,
-      fatherName: student.fatherName || undefined,
-      fatherMobile: student.fatherMobile || undefined,
-      motherName: student.motherName || undefined,
-      motherMobile: student.motherMobile || undefined,
       status: student.status,
       img: student.img,
+      fatherId: this._toId(student.fatherId),
+      motherId: this._toId(student.motherId),
+      guardianId: this._toId(student.guardianId),
     };
     if (student.username) payload.username = student.username;
     if (student.password) payload.password = student.password;
@@ -105,6 +105,20 @@ export class StudentsService {
     return this.httpClient.delete<void>(`${this.API_URL}/${id}`).pipe(
       map(() => id),
       catchError(this.handleError)
+    );
+  }
+
+  private _toId(value: any): string | null {
+    if (!value) return null;
+    if (typeof value === 'string') return value;
+    return value._id ?? value.id ?? null;
+  }
+
+  searchStudents(q: string): Observable<any[]> {
+    const params = new HttpParams().set('search', q).set('limit', '20');
+    return this.httpClient.get<any>(this.API_URL, { params }).pipe(
+      map((r) => r.data?.data ?? []),
+      catchError(() => throwError(() => new Error('Search failed'))),
     );
   }
 

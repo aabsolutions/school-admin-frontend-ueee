@@ -1,0 +1,40 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <h2>Bienvenido, {{ profile?.name || 'Cargando...' }}</h2>
+    </div>
+
+    <div class="row clearfix mt-3">
+      <!-- Hijos -->
+      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+        <mat-card class="text-center p-4">
+          <mat-icon style="font-size:48px; color:#3f51b5">people</mat-icon>
+          <h3 class="mt-2">{{ profile?.studentIds?.length ?? 0 }}</h3>
+          <p>Hijos vinculados</p>
+          <a mat-flat-button color="primary" routerLink="/parent/hijos">Ver hijos</a>
+        </mat-card>
+      </div>
+
+      <!-- Comunicados -->
+      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+        <mat-card class="text-center p-4">
+          <mat-icon [matBadge]="unreadCommunicados || null" matBadgeColor="warn"
+                    style="font-size:48px; color:#e91e63">mail</mat-icon>
+          <h3 class="mt-2">{{ unreadCommunicados }}</h3>
+          <p>Comunicados sin leer</p>
+          <a mat-flat-button color="accent" routerLink="/parent/communicados">Ver comunicados</a>
+        </mat-card>
+      </div>
+
+      <!-- Mensajería -->
+      <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+        <mat-card class="text-center p-4">
+          <mat-icon style="font-size:48px; color:#4caf50">chat</mat-icon>
+          <h3 class="mt-2">Mensajería</h3>
+          <p>Chat con docentes</p>
+          <a mat-flat-button color="primary" routerLink="/admin/messaging">Ir a mensajes</a>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</section>

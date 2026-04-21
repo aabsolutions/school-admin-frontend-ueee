@@ -3,7 +3,9 @@ import {
   MatDialogRef,
   MatDialogContent,
   MatDialogClose,
+  MatDialog,
 } from '@angular/material/dialog';
+import { AddParentInlineDialogComponent } from '@shared/components/parent-selector/add-parent-inline-dialog.component';
 import { Component, Inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentsService } from '../../students.service';
@@ -23,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ParentSingleSelectComponent } from '@shared/components/parent-selector/parent-single-select.component';
 
 export interface DialogData {
   id: string | number;
@@ -46,6 +49,7 @@ export interface DialogData {
     MatOptionModule,
     MatDatepickerModule,
     MatDialogClose,
+    ParentSingleSelectComponent,
   ],
 })
 export class StudentsFormComponent {
@@ -58,7 +62,8 @@ export class StudentsFormComponent {
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public studentsService: StudentsService,
     private fb: UntypedFormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {
     this.action = data.action;
     this.dialogTitle = this.action === 'edit' ? data.student.name : 'New Student';
@@ -84,12 +89,9 @@ export class StudentsFormComponent {
       residenceZone:        [this.student.residenceZone ?? ''],
       birthdate:            [this.safeDate(this.student.birthdate)],
       address:              [this.student.address],
-      parentGuardianName:   [this.student.parentGuardianName],
-      parentGuardianMobile: [this.student.parentGuardianMobile],
-      fatherName:           [this.student.fatherName],
-      fatherMobile:         [this.student.fatherMobile],
-      motherName:           [this.student.motherName],
-      motherMobile:         [this.student.motherMobile],
+      fatherId:             [this._extractId(this.student.fatherId)],
+      motherId:             [this._extractId(this.student.motherId)],
+      guardianId:           [this._extractId(this.student.guardianId)],
       status:               [this.student.status || 'active'],
     });
   }
@@ -104,6 +106,7 @@ export class StudentsFormComponent {
   submit() {
     if (this.stdForm.valid) {
       const formData = this.stdForm.getRawValue();
+
       if (this.action === 'edit') {
         this.studentsService.updateStudent(formData).subscribe({
           next: (response) => this.dialogRef.close(response),
@@ -127,7 +130,17 @@ export class StudentsFormComponent {
     });
   }
 
+  openAddParentDialog() {
+    this.dialog.open(AddParentInlineDialogComponent, { width: '500px' });
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
+  }
+
+  /** Si el campo viene populado ({_id,name,email}) lo pasa tal cual; si es string ID, lo pasa como string */
+  private _extractId(value: any): any {
+    if (!value) return null;
+    return value;
   }
 }

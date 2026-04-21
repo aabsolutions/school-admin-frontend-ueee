@@ -1,0 +1,49 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header d-flex align-items-center gap-3">
+      <a mat-icon-button routerLink="/parent/communicados"><mat-icon>arrow_back</mat-icon></a>
+      <h2>Detalle del Comunicado</h2>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center p-4">Cargando...</div>
+    } @else if (communicado) {
+      <div class="row clearfix mt-3">
+        <div class="col-xl-8 offset-xl-2">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>{{ communicado.subject }}</mat-card-title>
+              <mat-card-subtitle>
+                De: <strong>{{ communicado.teacherName }}</strong> —
+                Estudiante: <strong>{{ communicado.studentName }}</strong>
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="p-3">
+              <p class="text-muted small mb-3">{{ communicado.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+              <div class="border rounded p-3 bg-light">
+                {{ communicado.body }}
+              </div>
+
+              <div class="mt-3 d-flex align-items-center gap-3">
+                <mat-chip [color]="communicado.status === 'received' ? 'primary' : 'warn'">
+                  {{ communicado.status === 'received' ? 'Recibido' : 'Pendiente' }}
+                </mat-chip>
+                @if (communicado.receivedAt) {
+                  <small class="text-muted">Confirmado el {{ communicado.receivedAt | date:'dd/MM/yyyy HH:mm' }}</small>
+                }
+              </div>
+            </mat-card-content>
+            <mat-card-actions class="p-3">
+              @if (communicado.status === 'sent') {
+                <button mat-flat-button color="primary" [disabled]="isMarking" (click)="markReceived()">
+                  <mat-icon>check_circle</mat-icon>
+                  Marcar como recibido
+                </button>
+              }
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    }
+  </div>
+</section>

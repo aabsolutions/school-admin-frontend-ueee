@@ -18,6 +18,9 @@ export class Students {
   fatherMobile: string;
   motherName: string;
   motherMobile: string;
+  fatherId: any;
+  motherId: any;
+  guardianId: any;
   status: string;
 
   constructor(students: Partial<Students>) {
@@ -40,6 +43,9 @@ export class Students {
     this.fatherMobile = students.fatherMobile || '';
     this.motherName = students.motherName || '';
     this.motherMobile = students.motherMobile || '';
+    this.fatherId = students.fatherId ?? null;
+    this.motherId = students.motherId ?? null;
+    this.guardianId = students.guardianId ?? null;
     this.status = students.status || 'active';
   }
 

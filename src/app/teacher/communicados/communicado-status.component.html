@@ -1,0 +1,47 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+    <div class="block-header">
+      <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+    </div>
+    }
+
+    @if (isLoading) {
+      <div class="text-center p-4">Cargando...</div>
+    } @else if (communicado) {
+      <div class="row clearfix">
+        <div class="col-xl-8 offset-xl-2">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>{{ communicado.subject }}</mat-card-title>
+              <mat-card-subtitle>
+                Estudiante: <strong>{{ communicado.studentName }}</strong>
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="p-3">
+              <p class="text-muted small mb-3">Enviado: {{ communicado.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+              <div class="border rounded p-3 bg-light">{{ communicado.body }}</div>
+
+              <div class="mt-3 d-flex align-items-center gap-3">
+                <mat-chip [color]="communicado.status === 'received' ? 'primary' : 'warn'">
+                  {{ communicado.status === 'received' ? 'Recibido por el padre' : 'Pendiente de confirmación' }}
+                </mat-chip>
+                @if (communicado.receivedAt) {
+                  <small class="text-muted">
+                    <mat-icon style="font-size:16px;vertical-align:middle">check_circle</mat-icon>
+                    Confirmado el {{ communicado.receivedAt | date:'dd/MM/yyyy HH:mm' }}
+                  </small>
+                }
+              </div>
+            </mat-card-content>
+            <mat-card-actions class="p-3">
+              <a mat-stroked-button routerLink="/teacher/communicados">
+                <mat-icon>arrow_back</mat-icon> Volver
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    }
+  </div>
+</section>

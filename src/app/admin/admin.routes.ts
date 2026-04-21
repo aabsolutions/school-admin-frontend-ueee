@@ -106,6 +106,11 @@ export const ADMIN_ROUTE: Route[] = [
       import('./messaging/messaging.routes').then((m) => m.ADMIN_MESSAGING_ROUTE),
   },
   {
+    path: 'parents',
+    loadChildren: () =>
+      import('./parents/parents.routes').then((m) => m.PARENTS_ROUTE),
+  },
+  {
     path: 'account',
     loadComponent: () =>
       import('./account/account.component').then((m) => m.AccountComponent),

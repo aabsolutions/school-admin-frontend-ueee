@@ -74,6 +74,8 @@ export class SigninComponent
               this.router.navigate(['/teacher/dashboard']);
             } else if (role.name === Role.Student) {
               this.router.navigate(['/student/dashboard']);
+            } else if (role.name === Role.Parent) {
+              this.router.navigate(['/parent/dashboard']);
             } else {
               this.router.navigate(['/authentication/signin']);
             }

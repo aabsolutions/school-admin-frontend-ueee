@@ -28,9 +28,19 @@ export class AuthGuard {
         return true;
       }
 
+      // Redirect parent to their area if trying to access non-parent routes
+      if (userRole === Role.Parent && !state.url.startsWith('/parent')) {
+        this.router.navigate(['/parent/dashboard']);
+        return false;
+      }
+
       // Check if the route requires a specific role and if the user's role matches
       if (route.data['role'] && route.data['role'].indexOf(userRole) === -1) {
-        this.router.navigate(['/authentication/signin']);
+        if (userRole === Role.Parent) {
+          this.router.navigate(['/parent/dashboard']);
+        } else {
+          this.router.navigate(['/authentication/signin']);
+        }
         return false;
       }
       return true;

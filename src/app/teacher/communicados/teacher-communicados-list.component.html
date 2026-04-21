@@ -1,0 +1,66 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+    <div class="block-header">
+      <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+    </div>
+    }
+    <div class="card">
+      <div class="header d-flex justify-content-between align-items-center">
+        <h2>Mis Comunicados</h2>
+        <a mat-flat-button color="primary" routerLink="/teacher/communicados/nuevo">
+          <mat-icon>add</mat-icon> Nuevo Comunicado
+        </a>
+      </div>
+      <div class="body">
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Buscar</mat-label>
+          <input matInput placeholder="Asunto o estudiante..." (input)="onSearch($any($event.target).value)">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="table-responsive">
+          <mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="subject">
+              <mat-header-cell *matHeaderCellDef>Asunto</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.subject }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="student">
+              <mat-header-cell *matHeaderCellDef>Estudiante</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.studentName }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <mat-chip [color]="row.status === 'received' ? 'primary' : 'warn'">
+                  {{ row.status === 'received' ? 'Recibido' : 'Enviado' }}
+                </mat-chip>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+              <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.createdAt | date:'dd/MM/yyyy' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>Ver</mat-header-cell>
+              <mat-cell *matCellDef="let row">
+                <a mat-icon-button color="primary" [routerLink]="['/teacher/communicados', row._id]">
+                  <mat-icon>visibility</mat-icon>
+                </a>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+        <mat-paginator [length]="total" [pageSize]="10" (page)="onPageChange($event)"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</section>

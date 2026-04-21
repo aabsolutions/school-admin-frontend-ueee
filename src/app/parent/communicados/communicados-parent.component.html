@@ -1,0 +1,61 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header"><h2>Mis Comunicados</h2></div>
+
+    <div class="card mt-3">
+      <div class="body">
+        @if (isLoading) {
+          <div class="text-center p-4">Cargando...</div>
+        } @else {
+          <div class="table-responsive">
+            <mat-table [dataSource]="dataSource">
+
+              <ng-container matColumnDef="subject">
+                <mat-header-cell *matHeaderCellDef>Asunto</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.subject }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="teacher">
+                <mat-header-cell *matHeaderCellDef>Docente</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.teacherName }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="student">
+                <mat-header-cell *matHeaderCellDef>Estudiante</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.studentName }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <mat-chip [color]="row.status === 'received' ? 'primary' : 'warn'">
+                    {{ row.status === 'received' ? 'Recibido' : 'Pendiente' }}
+                  </mat-chip>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.createdAt | date:'dd/MM/yyyy HH:mm' }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <a mat-icon-button color="primary" [routerLink]="['/parent/communicados', row._id]">
+                    <mat-icon>visibility</mat-icon>
+                  </a>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+
+          <mat-paginator [length]="total" [pageSize]="10" (page)="onPageChange($event)"></mat-paginator>
+        }
+      </div>
+    </div>
+  </div>
+</section>

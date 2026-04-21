@@ -57,5 +57,20 @@ export const TEACHER_ROUTE: Route[] = [
     path: 'messaging',
     component: MessagingComponent,
   },
+  {
+    path: 'communicados',
+    loadComponent: () =>
+      import('./communicados/teacher-communicados-list.component').then((m) => m.TeacherCommunicadosListComponent),
+  },
+  {
+    path: 'communicados/nuevo',
+    loadComponent: () =>
+      import('./communicados/nuevo-communicado.component').then((m) => m.NuevoCommunicadoComponent),
+  },
+  {
+    path: 'communicados/:id',
+    loadComponent: () =>
+      import('./communicados/communicado-status.component').then((m) => m.CommunicadoStatusComponent),
+  },
   { path: '**', component: Page404Component },
 ];

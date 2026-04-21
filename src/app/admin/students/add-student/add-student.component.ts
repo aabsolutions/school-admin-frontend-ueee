@@ -15,8 +15,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { StudentsService } from '../all-students/students.service';
+import { ParentSingleSelectComponent } from '@shared/components/parent-selector/parent-single-select.component';
+import { AddParentInlineDialogComponent } from '@shared/components/parent-selector/add-parent-inline-dialog.component';
 
 @Component({
   selector: 'app-add-student',
@@ -34,6 +37,7 @@ import { StudentsService } from '../all-students/students.service';
     MatOptionModule,
     MatDatepickerModule,
     MatButtonModule,
+    ParentSingleSelectComponent,
   ],
 })
 export class AddStudentComponent {
@@ -48,7 +52,8 @@ export class AddStudentComponent {
     private fb: UntypedFormBuilder,
     private studentsService: StudentsService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) {
     this.stdForm = this.fb.group({
       name:                 ['', [Validators.required]],
@@ -59,14 +64,15 @@ export class AddStudentComponent {
       residenceZone:        [''],
       birthdate:            [''],
       address:              [''],
-      parentGuardianName:   [''],
-      parentGuardianMobile: [''],
-      fatherName:           [''],
-      fatherMobile:         [''],
-      motherName:           [''],
-      motherMobile:         [''],
+      fatherId:             [null],
+      motherId:             [null],
+      guardianId:           [null],
       status:               ['active'],
     });
+  }
+
+  openAddParentDialog() {
+    this.dialog.open(AddParentInlineDialogComponent, { width: '500px' });
   }
 
   onSubmit() {

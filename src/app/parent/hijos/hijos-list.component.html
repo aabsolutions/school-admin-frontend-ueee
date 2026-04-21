@@ -1,0 +1,50 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header d-flex align-items-center gap-3">
+      <h2>Mis Hijos</h2>
+    </div>
+
+    @if (isLoading) {
+      <div class="text-center p-4">Cargando...</div>
+    } @else if (!hijos.length) {
+      <div class="text-center p-4 text-muted">No tenés hijos vinculados aún.</div>
+    } @else {
+      <div class="row clearfix mt-3">
+        @for (hijo of hijos; track hijo._id) {
+          <div class="col-xl-4 col-lg-6 col-md-12">
+            <mat-card class="mb-3">
+              <div class="d-flex align-items-center p-3 gap-3">
+                <img [src]="hijo.img || 'assets/images/user/user1.jpg'"
+                     style="width:64px;height:64px;border-radius:50%;object-fit:cover" alt="foto">
+                <div>
+                  <h4 class="mb-1">{{ hijo.name }}</h4>
+                  <p class="mb-0 text-muted small">{{ hijo.email }}</p>
+                  @if (hijo.dni) { <p class="mb-0 text-muted small">DNI: {{ hijo.dni }}</p> }
+                  <mat-chip-set class="mt-1">
+                    <mat-chip [color]="getStatusColor(hijo.status || '')">{{ hijo.status }}</mat-chip>
+                  </mat-chip-set>
+                </div>
+              </div>
+              <mat-card-content class="px-3 pb-2">
+                <div class="row">
+                  @if (hijo.birthdate) {
+                    <div class="col-6 small"><strong>Nacimiento:</strong> {{ hijo.birthdate | date:'dd/MM/yyyy' }}</div>
+                  }
+                  @if (hijo.gender) {
+                    <div class="col-6 small"><strong>Género:</strong> {{ hijo.gender }}</div>
+                  }
+                  @if (hijo.mobile) {
+                    <div class="col-6 small"><strong>Celular:</strong> {{ hijo.mobile }}</div>
+                  }
+                  @if (hijo.address) {
+                    <div class="col-12 small"><strong>Dirección:</strong> {{ hijo.address }}</div>
+                  }
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
