@@ -98,16 +98,14 @@ export class UserFormDialogComponent {
   submit() {
     if (this.userForm.invalid) return;
     const formData = this.userForm.getRawValue();
-    // Don't send empty password on edit
-    if (this.action === 'edit' && !formData.password) {
-      delete formData.password;
-    }
     if (this.action === 'edit') {
+      if (!formData.password) delete formData.password;
       this.userService.updateUser(formData).subscribe({
         next: (res) => this.dialogRef.close(res),
         error: (err) => console.error(err),
       });
     } else {
+      delete formData.id;
       this.userService.addUser(formData).subscribe({
         next: (res) => this.dialogRef.close(res),
         error: (err) => console.error(err),
