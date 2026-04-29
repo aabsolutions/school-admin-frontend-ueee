@@ -504,6 +504,19 @@
     },
 
     {
+      "path": "/admin/roles",
+      "title": "Gestión de Roles",
+      "iconType": "material-icons-outlined",
+      "icon": "manage_accounts",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+
+    {
       "path": "",
       "title": "MENUITEMS.TEACHER-PORTAL.TEXT",
       "iconType": "",
