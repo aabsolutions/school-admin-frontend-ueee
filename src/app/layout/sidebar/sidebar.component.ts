@@ -16,6 +16,8 @@ import {
   DOCUMENT
 } from '@angular/core';
 import { AuthService, Role } from '@core';
+
+const SYSTEM_ROLES = new Set<string>(Object.values(Role));
 import { ProfilePhotoService } from '@core/service/profile-photo.service';
 import { RouteInfo } from './sidebar.metadata';
 import { TranslateModule } from '@ngx-translate/core';
@@ -167,6 +169,9 @@ export class SidebarComponent
 
   canSeeSubItem(roles: string[]): boolean {
     if (!roles || roles[0] === '') return true;
+    if (this.currentUserRole === Role.SuperAdmin) return true;
+    // Roles custom: el SidebarService ya pre-filtró los items — no re-filtrar
+    if (!SYSTEM_ROLES.has(this.currentUserRole)) return true;
     return roles.includes(this.currentUserRole);
   }
 

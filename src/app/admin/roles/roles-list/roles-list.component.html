@@ -1,0 +1,96 @@
+<section class="content">
+  <div class="content-block">
+
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <mat-card class="example-card">
+
+        </mat-card>
+        <mat-card-content>
+
+          <div class="container-fluid">
+            <div class="row mb-3 align-items-center">
+              <div class="col">
+                <h3 class="mat-h2 mb-0">Gestión de Roles</h3>
+                <p class="text-muted small mb-0">Configura los roles del sistema y sus permisos de menú</p>
+              </div>
+              <div class="col-auto">
+                <button mat-raised-button color="primary" (click)="openCreate()">
+                  <mat-icon>add</mat-icon> Nuevo Rol
+                </button>
+              </div>
+            </div>
+
+            <mat-table [dataSource]="roles" class="mat-elevation-z2">
+              <ng-container matColumnDef="displayName">
+                <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                <mat-cell *matCellDef="let role">
+                  <strong>{{ role.displayName }}</strong>
+                  <span *ngIf="role.description" class="text-muted d-block small">{{ role.description }}</span>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Clave</mat-header-cell>
+                <mat-cell *matCellDef="let role">
+                  <code class="badge bg-secondary">{{ role.name }}</code>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="type">
+                <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
+                <mat-cell *matCellDef="let role">
+                  <mat-chip *ngIf="role.isSystem" color="primary" highlighted>Sistema</mat-chip>
+                  <mat-chip *ngIf="!role.isSystem" color="accent" highlighted>Personalizado</mat-chip>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="permissions">
+                <mat-header-cell *matHeaderCellDef>Permisos</mat-header-cell>
+                <mat-cell *matCellDef="let role">
+                  <span *ngIf="role.name === 'SUPERADMIN'" class="text-muted fst-italic">Acceso total</span>
+                  <span *ngIf="role.name !== 'SUPERADMIN'">{{ role.sidebarPermissions.length }} ítems</span>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                <mat-cell *matCellDef="let role">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Editar"
+                    (click)="openEdit(role)"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="accent"
+                    matTooltip="Configurar permisos de menú"
+                    (click)="openPermissions(role)"
+                    [disabled]="role.name === 'SUPERADMIN'"
+                  >
+                    <mat-icon>tune</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    matTooltip="Eliminar"
+                    (click)="deleteRole(role)"
+                    [disabled]="role.isSystem"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+         </mat-card-content>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -19,18 +19,25 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { CommonModule } from '@angular/common';
 import { AppUser } from '../../user.model';
 import { UserService } from '../../user.service';
+import { RolesService } from '../../../../roles/roles.service';
+import { RoleConfig } from '@core/models/role-config.model';
 
 export interface UserDialogData {
   action: 'add' | 'edit';
   user: AppUser;
 }
 
+// Roles gestionados fuera de este formulario (se asignan desde alta de estudiante/docente)
+const NON_ASSIGNABLE_ROLES = new Set(['STUDENT', 'TEACHER', 'PARENT']);
+
 @Component({
   selector: 'app-user-form-dialog',
   templateUrl: './form-dialog.component.html',
   imports: [
+    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatDialogContent,
@@ -44,36 +51,40 @@ export interface UserDialogData {
     MatSlideToggleModule,
   ],
 })
-export class UserFormDialogComponent {
+export class UserFormDialogComponent implements OnInit {
   action: 'add' | 'edit';
   dialogTitle: string;
   userForm: UntypedFormGroup;
   hide = true;
-
-  readonly editableRoles = ['SUPERADMIN', 'ADMIN'];
-  readonly reservedRoles = ['STUDENT', 'TEACHER'];
-
-  get roles(): string[] {
-    // En edición de usuario con rol reservado: mostrar ese rol pero sin opciones editables
-    if (this.action === 'edit' && this.isReservedRole) {
-      return [this.data.user.role];
-    }
-    return this.editableRoles;
-  }
+  availableRoles: RoleConfig[] = [];
 
   get isReservedRole(): boolean {
-    return this.action === 'edit' && this.reservedRoles.includes(this.data.user?.role);
+    return this.action === 'edit' && NON_ASSIGNABLE_ROLES.has(this.data.user?.role);
   }
 
   constructor(
     public dialogRef: MatDialogRef<UserFormDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: UserDialogData,
     private fb: UntypedFormBuilder,
-    public userService: UserService
+    public userService: UserService,
+    private rolesService: RolesService,
   ) {
     this.action = data.action;
     this.dialogTitle = data.action === 'edit' ? data.user.name : 'New User';
     this.userForm = this.createForm();
+  }
+
+  ngOnInit() {
+    this.rolesService.getAll().subscribe({
+      next: (roles) => {
+        // Si el usuario tiene un rol no-asignable (STUDENT/TEACHER/PARENT), mostrar solo ese
+        if (this.isReservedRole) {
+          this.availableRoles = [{ name: this.data.user.role, displayName: this.data.user.role } as RoleConfig];
+        } else {
+          this.availableRoles = roles.filter((r) => !NON_ASSIGNABLE_ROLES.has(r.name));
+        }
+      },
+    });
   }
 
   createForm(): UntypedFormGroup {
@@ -88,8 +99,8 @@ export class UserFormDialogComponent {
       role: [user.role, [Validators.required]],
       isActive: [user.isActive ?? true],
     });
-    // Bloquear el rol si es STUDENT o TEACHER — se asigna solo desde el alta de estudiante/docente
-    if (isEdit && this.reservedRoles.includes(user.role)) {
+    // Bloquear el rol si es STUDENT/TEACHER/PARENT — se asigna solo desde su propio flujo
+    if (isEdit && NON_ASSIGNABLE_ROLES.has(user.role)) {
       form.get('role')?.disable();
     }
     return form;

@@ -1,0 +1,9 @@
+.permissions-tree {
+  max-height: 500px;
+  overflow-y: auto;
+  background: transparent;
+}
+
+mat-tree-node {
+  min-height: 40px;
+}

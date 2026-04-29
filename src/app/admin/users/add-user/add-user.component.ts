@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   UntypedFormBuilder,
@@ -19,6 +19,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { UserService } from '../all-users/user.service';
+import { RolesService } from '../../roles/roles.service';
+import { RoleConfig } from '@core/models/role-config.model';
+
+const NON_ASSIGNABLE_ROLES = new Set(['STUDENT', 'TEACHER', 'PARENT']);
 
 @Component({
   selector: 'app-add-user',
@@ -38,21 +42,30 @@ import { UserService } from '../all-users/user.service';
     MatSlideToggleModule,
   ],
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
   userForm: UntypedFormGroup;
   hide = true;
   isSubmitting = false;
+  availableRoles: RoleConfig[] = [];
 
   breadscrums = [{ title: 'Add User', items: ['User Management'], active: 'Add User' }];
-  readonly roles = ['SUPERADMIN', 'ADMIN'];
 
   constructor(
     private fb: UntypedFormBuilder,
     private userService: UserService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private rolesService: RolesService,
   ) {
     this.userForm = this.createForm();
+  }
+
+  ngOnInit() {
+    this.rolesService.getAll().subscribe({
+      next: (roles) => {
+        this.availableRoles = roles.filter((r) => !NON_ASSIGNABLE_ROLES.has(r.name));
+      },
+    });
   }
 
   createForm(): UntypedFormGroup {
@@ -90,6 +103,6 @@ export class AddUserComponent {
   }
 
   onReset() {
-    this.userForm.reset({ role: 'ADMIN', isActive: true });
+    this.userForm.reset({ isActive: true });
   }
 }

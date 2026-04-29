@@ -115,5 +115,10 @@ export const ADMIN_ROUTE: Route[] = [
     loadComponent: () =>
       import('./account/account.component').then((m) => m.AccountComponent),
   },
+  {
+    path: 'roles',
+    loadChildren: () =>
+      import('./roles/admin-roles.routes').then((m) => m.ROLES_ROUTE),
+  },
   { path: '**', component: Page404Component },
 ];

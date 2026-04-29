@@ -8,6 +8,8 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { AuthService, Role } from '@core';
+
+const SYSTEM_ROLES = new Set<string>(Object.values(Role));
 import { UnsubscribeOnDestroyAdapter } from '@shared';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -68,16 +70,15 @@ export class SigninComponent
           next: (response) => {
             const role = response.user.roles[0];
             this.loading = false;
-            if (role.name === Role.SuperAdmin || role.name === Role.Admin) {
-              this.router.navigate(['/admin/dashboard/main']);
-            } else if (role.name === Role.Teacher) {
+            if (role.name === Role.Teacher) {
               this.router.navigate(['/teacher/dashboard']);
             } else if (role.name === Role.Student) {
               this.router.navigate(['/student/dashboard']);
             } else if (role.name === Role.Parent) {
               this.router.navigate(['/parent/dashboard']);
             } else {
-              this.router.navigate(['/authentication/signin']);
+              // SuperAdmin, Admin y cualquier rol custom → área de administración
+              this.router.navigate(['/admin/dashboard/main']);
             }
           },
           error: (err) => {

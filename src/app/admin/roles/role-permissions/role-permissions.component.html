@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>
+  Permisos de menú — <strong>{{ data.role.displayName }}</strong>
+</h2>
+
+<mat-dialog-content>
+  <div *ngIf="loading" class="d-flex justify-content-center py-4">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <div class="d-flex gap-2 mb-3">
+      <button mat-stroked-button (click)="selectAll()">Seleccionar todo</button>
+      <button mat-stroked-button (click)="clearAll()">Limpiar todo</button>
+    </div>
+
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="permissions-tree">
+      <!-- Parent node -->
+      <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <button mat-icon-button matTreeNodeToggle>
+          <mat-icon>
+            {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        <mat-checkbox
+          [checked]="parentChecked(node)"
+          [indeterminate]="parentIndeterminate(node)"
+          (change)="toggleParent(node)"
+        >
+          {{ node.title }}
+        </mat-checkbox>
+      </mat-tree-node>
+
+      <!-- Leaf node -->
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        <mat-checkbox
+          [checked]="leafChecked(node)"
+          (change)="toggleLeaf(node)"
+        >
+          {{ node.title }}
+        </mat-checkbox>
+      </mat-tree-node>
+    </mat-tree>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="null">Cancelar</button>
+  <button mat-raised-button color="primary" [disabled]="saving" (click)="save()">
+    {{ saving ? 'Guardando...' : 'Guardar permisos' }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar' : 'Nuevo' }} Rol</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" class="d-flex flex-column gap-3 pt-2">
+    <mat-form-field appearance="outline">
+      <mat-label>Clave del rol (mayúsculas)</mat-label>
+      <input matInput formControlName="name" placeholder="SECRETARIA" />
+      <mat-hint>Solo letras mayúsculas y guiones bajos. Ej: RECTOR, COORD_ACADEMICO</mat-hint>
+      <mat-error *ngIf="form.get('name')?.hasError('pattern')">Solo mayúsculas y guiones bajos</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre para mostrar</mat-label>
+      <input matInput formControlName="displayName" placeholder="Secretaria" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descripción (opcional)</mat-label>
+      <textarea matInput formControlName="description" rows="2"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="null">Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid || saving"
+    (click)="submit()"
+  >
+    {{ saving ? 'Guardando...' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

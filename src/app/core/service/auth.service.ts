@@ -58,6 +58,11 @@ export class AuthService {
         this.user$.next(JSON.parse(JSON.stringify(response))['user']);
         this.store.set('currentUser', response.user);
 
+        // Store sidebar permissions for dynamic menu filtering
+        const sidebarPermissions: string[] =
+          (response.user as any)['sidebarPermissions'] ?? [];
+        this.store.set('sidebarPermissions', sidebarPermissions);
+
         // Store role names in a new array
         const roleNames = this.tokenService.roleArray.map(
           (role: { name: string }) => role.name
