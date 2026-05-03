@@ -120,5 +120,12 @@ export const ADMIN_ROUTE: Route[] = [
     loadChildren: () =>
       import('./roles/admin-roles.routes').then((m) => m.ROLES_ROUTE),
   },
+  {
+    path: 'asistencias',
+    loadChildren: () =>
+      import('./asistencias/admin-asistencias.routes').then(
+        (m) => m.ADMIN_ASISTENCIAS_ROUTE,
+      ),
+  },
   { path: '**', component: Page404Component },
 ];

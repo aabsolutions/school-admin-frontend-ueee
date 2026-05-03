@@ -54,9 +54,17 @@ export class EnrollmentFormComponent {
     this.enrollmentForm = this.fb.group({
       id:             [this.enrollment.id],
       studentId:      [this.enrollment.studentId, this.action === 'add' ? [Validators.required] : []],
-      cursoLectivoId: [this.enrollment.cursoLectivoId, this.action === 'add' ? [Validators.required] : []],
+      cursoLectivoId: [this.enrollment.cursoLectivoId, [Validators.required]],
       status:         [this.enrollment.status || 'enrolled'],
       notes:          [this.enrollment.notes],
+    });
+
+    this.http.get<any>(`${environment.apiUrl}/curso-lectivo?limit=200&status=active`).subscribe({
+      next: r => this.cursosLectivos = r.data.data.map((cl: any) => {
+        const c = cl.cursoId;
+        const display = c ? `${c.nivel} - ${c.especialidad} - ${c.paralelo} - ${c.jornada}` : cl._id;
+        return { id: cl._id ?? cl.id, label: `${display} (${cl.academicYear})` };
+      }),
     });
 
     if (this.action === 'add') {
@@ -68,14 +76,6 @@ export class EnrollmentFormComponent {
           }));
           this.filteredStudents = this.allStudents;
         },
-      });
-
-      this.http.get<any>(`${environment.apiUrl}/curso-lectivo?limit=200&status=active`).subscribe({
-        next: r => this.cursosLectivos = r.data.data.map((cl: any) => {
-          const c = cl.cursoId;
-          const display = c ? `${c.nivel} - ${c.especialidad} - ${c.paralelo} - ${c.jornada}` : cl._id;
-          return { id: cl._id ?? cl.id, label: `${display} (${cl.academicYear})` };
-        }),
       });
 
       this.studentSearch.valueChanges.subscribe(val => {

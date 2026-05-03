@@ -30,24 +30,24 @@
             </mat-form-field>
           </div>
         </div>
-
-        <!-- Selector de Curso Lectivo -->
-        <div class="row">
-          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-            <mat-form-field class="example-full-width mb-3" appearance="outline">
-              <mat-label>Curso — Año Lectivo</mat-label>
-              <mat-select formControlName="cursoLectivoId" required>
-                @for (cl of cursosLectivos; track cl.id) {
-                  <mat-option [value]="cl.id">{{ cl.label }}</mat-option>
-                }
-              </mat-select>
-              @if (enrollmentForm.get('cursoLectivoId')?.hasError('required')) {
-                <mat-error>El curso lectivo es requerido</mat-error>
-              }
-            </mat-form-field>
-          </div>
-        </div>
       }
+
+      <!-- Selector de Curso Lectivo -->
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Curso — Año Lectivo</mat-label>
+            <mat-select formControlName="cursoLectivoId" required>
+              @for (cl of cursosLectivos; track cl.id) {
+                <mat-option [value]="cl.id">{{ cl.label }}</mat-option>
+              }
+            </mat-select>
+            @if (enrollmentForm.get('cursoLectivoId')?.hasError('required')) {
+              <mat-error>El curso lectivo es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
 
       <!-- Estado + Observaciones -->
       <div class="row">

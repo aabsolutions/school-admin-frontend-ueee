@@ -65,6 +65,7 @@ export class EnrollmentService {
     return this.http.put<ApiOne<any>>(`${this.API_URL}/${enrollment.id}`, {
       status: enrollment.status,
       notes: enrollment.notes,
+      ...(enrollment.cursoLectivoId ? { cursoLectivoId: enrollment.cursoLectivoId } : {}),
     }).pipe(
       map(r => this.normalize(r.data)),
       catchError(this.handleError)

@@ -63,6 +63,20 @@ export const TEACHER_ROUTE: Route[] = [
       import('./communicados/teacher-communicados-list.component').then((m) => m.TeacherCommunicadosListComponent),
   },
   {
+    path: 'asistencias/registro',
+    loadComponent: () =>
+      import('./asistencias/registro/attendance-registro.component').then(
+        (m) => m.AttendanceRegistroComponent,
+      ),
+  },
+  {
+    path: 'asistencias/historial',
+    loadComponent: () =>
+      import('./asistencias/historial/attendance-historial.component').then(
+        (m) => m.AttendanceHistorialComponent,
+      ),
+  },
+  {
     path: 'communicados/nuevo',
     loadComponent: () =>
       import('./communicados/nuevo-communicado.component').then((m) => m.NuevoCommunicadoComponent),

@@ -1,0 +1,84 @@
+<app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Stats -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="fs-2 fw-bold text-success">{{ attendanceRate }}%</div>
+          <div class="text-muted">Asistencia</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="fs-2 fw-bold text-success">{{ present }}</div>
+          <div class="text-muted">Presencias</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="fs-2 fw-bold text-danger">{{ absent }}</div>
+          <div class="text-muted">Ausencias</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card text-center p-3">
+          <div class="fs-2 fw-bold text-warning">{{ late }}</div>
+          <div class="text-muted">Tardanzas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="header"><h2>Historial de Asistencia</h2></div>
+      <div class="body table-responsive">
+        @if (isLoading) {
+          <div class="d-flex justify-content-center p-4">
+            <mat-spinner diameter="40"></mat-spinner>
+          </div>
+        } @else {
+          <table mat-table [dataSource]="dataSource" class="w-100">
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Fecha</th>
+              <td mat-cell *matCellDef="let row">{{ row.date | date:'dd/MM/yyyy' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge" [ngClass]="statusClass(row.entry?.status)">
+                  {{ getStatusLabel(row.entry?.status) }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="note">
+              <th mat-header-cell *matHeaderCellDef>Nota</th>
+              <td mat-cell *matCellDef="let row">{{ row.entry?.note || '—' }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center py-4" [attr.colspan]="displayedColumns.length">
+                Sin registros de asistencia.
+              </td>
+            </tr>
+          </table>
+
+          <mat-paginator
+            [length]="total"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex"
+            [pageSizeOptions]="[10, 20, 50]"
+            (page)="onPageChange($event)">
+          </mat-paginator>
+        }
+      </div>
+    </div>
+  </div>
+</section>

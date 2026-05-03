@@ -44,6 +44,18 @@
         "STUDENT-ATTENDANCE": "Asistencia del Estudiante"
       }
     },
+    "ASISTENCIAS": {
+      "TEXT": "Asistencias",
+      "LIST": {
+        "CONFIG": "Asignación de registro de asistencia",
+        "REPORTE": "Reporte Institucional de asistencia",
+        "CAPTURA": "Registro de Asistencia",
+        "REGISTRO": "Tomar Asistencia",
+        "HISTORIAL": "Historial",
+        "MI_ASISTENCIA": "Mi Asistencia",
+        "RESUMEN": "Resumen de Asistencia"
+      }
+    },
     "COURSES": {
       "TEXT": "Cursos",
       "LIST": {

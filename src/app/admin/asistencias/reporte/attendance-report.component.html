@@ -1,0 +1,143 @@
+<app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Filters -->
+    <div class="card">
+      <div class="header"><h2>Filtros</h2></div>
+      <div class="body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Curso Lectivo</mat-label>
+              <mat-select [(ngModel)]="selectedCursoLectivoId">
+                <mat-option *ngFor="let cl of cursoLectivos" [value]="cl._id">
+                  {{ cursoLabel(cl) }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Desde</mat-label>
+              <input matInput type="date" [(ngModel)]="dateFrom" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Hasta</mat-label>
+              <input matInput type="date" [(ngModel)]="dateTo" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-2">
+            <button mat-flat-button color="primary" class="w-100 mb-3" (click)="search()" [disabled]="isLoading">
+              <mat-icon>search</mat-icon> Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+    }
+
+    <!-- Metrics -->
+    @if (consolidated) {
+      <div class="row mt-3">
+        <div class="col-md-3">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold text-primary">{{ consolidated.totalDays }}</div>
+            <div class="text-muted">Días registrados</div>
+          </mat-card>
+        </div>
+        <div class="col-md-3">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold text-success">{{ consolidated.attendanceRate }}%</div>
+            <div class="text-muted">Tasa de asistencia</div>
+          </mat-card>
+        </div>
+        <div class="col-md-3">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold text-danger">{{ consolidated.totalAbsences }}</div>
+            <div class="text-muted">Total ausencias</div>
+          </mat-card>
+        </div>
+        <div class="col-md-3">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold">{{ consolidated.totalStudents }}</div>
+            <div class="text-muted">Estudiantes</div>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="card mt-4">
+        <div class="header d-flex justify-content-between align-items-center">
+          <h2>Detalle por Estudiante</h2>
+          <button mat-stroked-button (click)="exportCsv()">
+            <mat-icon>download</mat-icon> Exportar CSV
+          </button>
+        </div>
+        <div class="body table-responsive">
+          <table mat-table [dataSource]="dataSource" class="w-100">
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+              <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="present">
+              <th mat-header-cell *matHeaderCellDef>Presente</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge bg-success">{{ row.present }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="absent">
+              <th mat-header-cell *matHeaderCellDef>Ausente</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge bg-danger">{{ row.absent }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="late">
+              <th mat-header-cell *matHeaderCellDef>Tardanza</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge bg-warning text-dark">{{ row.late }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="excused">
+              <th mat-header-cell *matHeaderCellDef>Justificado</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge bg-secondary">{{ row.excused }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="rate">
+              <th mat-header-cell *matHeaderCellDef>% Asistencia</th>
+              <td mat-cell *matCellDef="let row">
+                <strong [class.text-danger]="attendanceRate(row) < 75">
+                  {{ attendanceRate(row) }}%
+                </strong>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center py-4" [attr.colspan]="displayedColumns.length">
+                Sin datos. Buscá un curso lectivo.
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</section>

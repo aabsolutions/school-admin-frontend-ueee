@@ -85,8 +85,32 @@
           "submenu": []
         },
         {
-          "path": "/admin/students/student-attendance",
-          "title": "MENUITEMS.STUDENTS.LIST.ATTENDANCE",
+          "path": "/admin/asistencias/config",
+          "title": "MENUITEMS.ASISTENCIAS.LIST.CONFIG",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/asistencias/reporte",
+          "title": "MENUITEMS.ASISTENCIAS.LIST.REPORTE",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/asistencias/captura",
+          "title": "MENUITEMS.ASISTENCIAS.LIST.CAPTURA",
           "iconType": "",
           "icon": "",
           "class": "ml-menu",
@@ -589,6 +613,30 @@
       "submenu": []
     },
     {
+      "path": "/teacher/asistencias/registro",
+      "title": "MENUITEMS.ASISTENCIAS.LIST.REGISTRO",
+      "iconType": "material-icons-outlined",
+      "icon": "fact_check",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/asistencias/historial",
+      "title": "MENUITEMS.ASISTENCIAS.LIST.HISTORIAL",
+      "iconType": "material-icons-outlined",
+      "icon": "history",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
       "path": "/teacher/communicados",
       "title": "Comunicados a Padres",
       "iconType": "material-icons-outlined",
@@ -709,6 +757,18 @@
       "submenu": []
     },
     {
+      "path": "/student/asistencias",
+      "title": "MENUITEMS.ASISTENCIAS.LIST.MI_ASISTENCIA",
+      "iconType": "material-icons-outlined",
+      "icon": "event_available",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
       "path": "/student/messaging",
       "title": "Mensajes",
       "iconType": "material-icons-outlined",
@@ -728,6 +788,18 @@
       "icon": "",
       "class": "",
       "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/asistencias",
+      "title": "MENUITEMS.ASISTENCIAS.LIST.RESUMEN",
+      "iconType": "material-icons-outlined",
+      "icon": "event_available",
+      "class": "",
+      "groupTitle": false,
       "badge": "",
       "badgeClass": "",
       "role": ["PARENT"],

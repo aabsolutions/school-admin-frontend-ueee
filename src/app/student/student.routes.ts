@@ -59,6 +59,13 @@ export const STUDENT_ROUTE: Route[] = [
     component: MessagingComponent,
   },
   {
+    path: 'asistencias',
+    loadComponent: () =>
+      import('./asistencias/student-asistencia.component').then(
+        (m) => m.StudentAsistenciaComponent,
+      ),
+  },
+  {
     path: 'settings',
     component: SettingsComponent,
   },

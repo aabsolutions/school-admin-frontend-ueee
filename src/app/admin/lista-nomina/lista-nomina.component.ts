@@ -130,6 +130,8 @@ export class ListaNominaComponent implements OnInit {
             female:       st.female,
           };
         });
+        this.filteredCursos = this.allCursosLectivos;
+        this.hasSearched = true;
         this.loadingCursos  = false;
       },
       error: () => { this.loadingCursos = false; },
@@ -157,7 +159,7 @@ export class ListaNominaComponent implements OnInit {
     this.loadingStudents = true;
     this.dataSource.data = [];
 
-    this.http.get<any>(`${environment.apiUrl}/enrollments?cursoLectivoId=${cl.id}&limit=500`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/enrollments?cursoLectivoId=${cl.id}&status=enrolled&limit=500`).subscribe({
       next: r => {
         const rows: StudentRow[] = r.data.data.map((e: any) => {
           const s = e.studentId ?? {};

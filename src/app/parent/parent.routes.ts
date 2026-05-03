@@ -29,6 +29,13 @@ export const PARENT_ROUTE: Route[] = [
       import('./communicados/communicado-detail.component').then((m) => m.CommunicadoDetailComponent),
   },
   {
+    path: 'asistencias',
+    loadComponent: () =>
+      import('./asistencias/parent-asistencia.component').then(
+        (m) => m.ParentAsistenciaComponent,
+      ),
+  },
+  {
     path: 'messaging',
     component: MessagingComponent,
   },

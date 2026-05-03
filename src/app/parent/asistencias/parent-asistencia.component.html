@@ -1,0 +1,84 @@
+<app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
+
+<section class="content">
+  <div class="container-fluid">
+    @if (isLoading) {
+      <div class="d-flex justify-content-center p-5">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+    } @else if (!children.length) {
+      <div class="alert alert-info">No hay datos de asistencia disponibles.</div>
+    } @else {
+      <mat-tab-group>
+        @for (child of children; track child.studentId) {
+          <mat-tab [label]="child.name">
+            <div class="p-3">
+
+              <!-- Summary cards -->
+              <div class="row mb-4">
+                <div class="col-md-3">
+                  <div class="card text-center p-3">
+                    <div class="fs-2 fw-bold" [class.text-success]="attendanceRate(child) >= 75"
+                         [class.text-danger]="attendanceRate(child) < 75">
+                      {{ attendanceRate(child) }}%
+                    </div>
+                    <div class="text-muted">Asistencia</div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card text-center p-3">
+                    <div class="fs-2 fw-bold text-success">{{ child.present }}</div>
+                    <div class="text-muted">Presencias</div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card text-center p-3">
+                    <div class="fs-2 fw-bold text-danger">{{ child.absent }}</div>
+                    <div class="text-muted">Ausencias</div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card text-center p-3">
+                    <div class="fs-2 fw-bold text-warning">{{ child.late }}</div>
+                    <div class="text-muted">Tardanzas</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recent records -->
+              <div class="card">
+                <div class="header"><h6>Últimos registros</h6></div>
+                <div class="body table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Nota</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (rec of child.recentRecords; track rec.date) {
+                        <tr>
+                          <td>{{ rec.date | date:'dd/MM/yyyy' }}</td>
+                          <td>
+                            <span class="badge" [ngClass]="statusClass(rec.status)">
+                              {{ statusLabel[rec.status] }}
+                            </span>
+                          </td>
+                          <td>{{ rec.note || '—' }}</td>
+                        </tr>
+                      } @empty {
+                        <tr><td colspan="3" class="text-center text-muted">Sin registros recientes.</td></tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        }
+      </mat-tab-group>
+    }
+  </div>
+</section>
