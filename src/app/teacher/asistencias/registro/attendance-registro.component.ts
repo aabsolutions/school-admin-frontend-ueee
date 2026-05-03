@@ -157,7 +157,7 @@ export class AttendanceRegistroComponent implements OnInit {
     return c ? `${c.nivel} ${c.paralelo} (${c.jornada}) — ${cl.academicYear}` : cl.academicYear;
   }
 
-  private todayStr(): string {
+  todayStr(): string {
     return new Date().toISOString().split('T')[0];
   }
 }
