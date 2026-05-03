@@ -28,6 +28,18 @@
         "ATTENDANCE": "Student Attendance"
       }
     },
+    "ASISTENCIAS": {
+      "TEXT": "Attendance",
+      "LIST": {
+        "CONFIG": "Assignment Config",
+        "REPORTE": "Institutional Report",
+        "CAPTURA": "Attendance Capture",
+        "REGISTRO": "Take Attendance",
+        "HISTORIAL": "Attendance History",
+        "MI_ASISTENCIA": "My Attendance",
+        "RESUMEN": "Attendance Summary"
+      }
+    },
     "TEACHERS": {
       "TEXT": "Teachers",
       "LIST": {
