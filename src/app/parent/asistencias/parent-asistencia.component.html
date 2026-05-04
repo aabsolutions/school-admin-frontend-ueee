@@ -14,35 +14,15 @@
           <mat-tab [label]="child.name">
             <div class="p-3">
 
-              <!-- Summary cards -->
-              <div class="row mb-4">
-                <div class="col-md-3">
-                  <div class="card text-center p-3">
-                    <div class="fs-2 fw-bold" [class.text-success]="attendanceRate(child) >= 75"
-                         [class.text-danger]="attendanceRate(child) < 75">
-                      {{ attendanceRate(child) }}%
-                    </div>
-                    <div class="text-muted">Asistencia</div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="card text-center p-3">
-                    <div class="fs-2 fw-bold text-success">{{ child.present }}</div>
-                    <div class="text-muted">Presencias</div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="card text-center p-3">
-                    <div class="fs-2 fw-bold text-danger">{{ child.absent }}</div>
-                    <div class="text-muted">Ausencias</div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="card text-center p-3">
-                    <div class="fs-2 fw-bold text-warning">{{ child.late }}</div>
-                    <div class="text-muted">Tardanzas</div>
-                  </div>
-                </div>
+              <!-- Pie chart -->
+              <div class="d-flex justify-content-center mb-4">
+                <app-chart-card4
+                  [title]="child.name"
+                  [labels]="ATTENDANCE_LABELS"
+                  [data]="chartDataMap.get(child.studentId)!"
+                  [colors]="ATTENDANCE_COLORS"
+                  (sliceClick)="onSliceClick(child, $event)">
+                </app-chart-card4>
               </div>
 
               <!-- Recent records -->

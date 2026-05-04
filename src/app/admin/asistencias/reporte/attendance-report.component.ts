@@ -11,6 +11,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
+import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
+import { TableExportUtil } from '@shared';
 import { AsistenciasService } from '@shared/services/asistencias.service';
 import { AttendanceConsolidated, StudentAttendanceSummary } from '@shared/services/asistencias.model';
 
@@ -30,6 +32,7 @@ import { AttendanceConsolidated, StudentAttendanceSummary } from '@shared/servic
     MatProgressSpinnerModule,
     MatSnackBarModule,
     BreadcrumbComponent,
+    TableShowHideColumnComponent,
   ],
   templateUrl: './attendance-report.component.html',
 })
@@ -42,9 +45,21 @@ export class AttendanceReportComponent implements OnInit {
   dateTo = '';
 
   consolidated: AttendanceConsolidated | null = null;
-  displayedColumns = ['name', 'present', 'absent', 'late', 'excused', 'rate'];
   dataSource = new MatTableDataSource<StudentAttendanceSummary>();
   isLoading = false;
+
+  columnDefinitions = [
+    { def: 'name',    label: 'Estudiante',   visible: true },
+    { def: 'present', label: 'Presente',     visible: true },
+    { def: 'absent',  label: 'Ausente',      visible: true },
+    { def: 'late',    label: 'Tardanza',     visible: true },
+    { def: 'excused', label: 'Justificado',  visible: true },
+    { def: 'rate',    label: '% Asistencia', visible: true },
+  ];
+
+  getDisplayedColumns(): string[] {
+    return this.columnDefinitions.filter(c => c.visible).map(c => c.def);
+  }
 
   constructor(private svc: AsistenciasService, private snack: MatSnackBar) {}
 
@@ -88,26 +103,16 @@ export class AttendanceReportComponent implements OnInit {
     return total > 0 ? Math.round((row.present / total) * 100) : 100;
   }
 
-  exportCsv() {
+  exportXls() {
     if (!this.dataSource.data.length) return;
-    const rows = this.dataSource.data.map((s) => ({
-      Estudiante: s.name,
-      DNI: s.dni ?? '',
-      Presente: s.present,
-      Ausente: s.absent,
-      Tardanza: s.late,
-      Justificado: s.excused,
-      '% Asistencia': this.attendanceRate(s),
-    }));
-    const csv = [Object.keys(rows[0]).join(',')]
-      .concat(rows.map((r) => Object.values(r).join(',')))
-      .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'reporte-asistencias.csv';
-    a.click();
-    URL.revokeObjectURL(url);
+    const visibleCols = this.columnDefinitions.filter(c => c.visible);
+    const data = this.dataSource.data.map(s => {
+      const row: Record<string, string | number> = {};
+      visibleCols.forEach(col => {
+        row[col.label] = col.def === 'rate' ? this.attendanceRate(s) : (s as any)[col.def] ?? '';
+      });
+      return row;
+    });
+    TableExportUtil.exportToExcel(data, 'reporte-asistencias');
   }
 }

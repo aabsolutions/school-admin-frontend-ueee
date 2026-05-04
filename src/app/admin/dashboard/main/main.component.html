@@ -36,7 +36,11 @@
         <app-attendance-chart></app-attendance-chart>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
-        <app-chart-card4 [maleCount]="2078" [femaleCount]="1825">
+        <app-chart-card4
+          title="Estudiantes"
+          [labels]="['Masculino', 'Femenino']"
+          [data]="[2078, 1825]"
+          [colors]="['#4F58D2', '#EDBE27']">
         </app-chart-card4>
       </div>
       <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">

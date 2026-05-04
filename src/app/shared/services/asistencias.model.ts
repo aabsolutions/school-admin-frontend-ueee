@@ -90,6 +90,7 @@ export interface ChildAttendanceSummary {
   present: number;
   absent: number;
   late: number;
+  excused: number;
   recentRecords: Array<{ date: string; status: AttendanceStatus; note: string }>;
 }
 

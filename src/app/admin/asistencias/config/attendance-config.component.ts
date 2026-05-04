@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { AsistenciasService } from '@shared/services/asistencias.service';
 import { AttendanceAssignment } from '@shared/services/asistencias.model';
+import { Role } from '@core/models/role';
 
 // ─── Dialog ─────────────────────────────────────────────────────────────────
 
@@ -137,7 +138,10 @@ export class AttendanceConfigComponent implements OnInit {
 
   openDialog() {
     const ref = this.dialog.open(AssignDialogComponent, {
-      data: { users: this.users, cursoLectivos: this.cursoLectivos },
+      data: {
+        users: this.users.filter(u => u.role !== Role.Teacher && u.role !== Role.Student && u.role !== Role.Parent),
+        cursoLectivos: this.cursoLectivos,
+      },
     });
     ref.afterClosed().subscribe((result) => {
       if (!result) return;
