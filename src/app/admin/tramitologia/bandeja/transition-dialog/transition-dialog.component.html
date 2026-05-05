@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Cambiar Estado — {{ data.tramite.codigo }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="d-flex flex-column gap-3 pt-2">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Nuevo estado</mat-label>
+      <mat-select formControlName="newState">
+        <mat-option *ngFor="let s of availableStates" [value]="s">{{ stateLabel(s) }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Observación <span *ngIf="isRechazado">(requerida)</span><span *ngIf="!isRechazado">(opcional)</span></mat-label>
+      <textarea matInput formControlName="observation" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="confirm()" [disabled]="form.invalid || saving">
+    <mat-spinner *ngIf="saving" diameter="16" class="d-inline-block me-1"></mat-spinner>
+    Confirmar
+  </button>
+</mat-dialog-actions>

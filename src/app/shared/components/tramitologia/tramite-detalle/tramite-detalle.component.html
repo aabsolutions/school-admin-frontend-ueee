@@ -1,0 +1,82 @@
+<section class="content">
+  <div class="content-block">
+    @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div *ngIf="!tramite" class="text-center py-5">
+          <mat-spinner diameter="40" class="mx-auto"></mat-spinner>
+        </div>
+
+        <ng-container *ngIf="tramite">
+          <div class="row g-3">
+
+            <!-- Main content -->
+            <div class="col-md-8">
+              <div class="card">
+                <div class="header d-flex align-items-center gap-3">
+                  <h2 class="mb-0">{{ tramite.codigo }}</h2>
+                  <app-tramite-status-badge [state]="tramite.state"></app-tramite-status-badge>
+                  <small class="text-muted ms-auto">{{ tramite.plantilla.nombre }} · v{{ tramite.plantilla.version }}</small>
+                </div>
+                <div class="body">
+                  <div class="rendered-html p-3 border rounded bg-white text-dark" [innerHTML]="tramite.renderedHtml"></div>
+                </div>
+                <div class="footer" *ngIf="tramite.state === 'finalizado' || tramite.state === 'aprobado'">
+                  <div class="container">
+                    <a [href]="pdfUrl" target="_blank" mat-flat-button color="accent">
+                      <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
+                    </a>
+                  </div>
+                </div>
+                <p></p>
+              </div>
+
+              <!-- Adjuntos -->
+              <div class="card" *ngIf="tramite.attachments.length">
+                <div class="header"><h2>Adjuntos ({{ tramite.attachments.length }})</h2></div>
+                <div class="body">
+                  <div *ngFor="let att of tramite.attachments"
+                      class="d-flex align-items-center gap-2 py-2 border-bottom">
+                    <mat-icon class="text-muted">attach_file</mat-icon>
+                    <span>{{ att.name }}</span>
+                    <span class="badge bg-light text-dark ms-2">{{ att.mime }}</span>
+                    <a [href]="att.url" target="_blank" mat-icon-button color="primary" class="ms-auto">
+                      <mat-icon>download</mat-icon>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Historial -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="header"><h2>Historial</h2></div>
+                <div class="body">
+                  <div *ngFor="let h of history" class="pb-3 mb-3 border-bottom">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="badge" [ngClass]="stateBadgeClass(h.toState)">{{ h.fromState }} → {{ h.toState }}</span>
+                      <small class="text-muted">{{ h.createdAt | date:'dd/MM HH:mm' }}</small>
+                    </div>
+                    <div class="small text-muted">{{ actorName(h) }}</div>
+                    <div *ngIf="h.observation" class="small fst-italic mt-1 text-secondary">
+                      "{{ h.observation }}"
+                    </div>
+                  </div>
+                  <p *ngIf="history.length === 0" class="text-muted small">Sin historial.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>

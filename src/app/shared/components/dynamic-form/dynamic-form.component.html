@@ -1,0 +1,37 @@
+<form [formGroup]="form" class="dynamic-form">
+  <div *ngFor="let v of sortedVariables" class="mb-3">
+    <ng-container [ngSwitch]="v.fieldType">
+
+      <mat-form-field appearance="outline" class="w-100" *ngSwitchCase="'select'">
+        <mat-label>{{ v.label }}<span *ngIf="v.required" class="text-danger ms-1">*</span></mat-label>
+        <mat-select [formControlName]="v.key">
+          <mat-option *ngFor="let o of v.options" [value]="o">{{ o }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100" *ngSwitchCase="'date'">
+        <mat-label>{{ v.label }}<span *ngIf="v.required" class="text-danger ms-1">*</span></mat-label>
+        <input matInput [matDatepicker]="picker" [formControlName]="v.key" [placeholder]="v.placeholder || ''">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100" *ngSwitchCase="'textarea'">
+        <mat-label>{{ v.label }}<span *ngIf="v.required" class="text-danger ms-1">*</span></mat-label>
+        <textarea matInput [formControlName]="v.key" rows="4" [placeholder]="v.placeholder || ''"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100" *ngSwitchDefault>
+        <mat-label>{{ v.label }}<span *ngIf="v.required" class="text-danger ms-1">*</span></mat-label>
+        <input matInput [type]="v.fieldType === 'number' ? 'number' : v.fieldType === 'email' ? 'email' : 'text'"
+               [formControlName]="v.key" [placeholder]="v.placeholder || ''">
+      </mat-form-field>
+
+    </ng-container>
+    <div *ngIf="form.get(v.key)?.invalid && form.get(v.key)?.touched" class="text-danger small mt-1">
+      Campo requerido
+    </div>
+  </div>
+
+  <p *ngIf="sortedVariables.length === 0" class="text-muted small">Esta plantilla no tiene variables configuradas.</p>
+</form>

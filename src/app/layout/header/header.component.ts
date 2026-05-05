@@ -29,11 +29,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatBadgeModule } from '@angular/material/badge';
 
 const TYPE_ICON: Record<string, { icon: string; color: string }> = {
-  message:    { icon: 'chat',                 color: 'nfc-blue' },
-  system:     { icon: 'campaign',             color: 'nfc-orange' },
-  enrollment: { icon: 'assignment_turned_in', color: 'nfc-green' },
-  expediente: { icon: 'folder_special',       color: 'nfc-red' },
-  dece:       { icon: 'psychology',           color: 'nfc-purple' },
+  message:       { icon: 'chat',                 color: 'nfc-blue' },
+  system:        { icon: 'campaign',             color: 'nfc-orange' },
+  enrollment:    { icon: 'assignment_turned_in', color: 'nfc-green' },
+  expediente:    { icon: 'folder_special',       color: 'nfc-red' },
+  dece:          { icon: 'psychology',           color: 'nfc-purple' },
+  tramitologia:  { icon: 'description',          color: 'nfc-blush' },
 };
 
 @Component({

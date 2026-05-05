@@ -1,0 +1,105 @@
+<section class="content">
+  <div class="content-block">
+    @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <mat-stepper linear #stepper>
+
+              <!-- Step 1: Seleccionar plantilla -->
+              <mat-step label="Seleccionar Plantilla">
+                <div class="py-3">
+                  <div *ngIf="loadingPlantillas" class="text-center py-4">
+                    <mat-spinner diameter="36" class="mx-auto"></mat-spinner>
+                  </div>
+                  <div class="row g-3" *ngIf="!loadingPlantillas">
+                    <div class="col-md-4" *ngFor="let p of plantillas">
+                      <div class="card cursor-pointer mb-0"
+                          [class.border]="selectedPlantilla?._id === p._id"
+                          [style.border-color]="selectedPlantilla?._id === p._id ? '#7367f0' : 'transparent'"
+                          (click)="selectPlantilla(p)"
+                          style="cursor:pointer">
+                        <div class="body">
+                          <h6 class="mb-1">{{ p.nombre }}</h6>
+                          <p class="text-muted small mb-1">{{ p.descripcion }}</p>
+                          <span class="badge bg-light text-dark">{{ p.categoria }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="plantillas.length === 0" class="col-12">
+                      <p class="text-muted">No hay plantillas disponibles para tu rol.</p>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <button mat-flat-button color="primary" matStepperNext [disabled]="!selectedPlantilla">
+                      Siguiente <mat-icon>chevron_right</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+              <!-- Step 2: Completar variables -->
+              <mat-step label="Completar Datos">
+                <div class="py-3" *ngIf="selectedPlantilla">
+                  <app-dynamic-form [variables]="selectedPlantilla!.variables"
+                                    (formChange)="onDynamicFormChange($event)">
+                  </app-dynamic-form>
+                  <div class="mt-3 d-flex gap-2">
+                    <button mat-button matStepperPrevious>Atrás</button>
+                    <button mat-flat-button color="primary" matStepperNext [disabled]="!dynamicForm?.valid">
+                      Siguiente <mat-icon>chevron_right</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+              <!-- Step 3: Adjuntos + Operativo + Envío -->
+              <mat-step label="Adjuntos y Envío">
+                <div class="py-3">
+
+                  <div *ngIf="selectedPlantilla?.requiredAttachments?.length" class="mb-4">
+                    <h6>Adjuntos requeridos</h6>
+                    <div *ngFor="let att of selectedPlantilla!.requiredAttachments; let i = index" class="mb-3">
+                      <label class="form-label">
+                        {{ att.name }}
+                        <span *ngIf="att.required" class="text-danger">*</span>
+                      </label>
+                      <input type="file" class="form-control" (change)="onFileSelected($event, i)"
+                            [accept]="att.allowedMimes.join(',')">
+                      <div class="form-text" *ngIf="att.description">{{ att.description }}</div>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label class="form-label">Asignar Operativo <span class="text-muted">(opcional)</span></label>
+                    <select class="form-select" [(ngModel)]="selectedOperativoId">
+                      <option value="">— Sin asignar —</option>
+                      <option *ngFor="let op of operatives" [value]="op._id">{{ op.name }}</option>
+                    </select>
+                  </div>
+
+                  <div class="d-flex gap-2">
+                    <button mat-button matStepperPrevious>Atrás</button>
+                    <button mat-flat-button color="primary" (click)="submit()" [disabled]="submitting">
+                      <mat-spinner *ngIf="submitting" diameter="18" class="d-inline-block me-1"></mat-spinner>
+                      <mat-icon *ngIf="!submitting">send</mat-icon>
+                      Enviar Trámite
+                    </button>
+                  </div>
+                </div>
+              </mat-step>
+
+            </mat-stepper>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

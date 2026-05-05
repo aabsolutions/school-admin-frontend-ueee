@@ -127,5 +127,12 @@ export const ADMIN_ROUTE: Route[] = [
         (m) => m.ADMIN_ASISTENCIAS_ROUTE,
       ),
   },
+  {
+    path: 'tramitologia',
+    loadChildren: () =>
+      import('./tramitologia/admin-tramitologia.routes').then(
+        (m) => m.ADMIN_TRAMITOLOGIA_ROUTE,
+      ),
+  },
   { path: '**', component: Page404Component },
 ];

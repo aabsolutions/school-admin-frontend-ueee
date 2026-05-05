@@ -66,6 +66,13 @@ export const STUDENT_ROUTE: Route[] = [
       ),
   },
   {
+    path: 'tramitologia',
+    loadChildren: () =>
+      import('./tramitologia/student-tramitologia.routes').then(
+        (m) => m.STUDENT_TRAMITOLOGIA_ROUTE,
+      ),
+  },
+  {
     path: 'settings',
     component: SettingsComponent,
   },

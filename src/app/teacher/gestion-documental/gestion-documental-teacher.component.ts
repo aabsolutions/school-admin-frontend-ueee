@@ -100,7 +100,7 @@ export class GestionDocumentalTeacherComponent implements OnInit {
 
   upload() {
     if (!this.selectedFile || !this.uploadNombre.trim()) {
-      this.snackBar.open('Seleccioná un archivo y completá el nombre', '', {
+      this.snackBar.open('Seleccione un archivo y complete el nombre', '', {
         duration: 3000, panelClass: 'snackbar-danger',
       });
       return;

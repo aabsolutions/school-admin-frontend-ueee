@@ -36,6 +36,13 @@ export const PARENT_ROUTE: Route[] = [
       ),
   },
   {
+    path: 'tramitologia',
+    loadChildren: () =>
+      import('./tramitologia/parent-tramitologia.routes').then(
+        (m) => m.PARENT_TRAMITOLOGIA_ROUTE,
+      ),
+  },
+  {
     path: 'messaging',
     component: MessagingComponent,
   },

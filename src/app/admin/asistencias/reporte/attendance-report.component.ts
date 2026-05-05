@@ -75,7 +75,7 @@ export class AttendanceReportComponent implements OnInit {
 
   search() {
     if (!this.selectedCursoLectivoId) {
-      this.snack.open('Seleccioná un curso lectivo', 'OK', { duration: 3000 });
+      this.snack.open('Seleccione un curso lectivo', 'OK', { duration: 3000 });
       return;
     }
     this.isLoading = true;

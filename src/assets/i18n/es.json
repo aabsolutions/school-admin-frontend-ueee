@@ -44,6 +44,18 @@
         "STUDENT-ATTENDANCE": "Asistencia del Estudiante"
       }
     },
+    "TRAMITOLOGIA": {
+      "TEXT": "Tramitología",
+      "MAIN": "Trámites",
+      "SOLICITAR": "Solicitar Trámite",
+      "MIS_TRAMITES": "Mis Trámites",
+      "LIST": {
+        "DASHBOARD": "Dashboard",
+        "PLANTILLAS": "Plantillas",
+        "BANDEJA": "Bandeja",
+        "REPORTES": "Reportes"
+      }
+    },
     "ASISTENCIAS": {
       "TEXT": "Asistencias",
       "LIST": {

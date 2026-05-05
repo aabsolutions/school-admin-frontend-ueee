@@ -65,7 +65,7 @@
             @if (!selectedDocente) {
               <div class="right pe-3 d-flex align-items-center" style="color: #f57c00; font-size: 13px;">
                 <mat-icon style="font-size:18px; vertical-align:middle; margin-right:4px;">info</mat-icon>
-                Seleccioná un docente para gestionar su carga horaria
+                Selecciona un docente para gestionar su carga horaria
               </div>
             }
           </div>
@@ -107,7 +107,7 @@
                   <mat-header-cell *matHeaderCellDef>Materias Asignadas</mat-header-cell>
                   <mat-cell *matCellDef="let row">
                     @if (!selectedDocente) {
-                      <span class="text-muted" style="font-size:12px;">— seleccioná un docente —</span>
+                      <span class="text-muted" style="font-size:12px;">— seleccione un docente —</span>
                     } @else {
                       <span style="font-size: 12px; color: #555;">
                         {{ getMateriasDelDocente(row.id) }}
@@ -124,7 +124,7 @@
                       [disabled]="!selectedDocente"
                       (click)="$event.stopPropagation(); openAsignar(row)"
                       class="tbl-action-btn"
-                      [matTooltip]="selectedDocente ? 'Asignar materias a ' + selectedDocente.name : 'Seleccioná un docente primero'">
+                      [matTooltip]="selectedDocente ? 'Asignar materias a ' + selectedDocente.name : 'Seleccione un docente primero'">
                       <app-feather-icons [icon]="'book-open'" [class]="'tbl-fav-edit'"></app-feather-icons>
                     </button>
                   </mat-cell>

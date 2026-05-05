@@ -77,6 +77,13 @@ export const TEACHER_ROUTE: Route[] = [
       ),
   },
   {
+    path: 'tramitologia',
+    loadChildren: () =>
+      import('./tramitologia/teacher-tramitologia.routes').then(
+        (m) => m.TEACHER_TRAMITOLOGIA_ROUTE,
+      ),
+  },
+  {
     path: 'communicados/nuevo',
     loadComponent: () =>
       import('./communicados/nuevo-communicado.component').then((m) => m.NuevoCommunicadoComponent),
