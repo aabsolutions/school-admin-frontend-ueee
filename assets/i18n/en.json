@@ -28,6 +28,18 @@
         "ATTENDANCE": "Student Attendance"
       }
     },
+    "TRAMITOLOGIA": {
+      "TEXT": "Paperwork",
+      "MAIN": "Procedures",
+      "SOLICITAR": "New Request",
+      "MIS_TRAMITES": "My Requests",
+      "LIST": {
+        "DASHBOARD": "Dashboard",
+        "PLANTILLAS": "Templates",
+        "BANDEJA": "Inbox",
+        "REPORTES": "Reports"
+      }
+    },
     "ASISTENCIAS": {
       "TEXT": "Attendance",
       "LIST": {

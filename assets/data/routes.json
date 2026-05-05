@@ -124,6 +124,79 @@
     },
     {
       "path": "",
+      "title": "MENUITEMS.TRAMITOLOGIA.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "MENUITEMS.TRAMITOLOGIA.MAIN",
+      "iconType": "material-icons-outlined",
+      "icon": "description",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
+      "submenu": [
+        {
+          "path": "/admin/tramitologia/dashboard",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.DASHBOARD",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_VERIFICADOR"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/tramitologia/plantillas",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.PLANTILLAS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/tramitologia/bandeja",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.BANDEJA",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/tramitologia/reportes",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.REPORTES",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_VERIFICADOR"],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
       "title": "MENUITEMS.TEACHERS.TEXT",
       "iconType": "material-icons-outlined",
       "icon": "person",
@@ -649,6 +722,30 @@
       "submenu": []
     },
     {
+      "path": "/teacher/tramitologia/solicitar",
+      "title": "MENUITEMS.TRAMITOLOGIA.SOLICITAR",
+      "iconType": "material-icons-outlined",
+      "icon": "description",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/tramitologia/mis-tramites",
+      "title": "MENUITEMS.TRAMITOLOGIA.MIS_TRAMITES",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
       "path": "/teacher/messaging",
       "title": "Mensajes",
       "iconType": "material-icons-outlined",
@@ -769,6 +866,30 @@
       "submenu": []
     },
     {
+      "path": "/student/tramitologia/solicitar",
+      "title": "MENUITEMS.TRAMITOLOGIA.SOLICITAR",
+      "iconType": "material-icons-outlined",
+      "icon": "description",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
+      "path": "/student/tramitologia/mis-tramites",
+      "title": "MENUITEMS.TRAMITOLOGIA.MIS_TRAMITES",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
       "path": "/student/messaging",
       "title": "Mensajes",
       "iconType": "material-icons-outlined",
@@ -834,6 +955,30 @@
       "title": "Mensajes",
       "iconType": "material-icons-outlined",
       "icon": "chat",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/tramitologia/solicitar",
+      "title": "MENUITEMS.TRAMITOLOGIA.SOLICITAR",
+      "iconType": "material-icons-outlined",
+      "icon": "description",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/tramitologia/mis-tramites",
+      "title": "MENUITEMS.TRAMITOLOGIA.MIS_TRAMITES",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
       "class": "",
       "groupTitle": false,
       "badge": "",
