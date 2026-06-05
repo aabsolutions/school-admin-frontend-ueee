@@ -1,0 +1,191 @@
+<h2 mat-dialog-title>
+  <mat-icon style="vertical-align: middle; margin-right: 8px;">upload_file</mat-icon>
+  Alta Masiva — {{ config.entityName }}
+</h2>
+
+<mat-dialog-content>
+
+  <!-- Step indicator -->
+  <div class="step-indicator">
+    <span [class.active]="step === 'upload'" [class.done]="step !== 'upload'">
+      <mat-icon>cloud_upload</mat-icon> Cargar archivo
+    </span>
+    <mat-icon class="sep">chevron_right</mat-icon>
+    <span [class.active]="step === 'preview'" [class.done]="step === 'result'">
+      <mat-icon>table_view</mat-icon> Previsualizar
+    </span>
+    <mat-icon class="sep">chevron_right</mat-icon>
+    <span [class.active]="step === 'result'">
+      <mat-icon>check_circle</mat-icon> Resultado
+    </span>
+  </div>
+
+  <!-- ─── STEP 1: Upload ─────────────────────────────────────────────── -->
+  @if (step === 'upload') {
+    <div class="step-content upload-step">
+      <div class="instructions">
+        <p>
+          <strong>Paso 1:</strong> Descargá la plantilla Excel con las columnas correctas.
+          Los campos marcados con <strong>*</strong> son obligatorios (<strong>Nombre</strong> y <strong>Cédula</strong>).
+        </p>
+        <button mat-stroked-button color="primary" (click)="downloadTemplate()">
+          <mat-icon>download</mat-icon> Descargar Plantilla
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="upload-area">
+        <p><strong>Paso 2:</strong> Completá la plantilla y subí el archivo.</p>
+        <label class="file-label" for="bulk-file-input">
+          <mat-icon>attach_file</mat-icon>
+          @if (fileName) {
+            {{ fileName }}
+          } @else {
+            Seleccionar archivo .xlsx
+          }
+        </label>
+        <input
+          id="bulk-file-input"
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+      </div>
+
+      @if (parseError) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon> {{ parseError }}
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ─── STEP 2: Preview ───────────────────────────────────────────── -->
+  @if (step === 'preview') {
+    <div class="step-content">
+      <div class="preview-summary">
+        <span class="badge total">{{ parsedRows.length }} filas detectadas</span>
+        @if (invalidRowIndices.size > 0) {
+          <span class="badge invalid">{{ invalidRowIndices.size }} con campos obligatorios faltantes (se omitirán)</span>
+        }
+        <span class="badge valid">{{ validRows.length }} se importarán</span>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="parsedRows" class="preview-table">
+          @for (col of config.columns; track col.key) {
+            <ng-container [matColumnDef]="col.key">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ col.label }}@if (col.required) { <span class="req">*</span> }
+              </th>
+              <td mat-cell *matCellDef="let row; let i = index"
+                  [class.missing]="col.required && !row[col.key]">
+                {{ row[col.key] || '—' }}
+              </td>
+            </ng-container>
+          }
+          <ng-container matColumnDef="_status">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let row; let i = index">
+              @if (isRowInvalid(i)) {
+                <span class="row-invalid"><mat-icon>error</mat-icon> Incompleta</span>
+              } @else {
+                <span class="row-ok"><mat-icon>check</mat-icon> OK</span>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; let i = index; columns: displayedColumns"
+              [class.invalid-row]="isRowInvalid(i)"></tr>
+        </table>
+      </div>
+
+      @if (parseError) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon> {{ parseError }}
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ─── STEP 3: Result ────────────────────────────────────────────── -->
+  @if (step === 'result' && result) {
+    <div class="step-content result-step">
+      <div class="result-cards">
+        <div class="result-card success">
+          <mat-icon>check_circle</mat-icon>
+          <span class="count">{{ result.successCount }}</span>
+          <span class="label">Creados</span>
+        </div>
+        <div class="result-card error" [class.zero]="result.failureCount === 0">
+          <mat-icon>cancel</mat-icon>
+          <span class="count">{{ result.failureCount }}</span>
+          <span class="label">Fallidos</span>
+        </div>
+        <div class="result-card neutral">
+          <mat-icon>summarize</mat-icon>
+          <span class="count">{{ result.total }}</span>
+          <span class="label">Total</span>
+        </div>
+      </div>
+
+      @if (result.failed.length > 0) {
+        <div class="failed-list">
+          <h4>Errores por fila:</h4>
+          <table mat-table [dataSource]="result.failed" class="errors-table">
+            <ng-container matColumnDef="row">
+              <th mat-header-cell *matHeaderCellDef>Fila</th>
+              <td mat-cell *matCellDef="let f">{{ f.row }}</td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let f">{{ f.data?.name || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="dni">
+              <th mat-header-cell *matHeaderCellDef>Cédula</th>
+              <td mat-cell *matCellDef="let f">{{ f.data?.dni || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="error">
+              <th mat-header-cell *matHeaderCellDef>Error</th>
+              <td mat-cell *matCellDef="let f" class="error-msg">{{ f.error }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['row','name','dni','error']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['row','name','dni','error']"></tr>
+          </table>
+        </div>
+        <button mat-stroked-button color="warn" (click)="downloadErrorReport()">
+          <mat-icon>download</mat-icon> Descargar reporte de errores
+        </button>
+      }
+    </div>
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  @if (step === 'upload') {
+    <button mat-button (click)="close()">Cancelar</button>
+  }
+  @if (step === 'preview') {
+    <button mat-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="validRows.length === 0 || isSubmitting"
+      (click)="submitImport()"
+    >
+      <mat-icon>{{ isSubmitting ? 'hourglass_empty' : 'upload' }}</mat-icon>
+      {{ isSubmitting ? 'Importando...' : 'Importar ' + validRows.length + ' registros' }}
+    </button>
+  }
+  @if (step === 'result') {
+    <button mat-raised-button color="primary" (click)="close()">
+      <mat-icon>done</mat-icon> Cerrar
+    </button>
+  }
+</mat-dialog-actions>

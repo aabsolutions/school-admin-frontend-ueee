@@ -114,6 +114,13 @@ export class StudentsService {
     return value._id ?? value.id ?? null;
   }
 
+  bulkCreate(records: Record<string, any>[]): Observable<any> {
+    return this.httpClient.post<any>(`${this.API_URL}/bulk`, { records }).pipe(
+      map(res => res.data),
+      catchError(this.handleError)
+    );
+  }
+
   searchStudents(q: string): Observable<any[]> {
     const params = new HttpParams().set('search', q).set('limit', '20');
     return this.httpClient.get<any>(this.API_URL, { params }).pipe(

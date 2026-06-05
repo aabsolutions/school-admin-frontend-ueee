@@ -1,16 +1,21 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormsModule, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { TramitologiaService } from '@shared/services/tramitologia.service';
 import { DynamicFormComponent } from '../../dynamic-form/dynamic-form.component';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
-import { Plantilla } from '@shared/services/tramitologia.model';
+import { Plantilla, HijoActivo } from '@shared/services/tramitologia.model';
+import { AuthService } from '@core/service/auth.service';
+import { ParentsService } from '@core/service/parents.service';
 
 @Component({
   selector: 'app-solicitar-tramite',
@@ -19,6 +24,7 @@ import { Plantilla } from '@shared/services/tramitologia.model';
     CommonModule, ReactiveFormsModule, FormsModule, RouterModule,
     MatStepperModule, MatButtonModule, MatIconModule,
     MatSnackBarModule, MatProgressSpinnerModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule,
     DynamicFormComponent, BreadcrumbComponent,
   ],
   templateUrl: './solicitar-tramite.component.html',
@@ -37,14 +43,55 @@ export class SolicitarTramiteComponent implements OnInit {
   submitting = false;
   loadingPlantillas = false;
 
+  isParent = false;
+  repForm!: FormGroup;
+  hijosActivos: HijoActivo[] = [];
+  selectedHijo: HijoActivo | null = null;
+  selectedHijoStudentId = '';
+
   constructor(
     private tramitologiaService: TramitologiaService,
     private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private parentsService: ParentsService,
   ) {}
 
   ngOnInit() {
+    this.repForm = this.fb.group({
+      nombre: [''],
+      dni: [''],
+      contacto: [''],
+    });
+
+    const currentUser = this.authService.currentUserValue;
+    this.isParent = currentUser?.roles?.[0]?.name === 'PARENT';
+
+    if (this.isParent) {
+      this.parentsService.getMe().subscribe({
+        next: (profile) => {
+          this.repForm.patchValue({
+            nombre: profile.name,
+            dni: profile.dni ?? '',
+            contacto: profile.mobile ?? '',
+          });
+        },
+        error: () => {},
+      });
+      this.parentsService.getHijosActivos().subscribe({
+        next: (hijos) => {
+          this.hijosActivos = hijos;
+          if (hijos.length === 1) {
+            this.selectedHijoStudentId = hijos[0].student._id;
+            this.selectedHijo = hijos[0];
+          }
+        },
+        error: () => {},
+      });
+    }
+
     this.loadingPlantillas = true;
     this.tramitologiaService.getAvailablePlantillas().subscribe({
       next: (p) => { this.plantillas = p; this.loadingPlantillas = false; },
@@ -63,6 +110,10 @@ export class SolicitarTramiteComponent implements OnInit {
 
   onDynamicFormChange(form: FormGroup) { this.dynamicForm = form; }
 
+  onHijoChange(studentId: string) {
+    this.selectedHijo = this.hijosActivos.find((h) => h.student._id === studentId) ?? null;
+  }
+
   onFileSelected(event: Event, idx: number) {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file && this.selectedPlantilla) {
@@ -77,11 +128,24 @@ export class SolicitarTramiteComponent implements OnInit {
     const values = this.dynamicFormComp?.getValues()
       ?? Object.entries(this.dynamicForm!.value).map(([key, value]) => ({ key, value }));
 
-    this.tramitologiaService.createTramite({
+    const payload: any = {
       plantillaId: this.selectedPlantilla._id,
       operativoUserId: this.selectedOperativoId || undefined,
       values,
-    }).subscribe({
+    };
+
+    if (this.isParent) {
+      const rep = this.repForm.value;
+      if (rep.nombre || rep.dni || rep.contacto) {
+        payload.datosRepresentante = rep;
+      }
+      if (this.selectedHijo) {
+        payload.estudianteId = this.selectedHijo.student._id;
+        payload.cursoNombre = this.selectedHijo.cursoNombre;
+      }
+    }
+
+    this.tramitologiaService.createTramite(payload).subscribe({
       next: async (tramite) => {
         for (const sf of this.selectedFiles) {
           if (!sf) continue;

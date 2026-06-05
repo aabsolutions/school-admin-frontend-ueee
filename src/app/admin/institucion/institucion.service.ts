@@ -15,6 +15,9 @@ export interface InstitucionData {
   autoridad?: string | { _id: string; name: string; email: string } | null;
   logotipo?: string;
   periodoLectivoFuncional?: string;
+  membrete?: string;
+  membreteContentTopMm?: number;
+  membreteContentBottomMm?: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -35,5 +38,11 @@ export class InstitucionService {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<any>(`${this.API}/logo`, form).pipe(map((r) => r.data ?? r));
+  }
+
+  uploadMembrete(file: File): Observable<InstitucionData> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<any>(`${this.API}/membrete`, form).pipe(map((r) => r.data ?? r));
   }
 }

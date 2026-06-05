@@ -1,0 +1,190 @@
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #999;
+    font-size: 14px;
+
+    mat-icon { font-size: 18px; height: 18px; width: 18px; }
+
+    &.active {
+      color: #3f51b5;
+      font-weight: 600;
+      background: rgba(63, 81, 181, 0.08);
+    }
+
+    &.done {
+      color: #4caf50;
+    }
+  }
+
+  .sep {
+    color: #ccc;
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.step-content {
+  min-height: 200px;
+}
+
+.upload-step {
+  .instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .divider {
+    border-top: 1px solid #e0e0e0;
+    margin: 16px 0;
+  }
+
+  .upload-area {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 2px dashed #90caf9;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #1976d2;
+    background: rgba(25, 118, 210, 0.04);
+    transition: background 0.2s;
+    width: fit-content;
+
+    &:hover {
+      background: rgba(25, 118, 210, 0.1);
+    }
+
+    mat-icon { font-size: 20px; height: 20px; width: 20px; }
+  }
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin-top: 16px;
+  background: #fff3f3;
+  border: 1px solid #f44336;
+  border-radius: 6px;
+  color: #c62828;
+  font-size: 14px;
+
+  mat-icon { font-size: 18px; height: 18px; width: 18px; color: #f44336; }
+}
+
+.preview-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+
+  .badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+
+    &.total { background: #e3f2fd; color: #1565c0; }
+    &.invalid { background: #fff3e0; color: #e65100; }
+    &.valid { background: #e8f5e9; color: #2e7d32; }
+  }
+}
+
+.table-container {
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.preview-table, .errors-table {
+  width: 100%;
+  font-size: 13px;
+
+  th { background: #fafafa; font-weight: 600; white-space: nowrap; }
+  td, th { padding: 6px 12px; }
+
+  .missing { color: #e53935; font-style: italic; }
+  .req { color: #e53935; margin-left: 2px; }
+}
+
+.invalid-row { background: #fff8f8; }
+
+.row-ok {
+  display: flex; align-items: center; gap: 4px; color: #4caf50; font-size: 12px;
+  mat-icon { font-size: 14px; height: 14px; width: 14px; }
+}
+
+.row-invalid {
+  display: flex; align-items: center; gap: 4px; color: #f44336; font-size: 12px;
+  mat-icon { font-size: 14px; height: 14px; width: 14px; }
+}
+
+.result-step {
+  .result-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    .result-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      border-radius: 10px;
+      gap: 4px;
+
+      mat-icon { font-size: 32px; height: 32px; width: 32px; }
+      .count { font-size: 28px; font-weight: 700; }
+      .label { font-size: 13px; color: #666; }
+
+      &.success { background: #e8f5e9; mat-icon, .count { color: #2e7d32; } }
+      &.error:not(.zero) { background: #ffebee; mat-icon, .count { color: #c62828; } }
+      &.error.zero { background: #f5f5f5; mat-icon, .count { color: #999; } }
+      &.neutral { background: #e3f2fd; mat-icon, .count { color: #1565c0; } }
+    }
+  }
+
+  .failed-list {
+    margin-bottom: 16px;
+
+    h4 { margin: 0 0 8px; color: #c62828; }
+
+    .errors-table {
+      max-height: 200px;
+      overflow: auto;
+      display: block;
+      border: 1px solid #ffcdd2;
+      border-radius: 6px;
+      margin-bottom: 12px;
+
+      .error-msg { color: #c62828; max-width: 300px; word-break: break-word; }
+    }
+  }
+}

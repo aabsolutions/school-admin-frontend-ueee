@@ -18,6 +18,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { StudentsFormComponent } from './dialogs/form-dialog/form-dialog.component';
 import { StudentsDeleteComponent } from './dialogs/delete/delete.component';
+import { BulkImportDialogComponent, BulkImportColumn } from '@shared/components/bulk-import/bulk-import-dialog.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { StudentsService } from './students.service';
 import { Students } from './students.model';
@@ -248,6 +249,35 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
       verticalPosition: placementFrom,
       horizontalPosition: placementAlign,
       panelClass: colorName,
+    });
+  }
+
+  openBulkImport() {
+    const STUDENT_BULK_COLUMNS: BulkImportColumn[] = [
+      { key: 'name',                label: 'Nombre',           required: true,  example: 'Juan Pérez' },
+      { key: 'dni',                 label: 'Cédula',           required: true,  example: '1234567890' },
+      { key: 'email',               label: 'Email',            required: false, example: 'juan@email.com' },
+      { key: 'mobile',              label: 'Celular',          required: false, example: '0991234567' },
+      { key: 'gender',              label: 'Sexo',             required: false, example: 'Male' },
+      { key: 'birthdate',           label: 'Fecha Nacimiento', required: false, example: '2005-03-15' },
+      { key: 'address',             label: 'Dirección',        required: false, example: 'Av. Principal 123' },
+      { key: 'residenceZone',       label: 'Zona Residencia',  required: false, example: 'URBANA' },
+      { key: 'parentGuardianName',  label: 'Nombre Encargado', required: false, example: 'María Pérez' },
+      { key: 'parentGuardianMobile',label: 'Tel. Encargado',   required: false, example: '0987654321' },
+      { key: 'status',              label: 'Estado',           required: false, example: 'active' },
+    ];
+    const dialogRef = this.dialog.open(BulkImportDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      disableClose: true,
+      data: {
+        entityName: 'Estudiantes',
+        columns: STUDENT_BULK_COLUMNS,
+        submitFn: (rows: Record<string, any>[]) => this.studentsService.bulkCreate(rows),
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.successCount > 0) this.loadData();
     });
   }
 

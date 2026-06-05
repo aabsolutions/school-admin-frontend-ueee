@@ -27,11 +27,37 @@
                 <div class="body">
                   <div class="rendered-html p-3 border rounded bg-white text-dark" [innerHTML]="tramite.renderedHtml"></div>
                 </div>
-                <div class="footer" *ngIf="tramite.state === 'finalizado' || tramite.state === 'aprobado'">
-                  <div class="container">
-                    <a [href]="pdfUrl" target="_blank" mat-flat-button color="accent">
-                      <mat-icon>picture_as_pdf</mat-icon> Descargar PDF
-                    </a>
+                <!-- Datos del representante / estudiante -->
+                <div class="body border-top pt-3" *ngIf="tramite.datosRepresentante || tramite.cursoNombre">
+                  <div class="row g-2 small text-muted">
+                    <div class="col-md-4" *ngIf="tramite.datosRepresentante?.nombre">
+                      <strong>Representante:</strong> {{ tramite.datosRepresentante!.nombre }}
+                    </div>
+                    <div class="col-md-4" *ngIf="tramite.datosRepresentante?.dni">
+                      <strong>Cédula:</strong> {{ tramite.datosRepresentante!.dni }}
+                    </div>
+                    <div class="col-md-4" *ngIf="tramite.datosRepresentante?.contacto">
+                      <strong>Contacto:</strong> {{ tramite.datosRepresentante!.contacto }}
+                    </div>
+                    <div class="col-md-6" *ngIf="tramite.cursoNombre">
+                      <strong>Curso:</strong> {{ tramite.cursoNombre }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="footer">
+                  <div class="container d-flex gap-2 flex-wrap">
+                    <button mat-flat-button color="accent" (click)="openPdf()" [disabled]="downloadingPdf">
+                      <mat-spinner *ngIf="downloadingPdf" diameter="16" class="d-inline-block me-1"></mat-spinner>
+                      <mat-icon *ngIf="!downloadingPdf">print</mat-icon>
+                      Imprimir Solicitud
+                    </button>
+                    <button mat-flat-button color="primary" (click)="openResponsePdf()" [disabled]="downloadingResponse"
+                            *ngIf="tramite.respuestaRenderedHtml">
+                      <mat-spinner *ngIf="downloadingResponse" diameter="16" class="d-inline-block me-1"></mat-spinner>
+                      <mat-icon *ngIf="!downloadingResponse">assignment_turned_in</mat-icon>
+                      Imprimir Respuesta
+                    </button>
                   </div>
                 </div>
                 <p></p>

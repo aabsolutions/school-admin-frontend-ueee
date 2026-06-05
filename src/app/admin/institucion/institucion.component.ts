@@ -37,6 +37,8 @@ export class InstitucionComponent implements OnInit {
   saving = false;
   uploadingLogo = false;
   logoPreview: string | null = null;
+  membretePreview: string | null = null;
+  uploadingMembrete = false;
 
   docentes: { id: string; name: string; email: string }[] = [];
   periodosOptions: string[] = [];
@@ -60,6 +62,8 @@ export class InstitucionComponent implements OnInit {
       direccion: [''],
       autoridad: [''],
       periodoLectivoFuncional: ['', [Validators.pattern(/^\d{4}-\d{4}$/)]],
+      membreteContentTopMm: [40, [Validators.min(0), Validators.max(120)]],
+      membreteContentBottomMm: [40, [Validators.min(0), Validators.max(120)]],
     });
     this.generatePeriodosOptions();
   }
@@ -73,6 +77,7 @@ export class InstitucionComponent implements OnInit {
           : data.autoridad;
         this.form.patchValue({ ...data, autoridad: autoridad ?? '' });
         this.logoPreview = data.logotipo ?? null;
+        this.membretePreview = data.membrete ?? null;
         this.loading = false;
         if (data.autoridad && typeof data.autoridad === 'object') {
           const d = data.autoridad as any;
@@ -110,6 +115,23 @@ export class InstitucionComponent implements OnInit {
 
   getDocenteName(id: string): string {
     return this.docentes.find((d) => d.id === id)?.name ?? id ?? '';
+  }
+
+  onMembreteChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.uploadingMembrete = true;
+    this.service.uploadMembrete(file).subscribe({
+      next: (res) => {
+        this.membretePreview = res.membrete ?? null;
+        this.uploadingMembrete = false;
+        this.snackBar.open('Membrete actualizado', '', { duration: 3000, panelClass: 'snackbar-success' });
+      },
+      error: () => {
+        this.uploadingMembrete = false;
+        this.snackBar.open('Error al subir el membrete', '', { duration: 3000, panelClass: 'snackbar-danger' });
+      },
+    });
   }
 
   onLogoChange(event: Event): void {

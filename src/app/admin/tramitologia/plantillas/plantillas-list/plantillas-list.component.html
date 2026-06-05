@@ -34,6 +34,14 @@
             </div>
 
             <table mat-table [dataSource]="plantillas" class="w-100" *ngIf="!loading">
+              <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                <td mat-cell *matCellDef="let p">
+                  <span [class]="p.tipo === 'respuesta' ? 'badge bg-info text-dark' : 'badge bg-secondary'">
+                    {{ p.tipo === 'respuesta' ? 'Respuesta' : 'Solicitud' }}
+                  </span>
+                </td>
+              </ng-container>
               <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef>Nombre</th>
                 <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
@@ -44,7 +52,10 @@
               </ng-container>
               <ng-container matColumnDef="roles">
                 <th mat-header-cell *matHeaderCellDef>Solicitantes</th>
-                <td mat-cell *matCellDef="let p">{{ p.solicitanteRoles.join(', ') }}</td>
+                <td mat-cell *matCellDef="let p">
+                  <span *ngIf="p.tipo !== 'respuesta'">{{ p.solicitanteRoles.join(', ') }}</span>
+                  <span *ngIf="p.tipo === 'respuesta'" class="text-muted small">—</span>
+                </td>
               </ng-container>
               <ng-container matColumnDef="version">
                 <th mat-header-cell *matHeaderCellDef>Versión</th>

@@ -18,6 +18,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TeachersFormComponent } from './dialogs/form-dialog/form-dialog.component';
 import { TeachersDeleteComponent } from './dialogs/delete/delete.component';
+import { BulkImportDialogComponent, BulkImportColumn } from '@shared/components/bulk-import/bulk-import-dialog.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { TeachersService } from './teachers.service';
 import { Teachers } from './teachers.model';
@@ -250,6 +251,36 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
       verticalPosition: placementFrom,
       horizontalPosition: placementAlign,
       panelClass: colorName,
+    });
+  }
+
+  openBulkImport() {
+    const TEACHER_BULK_COLUMNS: BulkImportColumn[] = [
+      { key: 'name',                label: 'Nombre',              required: true,  example: 'Ana González' },
+      { key: 'dni',                 label: 'Cédula',              required: true,  example: '0987654321' },
+      { key: 'email',               label: 'Email',               required: false, example: 'ana@email.com' },
+      { key: 'mobile',              label: 'Celular',             required: false, example: '0991234567' },
+      { key: 'gender',              label: 'Sexo',                required: false, example: 'Female' },
+      { key: 'birthdate',           label: 'Fecha Nacimiento',    required: false, example: '1985-06-20' },
+      { key: 'address',             label: 'Dirección',           required: false, example: 'Calle 5 de Agosto' },
+      { key: 'subjectSpecialization',label: 'Especialización',    required: false, example: 'Matemáticas' },
+      { key: 'experienceYears',     label: 'Años Experiencia',    required: false, example: '5' },
+      { key: 'laboralDependency',   label: 'Dependencia Laboral', required: false, example: 'Contrato' },
+      { key: 'salarialCategory',    label: 'Categoría Salarial',  required: false, example: 'C' },
+      { key: 'status',              label: 'Estado',              required: false, example: 'active' },
+    ];
+    const dialogRef = this.dialog.open(BulkImportDialogComponent, {
+      width: '900px',
+      maxWidth: '95vw',
+      disableClose: true,
+      data: {
+        entityName: 'Docentes',
+        columns: TEACHER_BULK_COLUMNS,
+        submitFn: (rows: Record<string, any>[]) => this.teachersService.bulkCreate(rows),
+      },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.successCount > 0) this.loadData();
     });
   }
 

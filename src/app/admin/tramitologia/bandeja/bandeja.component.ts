@@ -64,7 +64,7 @@ export class BandejaComponent implements OnInit {
   }
 
   openTransition(tramite: Tramite) {
-    const ref = this.dialog.open(TransitionDialogComponent, { width: '420px', data: { tramite } });
+    const ref = this.dialog.open(TransitionDialogComponent, { width: '640px', maxWidth: '95vw', data: { tramite } });
     ref.afterClosed().subscribe((result) => { if (result) this.load(); });
   }
 }

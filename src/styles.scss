@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* ngx-editor wrapper border — visible si el componente usa encapsulación None */
+.NgxEditor__Wrapper {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+.NgxEditor {
+  min-height: 200px;
+}
+
+/* Rendered HTML del trámite — restaura spacing que el template admin resetea */
+.rendered-html {
+  p          { margin-top: 0; margin-bottom: 0.75rem; min-height: 1em; }
+  h1, h2, h3, h4, h5, h6 { margin-top: 0.75rem; margin-bottom: 0.5rem; }
+  ul, ol     { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+  blockquote { border-left: 4px solid #dee2e6; padding-left: 1rem; margin: 0 0 0.75rem; }
+  table      { margin-bottom: 0.75rem; }
+}

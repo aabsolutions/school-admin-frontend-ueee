@@ -23,7 +23,9 @@ export class TramiteDetalleComponent implements OnInit {
   breadscrums = [{ title: 'Detalle', items: ['Trámites'], active: 'Detalle' }];
   tramite: Tramite | null = null;
   history: TramiteHistory[] = [];
-  pdfUrl = '';
+  downloadingPdf = false;
+  downloadingResponse = false;
+  private tramiteId = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -31,13 +33,38 @@ export class TramiteDetalleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id')!;
-    this.pdfUrl = this.tramitologiaService.getPdfUrl(id);
-    this.tramitologiaService.getTramite(id).subscribe((t) => {
+    this.tramiteId = this.route.snapshot.paramMap.get('id')!;
+    this.tramitologiaService.getTramite(this.tramiteId).subscribe((t) => {
       this.tramite = t;
       this.breadscrums = [{ title: t.codigo, items: ['Trámites'], active: t.codigo }];
     });
-    this.tramitologiaService.getTramiteHistory(id).subscribe((h) => { this.history = h; });
+    this.tramitologiaService.getTramiteHistory(this.tramiteId).subscribe((h) => { this.history = h; });
+  }
+
+  openPdf() {
+    this.downloadingPdf = true;
+    this.tramitologiaService.downloadPdf(this.tramiteId).subscribe({
+      next: (blob) => { this.openBlob(blob, `${this.tramite?.codigo}.pdf`); this.downloadingPdf = false; },
+      error: () => { this.downloadingPdf = false; },
+    });
+  }
+
+  openResponsePdf() {
+    this.downloadingResponse = true;
+    this.tramitologiaService.downloadResponsePdf(this.tramiteId).subscribe({
+      next: (blob) => { this.openBlob(blob, `respuesta-${this.tramite?.codigo}.pdf`); this.downloadingResponse = false; },
+      error: () => { this.downloadingResponse = false; },
+    });
+  }
+
+  private openBlob(blob: Blob, filename: string) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 60_000);
   }
 
   actorName(h: TramiteHistory): string {

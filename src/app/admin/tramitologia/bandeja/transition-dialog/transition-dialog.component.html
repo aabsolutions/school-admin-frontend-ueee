@@ -13,6 +13,41 @@
       <textarea matInput formControlName="observation" rows="3"></textarea>
     </mat-form-field>
   </form>
+
+  <!-- Editor de cuerpo de respuesta (colapsable) -->
+  <ng-container *ngIf="plantillaRespuesta && isResolution">
+    <hr>
+    <mat-expansion-panel [(expanded)]="showBodyEditor" class="mb-3">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="fw-semibold small d-flex align-items-center gap-1">
+          <mat-icon style="font-size:16px;height:16px;width:16px">edit_note</mat-icon>
+          Editar cuerpo de la respuesta (opcional)
+        </mat-panel-title>
+        <mat-panel-description class="small text-muted">
+          Personalizá el texto antes de generar el PDF
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="NgxEditor__Wrapper mb-2">
+        <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+        <ngx-editor [editor]="editor" [formControl]="bodyOverride" style="min-height:180px"></ngx-editor>
+      </div>
+      <app-variable-picker
+        [customVariables]="respuestaVariables"
+        (insert)="insertVariable($event)">
+      </app-variable-picker>
+    </mat-expansion-panel>
+  </ng-container>
+
+  <!-- Formulario de respuesta (variables del DynamicForm) -->
+  <ng-container *ngIf="plantillaRespuesta && respuestaVariables.length">
+    <hr *ngIf="!showBodyEditor">
+    <p class="fw-semibold mb-2">
+      <mat-icon class="align-middle me-1 text-primary" style="font-size:18px">assignment_turned_in</mat-icon>
+      Completar respuesta — {{ plantillaRespuesta.nombre }}
+    </p>
+    <app-dynamic-form [variables]="respuestaVariables" (formChange)="onRespuestaFormChange($event)"></app-dynamic-form>
+  </ng-container>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

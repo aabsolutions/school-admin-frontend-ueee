@@ -48,6 +48,49 @@
               <!-- Step 2: Completar variables -->
               <mat-step label="Completar Datos">
                 <div class="py-3" *ngIf="selectedPlantilla">
+
+                  <!-- Datos del representante (solo PARENT) -->
+                  <ng-container *ngIf="isParent">
+                    <h6 class="mb-3">Datos del Representante</h6>
+                    <form [formGroup]="repForm" class="row g-3 mb-4">
+                      <div class="col-md-4">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-label>Nombres y Apellidos</mat-label>
+                          <input matInput formControlName="nombre">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-4">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-label>Cédula / DNI</mat-label>
+                          <input matInput formControlName="dni">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-4">
+                        <mat-form-field appearance="outline" class="w-100">
+                          <mat-label>Número de Contacto</mat-label>
+                          <input matInput formControlName="contacto">
+                        </mat-form-field>
+                      </div>
+                    </form>
+
+                    <div class="mb-4">
+                      <label class="form-label fw-semibold">Estudiante <span class="text-muted">(seleccionar)</span></label>
+                      <select class="form-select"
+                              [(ngModel)]="selectedHijoStudentId"
+                              (ngModelChange)="onHijoChange($event)">
+                        <option value="">— Seleccionar estudiante —</option>
+                        <option *ngFor="let h of hijosActivos" [value]="h.student._id">
+                          {{ h.student.name }}{{ h.cursoNombre ? ' — ' + h.cursoNombre : '' }}
+                        </option>
+                      </select>
+                      <div class="form-text mt-1" *ngIf="selectedHijo?.cursoNombre">
+                        Curso: <strong>{{ selectedHijo!.cursoNombre }}</strong>
+                        <span *ngIf="selectedHijo!.academicYear"> · {{ selectedHijo!.academicYear }}</span>
+                      </div>
+                    </div>
+                    <hr>
+                  </ng-container>
+
                   <app-dynamic-form [variables]="selectedPlantilla!.variables"
                                     (formChange)="onDynamicFormChange($event)">
                   </app-dynamic-form>

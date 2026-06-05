@@ -19,9 +19,10 @@ export class TramitologiaService {
 
   // ─── PLANTILLAS ─────────────────────────────────────────────────────────────
 
-  getPlantillas(page = 1, limit = 10, search?: string): Observable<PagedResult<Plantilla>> {
+  getPlantillas(page = 1, limit = 10, search?: string, tipo?: string): Observable<PagedResult<Plantilla>> {
     let params = new HttpParams().set('page', page).set('limit', limit);
     if (search) params = params.set('search', search);
+    if (tipo) params = params.set('tipo', tipo);
     return this.http.get<ApiList<Plantilla>>(`${this.BASE}/plantillas`, { params }).pipe(map((r) => r.data));
   }
 
@@ -53,7 +54,14 @@ export class TramitologiaService {
 
   // ─── TRAMITES ────────────────────────────────────────────────────────────────
 
-  createTramite(body: { plantillaId: string; operativoUserId?: string; values: Array<{ key: string; value: unknown }> }): Observable<Tramite> {
+  createTramite(body: {
+    plantillaId: string;
+    operativoUserId?: string;
+    values: Array<{ key: string; value: unknown }>;
+    datosRepresentante?: { nombre: string; dni: string; contacto: string };
+    estudianteId?: string;
+    cursoNombre?: string;
+  }): Observable<Tramite> {
     return this.http.post<ApiOne<Tramite>>(`${this.BASE}/tramites`, body).pipe(map((r) => r.data));
   }
 
@@ -89,13 +97,26 @@ export class TramitologiaService {
     return this.http.get<ApiOne<TramiteHistory[]>>(`${this.BASE}/tramites/${id}/history`).pipe(map((r) => r.data));
   }
 
-  getPdfUrl(tramiteId: string): string {
-    return `${this.BASE}/tramites/${tramiteId}/pdf`;
+  downloadPdf(tramiteId: string): Observable<Blob> {
+    return this.http.get(`${this.BASE}/tramites/${tramiteId}/pdf`, { responseType: 'blob' });
   }
 
-  transition(tramiteId: string, newState: string, observation?: string): Observable<Tramite> {
+  downloadResponsePdf(tramiteId: string): Observable<Blob> {
+    return this.http.get(`${this.BASE}/tramites/${tramiteId}/pdf-respuesta`, { responseType: 'blob' });
+  }
+
+  transition(
+    tramiteId: string,
+    newState: string,
+    observation?: string,
+    respuestaValues?: Array<{ key: string; value: unknown }>,
+    respuestaBodyOverride?: string,
+  ): Observable<Tramite> {
     return this.http
-      .patch<ApiOne<Tramite>>(`${this.BASE}/tramites/${tramiteId}/transition`, { newState, observation })
+      .patch<ApiOne<Tramite>>(`${this.BASE}/tramites/${tramiteId}/transition`, {
+        newState, observation, respuestaValues,
+        ...(respuestaBodyOverride ? { respuestaBodyOverride } : {}),
+      })
       .pipe(map((r) => r.data));
   }
 

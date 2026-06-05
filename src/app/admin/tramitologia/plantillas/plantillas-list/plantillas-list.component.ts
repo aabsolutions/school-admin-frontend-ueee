@@ -27,7 +27,7 @@ import { Plantilla } from '@shared/services/tramitologia.model';
 })
 export class PlantillasListComponent implements OnInit {
   breadscrums = [{ title: 'Plantillas', items: ['Tramitología'], active: 'Plantillas' }];
-  cols = ['nombre', 'categoria', 'roles', 'version', 'activa', 'acciones'];
+  cols = ['tipo', 'nombre', 'categoria', 'roles', 'version', 'activa', 'acciones'];
   plantillas: Plantilla[] = [];
   search = '';
   loading = false;

@@ -93,6 +93,13 @@ export class TeachersService {
       );
   }
 
+  bulkCreate(records: Record<string, any>[]): Observable<any> {
+    return this.httpClient.post<any>(`${this.API_URL}/bulk`, { records }).pipe(
+      map(res => res.data),
+      catchError(this.handleError)
+    );
+  }
+
   deleteTeacher(id: string | number): Observable<string | number> {
     return this.httpClient.delete<void>(`${this.API_URL}/${id}`).pipe(
       map(() => id),

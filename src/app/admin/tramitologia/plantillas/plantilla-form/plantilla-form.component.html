@@ -16,6 +16,26 @@
             <div class="header"><h2>Datos Generales</h2></div>
             <div class="body">
               <div class="row g-3">
+
+                <!-- Tipo de plantilla -->
+                <div class="col-12">
+                  <label class="form-label fw-semibold d-block mb-2">Tipo de plantilla</label>
+                  <mat-button-toggle-group formControlName="tipo" aria-label="Tipo de plantilla">
+                    <mat-button-toggle value="solicitud">
+                      <mat-icon class="me-1" style="font-size:18px;vertical-align:middle">description</mat-icon>
+                      Solicitud
+                    </mat-button-toggle>
+                    <mat-button-toggle value="respuesta">
+                      <mat-icon class="me-1" style="font-size:18px;vertical-align:middle">assignment_turned_in</mat-icon>
+                      Respuesta
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                  <div class="form-text mt-1">
+                    <span *ngIf="!isRespuesta">Los usuarios con el rol indicado podrán solicitar esta plantilla.</span>
+                    <span *ngIf="isRespuesta">No puede ser solicitada. Se asigna a una plantilla de solicitud para generar el PDF de respuesta al aprobar o finalizar un trámite.</span>
+                  </div>
+                </div>
+
                 <div class="col-md-6">
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Nombre</mat-label>
@@ -34,7 +54,9 @@
                     <textarea matInput formControlName="descripcion" rows="2"></textarea>
                   </mat-form-field>
                 </div>
-                <div class="col-md-6">
+
+                <!-- Roles solicitantes — solo visible para tipo=solicitud -->
+                <div class="col-md-6" *ngIf="!isRespuesta">
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Roles que pueden solicitar</mat-label>
                     <mat-select formControlName="solicitanteRoles" multiple>
@@ -44,6 +66,28 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
+
+                <!-- Plantilla de respuesta — solo visible para tipo=solicitud -->
+                <div [class]="isRespuesta ? 'col-md-12' : 'col-md-6'" *ngIf="!isRespuesta">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Plantilla de Respuesta <span class="text-muted">(opcional)</span></mat-label>
+                    <mat-select formControlName="plantillaRespuestaId">
+                      <mat-option [value]="null">— Sin plantilla de respuesta —</mat-option>
+                      <mat-option *ngFor="let p of availableRespuestaPlantillas" [value]="p._id">
+                        {{ p.nombre }} <span class="text-muted small">({{ p.categoria }})</span>
+                      </mat-option>
+                    </mat-select>
+                    <mat-hint>Plantilla usada para generar el PDF de respuesta al aprobar/finalizar</mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Info para tipo=respuesta -->
+                <div class="col-12" *ngIf="isRespuesta">
+                  <div class="alert alert-info py-2 mb-0">
+                    <small>Esta plantilla de respuesta no puede ser solicitada por usuarios. Solo aparece como opción al configurar otras plantillas de solicitud.</small>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -52,16 +96,18 @@
           <div class="card">
             <div class="header"><h2>Cuerpo de la Plantilla</h2></div>
             <div class="body">
-              <small class="text-muted d-block mb-2">
-                Usá <code>[VARIABLE]</code> para insertar variables. Sistema: <code>[FECHA_ACTUAL]</code>, <code>[USUARIO_LOGUEADO]</code>, <code>[ID_TRAMITE]</code>
-              </small>
-              <textarea class="form-control font-monospace" rows="14" formControlName="bodyHtml"
-                        placeholder="<p>Yo, [USUARIO_LOGUEADO], solicito...</p>"></textarea>
+              <div class="NgxEditor__Wrapper mb-2">
+                <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"></ngx-editor-menu>
+                <ngx-editor [editor]="editor" formControlName="bodyHtml"
+                             placeholder="Escribí el cuerpo de la plantilla. Usá el selector de variables para insertar datos dinámicos.">
+                </ngx-editor>
+              </div>
+              <app-variable-picker (insert)="insertVariable($event)"></app-variable-picker>
               <div class="mt-3">
                 <button type="button" mat-stroked-button color="primary" (click)="detectVariables()" [disabled]="detectingVars">
                   <mat-spinner *ngIf="detectingVars" diameter="16" class="d-inline-block me-1"></mat-spinner>
                   <mat-icon *ngIf="!detectingVars">search</mat-icon>
-                  Detectar Variables
+                  Detectar Variables del Formulario
                 </button>
               </div>
             </div>
@@ -164,7 +210,7 @@
                 <mat-spinner *ngIf="saving" diameter="18" class="d-inline-block me-1"></mat-spinner>
                 {{ isEdit ? 'Guardar cambios' : 'Crear plantilla' }}
               </button>
-              <a routerLink="../" mat-button>Cancelar</a>
+              <button type="button" mat-button (click)="router.navigate([isEdit ? '../../plantillas' : '../plantillas'], { relativeTo: route })">Cancelar</button>
             </div>
           </div>
 

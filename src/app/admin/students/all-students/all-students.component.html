@@ -32,6 +32,9 @@
 
                 <app-table-show-hide-column [columnDefinitions]="columnDefinitions"></app-table-show-hide-column>
 
+                <button mat-icon-button (click)="openBulkImport()" class="tbl-header-btn col-blue" matTooltip="Alta Masiva">
+                  <mat-icon>upload_file</mat-icon>
+                </button>
                 <button mat-icon-button (click)="addNew()" class="tbl-header-btn col-green" matTooltip="Add">
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>

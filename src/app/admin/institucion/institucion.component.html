@@ -179,6 +179,58 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- ── Membrete institucional (PDF) ── -->
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2 align-middle">picture_as_pdf</mat-icon>
+            Membrete Institucional (PDF)
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="d-flex align-items-start gap-4 flex-wrap mb-3">
+            @if (membretePreview) {
+              <img [src]="membretePreview" alt="Membrete institucional"
+                    style="max-height:160px;max-width:120px;object-fit:contain;border:1px solid #e0e0e0;border-radius:4px;padding:4px;">
+            } @else {
+              <div class="d-flex align-items-center justify-content-center"
+                    style="height:160px;width:120px;border:1px dashed #bbb;border-radius:4px;color:#bbb;">
+                <mat-icon style="font-size:48px;height:48px;width:48px">picture_as_pdf</mat-icon>
+              </div>
+            }
+            <div>
+              <input #membreteInput type="file" accept="image/jpeg,image/png"
+                      style="display:none" (change)="onMembreteChange($event)">
+              <button mat-stroked-button type="button" [disabled]="uploadingMembrete" (click)="membreteInput.click()">
+                @if (uploadingMembrete) {
+                  <mat-spinner diameter="20" style="display:inline-block" />
+                } @else {
+                  <mat-icon>upload</mat-icon>
+                }
+                {{ uploadingMembrete ? 'Subiendo...' : 'Subir membrete' }}
+              </button>
+              <p class="text-muted small mt-2 mb-0">JPG o PNG tamaño A4 (210×297mm) — máx. 8 MB.<br>Se usa como fondo de página en los PDF generados.</p>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Margen superior del contenido (mm)</mat-label>
+                <input matInput type="number" formControlName="membreteContentTopMm" min="0" max="120">
+                <mat-hint>Espacio desde arriba hasta el inicio del texto (ej: 40mm para membrete institucional)</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="w-100" appearance="outline">
+                <mat-label>Margen inferior del contenido (mm)</mat-label>
+                <input matInput type="number" formControlName="membreteContentBottomMm" min="0" max="120">
+                <mat-hint>Espacio desde el texto hasta el pie de página (ej: 40mm para membrete institucional)</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <!-- ── Botón guardar ── -->
       <div class="d-flex justify-content-end mb-4">
         <button mat-flat-button color="primary" type="submit" [disabled]="saving || form.invalid">

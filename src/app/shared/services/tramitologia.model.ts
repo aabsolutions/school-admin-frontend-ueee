@@ -20,17 +20,39 @@ export interface RequiredAttachment {
   maxSizeBytes: number;
 }
 
+export interface DatosRepresentante {
+  nombre: string;
+  dni: string;
+  contacto: string;
+}
+
+export interface HijoActivo {
+  student: {
+    _id: string;
+    name: string;
+    email: string;
+    dni: string;
+    img?: string;
+    gender: string;
+    status: string;
+  };
+  cursoNombre: string;
+  academicYear: string;
+}
+
 export interface Plantilla {
   _id: string;
   nombre: string;
   descripcion: string;
   categoria: string;
+  tipo: 'solicitud' | 'respuesta';
   solicitanteRoles: string[];
   bodyHtml: string;
   variables: VariableConfig[];
   requiredAttachments: RequiredAttachment[];
   isActive: boolean;
   version: number;
+  plantillaRespuestaId?: string | Plantilla;
   createdAt: string;
   updatedAt: string;
 }
@@ -42,6 +64,7 @@ export interface PlantillaSnapshot {
   bodyHtml: string;
   variables: VariableConfig[];
   requiredAttachments: RequiredAttachment[];
+  plantillaRespuestaId?: string;
 }
 
 export interface FilledValue {
@@ -73,6 +96,11 @@ export interface Tramite {
   closedAt?: string;
   createdAt: string;
   updatedAt: string;
+  datosRepresentante?: DatosRepresentante;
+  estudianteId?: string;
+  cursoNombre?: string;
+  respuestaValues?: FilledValue[];
+  respuestaRenderedHtml?: string;
 }
 
 export interface TramiteHistory {
