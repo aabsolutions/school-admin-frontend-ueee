@@ -119,6 +119,18 @@
           "badgeClass": "",
           "role": [""],
           "submenu": []
+        },
+        {
+          "path": "/admin/asistencias/resumen-cursos",
+          "title": "MENUITEMS.ASISTENCIAS.LIST.RESUMEN_CURSOS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
         }
       ]
     },
