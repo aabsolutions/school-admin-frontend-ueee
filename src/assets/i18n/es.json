@@ -14,6 +14,41 @@
         "COMPLAINTS": "Quejas"
       }
     },
+    "ACADEMIC": {
+      "TEXT": "Administración Académica"
+    },
+    "COMUNICACION": {
+      "TEXT": "Comunicación"
+    },
+    "GESTION-DATOS": {
+      "TEXT": "Gestión de Datos"
+    },
+    "ADMINISTRATION": {
+      "TEXT": "Administración"
+    },
+    "USER-MANAGEMENT": {
+      "TEXT": "Gestión de Usuarios"
+    },
+    "TEACHER-PORTAL": {
+      "TEXT": "Portal del Docente",
+      "LIST": {
+        "DASHBOARD": "Tablero",
+        "LECTURES": "Clases",
+        "LEAVE-REQUEST": "Solicitud de Licencia",
+        "EXAM-SCHEDULE": "Horario de Exámenes",
+        "SETTINGS": "Configuraciones"
+      }
+    },
+    "STUDENT-PORTAL": {
+      "TEXT": "Portal del Estudiante",
+      "LIST": {
+        "DASHBOARD": "Tablero",
+        "HOMEWORK": "Tareas",
+        "LEAVE-REQUEST": "Solicitud de Licencia",
+        "TIMETABLE": "Horario",
+        "SETTINGS": "Configuraciones"
+      }
+    },
     "DASHBOARD": {
       "TEXT": "Tablero",
       "LIST": {
@@ -31,7 +66,8 @@
         "EDIT-TEACHER": "Editar Docente",
         "ABOUT-TEACHER": "Acerca del Docente",
         "TEACHER-TIMETABLE": "Horario del Docente",
-        "ASSIGN-CLASS-TEACHER": "Asignar Docente de Clase"
+        "ASSIGN-CLASS-TEACHER": "Asignar Docente de Clase",
+        "ASSIGN-CLASS": "Asignar Docente"
       }
     },
     "STUDENTS": {

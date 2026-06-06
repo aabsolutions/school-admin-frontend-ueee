@@ -21,15 +21,24 @@ import { ParentsApiService } from '../../../admin/parents/parents-api.service';
       <form [formGroup]="form" class="mt-2">
         <mat-form-field appearance="outline" class="w-100 mb-2">
           <mat-label>Nombre completo *</mat-label>
-          <input matInput formControlName="name">
+          <input matInput formControlName="name" required>
+          @if (form.get('name')?.hasError('required')) {
+            <mat-error>El nombre es obligatorio</mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline" class="w-100 mb-2">
-          <mat-label>Email *</mat-label>
+          <mat-label>DNI / Cédula *</mat-label>
+          <input matInput formControlName="dni" required>
+          @if (form.get('dni')?.hasError('required')) {
+            <mat-error>El DNI es obligatorio</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100 mb-2">
+          <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email">
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-100 mb-2">
-          <mat-label>DNI / Cédula</mat-label>
-          <input matInput formControlName="dni">
+          @if (form.get('email')?.hasError('email')) {
+            <mat-error>Ingrese un email válido</mat-error>
+          }
         </mat-form-field>
         <mat-form-field appearance="outline" class="w-100 mb-2">
           <mat-label>Celular</mat-label>
@@ -61,8 +70,8 @@ export class AddParentInlineDialogComponent {
 
   form: FormGroup = this.fb.group({
     name:   ['', Validators.required],
-    email:  ['', [Validators.required, Validators.email]],
-    dni:    [''],
+    email:  ['', Validators.email],
+    dni:    ['', Validators.required],
     mobile: [''],
   });
   isSaving = false;

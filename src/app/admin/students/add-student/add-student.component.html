@@ -30,8 +30,11 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                   <mat-form-field class="example-full-width mb-3" appearance="outline">
                     <mat-label>DNI</mat-label>
-                    <input matInput formControlName="dni">
+                    <input matInput formControlName="dni" required>
                     <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>badge</mat-icon>
+                    @if (stdForm.get('dni')?.hasError('required')) {
+                    <mat-error>El DNI es obligatorio</mat-error>
+                    }
                   </mat-form-field>
                 </div>
               </div>
@@ -48,10 +51,10 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
                   <mat-form-field class="example-full-width mb-3" appearance="outline">
                     <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" required>
+                    <input matInput formControlName="email">
                     <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
-                    @if (stdForm.get('email')?.hasError('required') || stdForm.get('email')?.hasError('email')) {
-                    <mat-error>Please enter a valid email address</mat-error>
+                    @if (stdForm.get('email')?.hasError('email')) {
+                    <mat-error>Ingrese un email válido</mat-error>
                     }
                   </mat-form-field>
                 </div>

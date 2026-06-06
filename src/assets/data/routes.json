@@ -24,9 +24,291 @@
       "role": ["ADMIN", "SUPERADMIN"],
       "submenu": []
     },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.ACADEMIC.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "Reportes",
+      "iconType": "material-icons-outlined",
+      "icon": "assessment",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN", "TEACHER"],
+      "submenu": [
+        {
+          "path": "/admin/lista-nomina",
+          "title": "Nómina de Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/directorio-docentes",
+          "title": "Directorio de Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/directorio-estudiantes",
+          "title": "Directorio de Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/cursos-stats",
+          "title": "Estadísticas de Cursos",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-expedientes",
+          "title": "Reporte Expedientes Disciplinarios",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-dece",
+          "title": "Reporte Atención DECE",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-medico-estudiantes",
+          "title": "Ficha Médica Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/reportes/reporte-medico-docentes",
+          "title": "Ficha Médica Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "/admin/expedientes",
+      "title": "Expedientes Disciplinarios",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_special",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/dece",
+      "title": "Atención Psicológica DECE",
+      "iconType": "material-icons-outlined",
+      "icon": "psychology",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "Matrículas",
+      "iconType": "material-icons-outlined",
+      "icon": "assignment_turned_in",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/enrollments/all-enrollments",
+          "title": "Todas las Matrículas",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
+      "title": "Gestión Documental",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_open",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/gestion-documental/docentes",
+          "title": "Documentos Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/gestion-documental/estudiantes",
+          "title": "Documentos Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+
+    {
+      "path": "",
+      "title": "MENUITEMS.COMUNICACION.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "MENUITEMS.TRAMITOLOGIA.MAIN",
+      "iconType": "material-icons-outlined",
+      "icon": "description",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
+      "submenu": [
+        {
+          "path": "/admin/tramitologia/dashboard",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.DASHBOARD",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_VERIFICADOR"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/tramitologia/plantillas",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.PLANTILLAS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/tramitologia/bandeja",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.BANDEJA",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
+          "submenu": []
+        },
+        {
+          "path": "/admin/tramitologia/reportes",
+          "title": "MENUITEMS.TRAMITOLOGIA.LIST.REPORTES",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_VERIFICADOR"],
+          "submenu": []
+        }
+      ]
+    },
     {
       "path": "/admin/messaging",
-      "title": "Mensajes",
+      "title": "Centro de Mensajería",
       "iconType": "material-icons-outlined",
       "icon": "chat",
       "class": "",
@@ -39,7 +321,7 @@
 
     {
       "path": "",
-      "title": "MENUITEMS.ACADEMIC.TEXT",
+      "title": "MENUITEMS.GESTION-DATOS.TEXT",
       "iconType": "",
       "icon": "",
       "class": "",
@@ -130,79 +412,6 @@
           "badge": "",
           "badgeClass": "",
           "role": [""],
-          "submenu": []
-        }
-      ]
-    },
-    {
-      "path": "",
-      "title": "MENUITEMS.TRAMITOLOGIA.TEXT",
-      "iconType": "",
-      "icon": "",
-      "class": "",
-      "groupTitle": true,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
-      "submenu": []
-    },
-    {
-      "path": "",
-      "title": "MENUITEMS.TRAMITOLOGIA.MAIN",
-      "iconType": "material-icons-outlined",
-      "icon": "description",
-      "class": "menu-toggle",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
-      "submenu": [
-        {
-          "path": "/admin/tramitologia/dashboard",
-          "title": "MENUITEMS.TRAMITOLOGIA.LIST.DASHBOARD",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_VERIFICADOR"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/tramitologia/plantillas",
-          "title": "MENUITEMS.TRAMITOLOGIA.LIST.PLANTILLAS",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/tramitologia/bandeja",
-          "title": "MENUITEMS.TRAMITOLOGIA.LIST.BANDEJA",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_OPERATIVO", "TRAMITE_VERIFICADOR"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/tramitologia/reportes",
-          "title": "MENUITEMS.TRAMITOLOGIA.LIST.REPORTES",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN", "TRAMITE_ADMIN", "TRAMITE_VERIFICADOR"],
           "submenu": []
         }
       ]
@@ -305,126 +514,18 @@
         }
       ]
     },
+
     {
       "path": "",
-      "title": "Reportes",
-      "iconType": "material-icons-outlined",
-      "icon": "assessment",
-      "class": "menu-toggle",
-      "groupTitle": false,
+      "title": "MENUITEMS.ADMINISTRATION.TEXT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
       "badge": "",
       "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN", "TEACHER"],
-      "submenu": [
-        {
-          "path": "/admin/lista-nomina",
-          "title": "Nómina de Estudiantes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/teacher/lista-nomina",
-          "title": "Nómina de Estudiantes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["TEACHER"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/directorio-docentes",
-          "title": "Directorio de Docentes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/directorio-estudiantes",
-          "title": "Directorio de Estudiantes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/cursos-stats",
-          "title": "Estadísticas de Cursos",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/reporte-expedientes",
-          "title": "Reporte Expedientes Disciplinarios",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/reporte-dece",
-          "title": "Reporte Atención DECE",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/reporte-medico-estudiantes",
-          "title": "Ficha Médica Estudiantes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
-          "path": "/admin/reportes/reporte-medico-docentes",
-          "title": "Ficha Médica Docentes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        }
-      ]
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
     },
     {
       "path": "",
@@ -486,105 +587,6 @@
           "submenu": []
         }
       ]
-    },
-    {
-      "path": "/admin/expedientes",
-      "title": "Expedientes Disciplinarios",
-      "iconType": "material-icons-outlined",
-      "icon": "folder_special",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN"],
-      "submenu": []
-    },
-    {
-      "path": "/admin/dece",
-      "title": "Atención Psicológica DECE",
-      "iconType": "material-icons-outlined",
-      "icon": "psychology",
-      "class": "",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN"],
-      "submenu": []
-    },
-    {
-      "path": "",
-      "title": "Gestión Documental",
-      "iconType": "material-icons-outlined",
-      "icon": "folder_open",
-      "class": "menu-toggle",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN"],
-      "submenu": [
-        {
-          "path": "/admin/gestion-documental/docentes",
-          "title": "Documentos Docentes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": [""],
-          "submenu": []
-        },
-        {
-          "path": "/admin/gestion-documental/estudiantes",
-          "title": "Documentos Estudiantes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": [""],
-          "submenu": []
-        }
-      ]
-    },
-    {
-      "path": "",
-      "title": "Matrículas",
-      "iconType": "material-icons-outlined",
-      "icon": "assignment_turned_in",
-      "class": "menu-toggle",
-      "groupTitle": false,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN"],
-      "submenu": [
-        {
-          "path": "/admin/enrollments/all-enrollments",
-          "title": "Todas las Matrículas",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": [""],
-          "submenu": []
-        }
-      ]
-    },
-
-    {
-      "path": "",
-      "title": "MENUITEMS.ADMINISTRATION.TEXT",
-      "iconType": "",
-      "icon": "",
-      "class": "",
-      "groupTitle": true,
-      "badge": "",
-      "badgeClass": "",
-      "role": ["ADMIN", "SUPERADMIN"],
-      "submenu": []
     },
     {
       "path": "/admin/area-estudio/all",
@@ -660,7 +662,6 @@
         }
       ]
     },
-
     {
       "path": "/admin/roles",
       "title": "Gestión de Roles",
@@ -691,6 +692,18 @@
       "title": "MENUITEMS.TEACHER-PORTAL.LIST.DASHBOARD",
       "iconType": "material-icons-outlined",
       "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
+      "path": "/teacher/lista-nomina",
+      "title": "Nómina de Estudiantes",
+      "iconType": "material-icons-outlined",
+      "icon": "format_list_bulleted",
       "class": "",
       "groupTitle": false,
       "badge": "",
@@ -808,7 +821,7 @@
     },
     {
       "path": "/teacher/messaging",
-      "title": "Mensajes",
+      "title": "Centro de Mensajería",
       "iconType": "material-icons-outlined",
       "icon": "chat",
       "class": "",
@@ -818,6 +831,7 @@
       "role": ["TEACHER"],
       "submenu": []
     },
+
     {
       "path": "",
       "title": "MENUITEMS.STUDENT-PORTAL.TEXT",
@@ -952,7 +966,7 @@
     },
     {
       "path": "/student/messaging",
-      "title": "Mensajes",
+      "title": "Centro de Mensajería",
       "iconType": "material-icons-outlined",
       "icon": "chat",
       "class": "",
@@ -1013,7 +1027,7 @@
     },
     {
       "path": "/parent/messaging",
-      "title": "Mensajes",
+      "title": "Centro de Mensajería",
       "iconType": "material-icons-outlined",
       "icon": "chat",
       "class": "",
