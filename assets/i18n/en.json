@@ -1,130 +1,136 @@
 {
   "LOGIN": {
-    "TITLE": "Welcome to Smart"
+    "TITLE": "Bienvenido a Smart"
   },
   "MENUITEMS": {
     "MAIN": {
-      "TEXT": "Main"
+      "TEXT": "Principal"
     },
     "DASHBOARD": {
-      "TEXT": "Dashboard",
+      "TEXT": "Tablero",
       "LIST": {
-        "DASHBOARD1": "Dashboard 1",
-        "DASHBOARD2": "Dashboard 2",
-        "TEACHER-DASHBOARD": "Teacher Dashboard",
-        "STUDENT-DASHBOARD": "Student Dashboard"
+        "DASHBOARD1": "Tablero 1",
+        "DASHBOARD2": "Tablero 2",
+        "TEACHER-DASHBOARD": "Tablero del Docente",
+        "STUDENT-DASHBOARD": "Tablero del Estudiante"
       }
     },
     "ACADEMIC": {
-      "TEXT": "Academic Management"
+      "TEXT": "Administración Académica"
+    },
+    "COMUNICACION": {
+      "TEXT": "Comunicación"
+    },
+    "GESTION-DATOS": {
+      "TEXT": "Gestión de Datos"
     },
     "STUDENTS": {
-      "TEXT": "Students",
+      "TEXT": "Estudiantes",
       "LIST": {
-        "ALL-STUDENTS": "All Students",
-        "ADD-STUDENT": "Add Student",
-        "EDIT-STUDENT": "Edit Student",
-        "ABOUT-STUDENT": "About Student",
-        "ATTENDANCE": "Student Attendance"
+        "ALL-STUDENTS": "Todos los Estudiantes",
+        "ADD-STUDENT": "Agregar Estudiante",
+        "EDIT-STUDENT": "Editar Estudiante",
+        "ABOUT-STUDENT": "Acerca del Estudiante",
+        "ATTENDANCE": "Asistencia del Estudiante"
       }
     },
     "TRAMITOLOGIA": {
-      "TEXT": "Paperwork",
-      "MAIN": "Procedures",
-      "SOLICITAR": "New Request",
-      "MIS_TRAMITES": "My Requests",
+      "TEXT": "Tramitología",
+      "MAIN": "Trámites",
+      "SOLICITAR": "Solicitar Trámite",
+      "MIS_TRAMITES": "Mis Trámites",
       "LIST": {
-        "DASHBOARD": "Dashboard",
-        "PLANTILLAS": "Templates",
-        "BANDEJA": "Inbox",
-        "REPORTES": "Reports"
+        "DASHBOARD": "Tablero",
+        "PLANTILLAS": "Plantillas",
+        "BANDEJA": "Bandeja",
+        "REPORTES": "Reportes"
       }
     },
     "ASISTENCIAS": {
-      "TEXT": "Attendance",
+      "TEXT": "Asistencias",
       "LIST": {
-        "CONFIG": "Assignment Config",
-        "REPORTE": "Institutional Report",
-        "CAPTURA": "Attendance Capture",
-        "REGISTRO": "Take Attendance",
-        "HISTORIAL": "Attendance History",
-        "MI_ASISTENCIA": "My Attendance",
-        "RESUMEN": "Attendance Summary",
-        "RESUMEN_CURSOS": "General Summary by Course"
+        "CONFIG": "Asignación de registro de asistencia",
+        "REPORTE": "Reporte Institucional de asistencia",
+        "CAPTURA": "Registro de Asistencia",
+        "REGISTRO": "Tomar Asistencia",
+        "HISTORIAL": "Historial",
+        "MI_ASISTENCIA": "Mi Asistencia",
+        "RESUMEN": "Resumen de Asistencia",
+        "RESUMEN_CURSOS": "Resumen General por Cursos"
       }
     },
     "TEACHERS": {
-      "TEXT": "Teachers",
+      "TEXT": "Docentes",
       "LIST": {
-        "ALL-TEACHERS": "All Teachers",
-        "ADD-TEACHER": "Add Teacher",
-        "EDIT-TEACHER": "Edit Teacher",
-        "ABOUT-TEACHER": "About Teacher",
-        "TEACHER-TIMETABLE": "Teacher Timetable",
-        "ASSIGN-CLASS": "Assign Class Teacher"
+        "ALL-TEACHERS": "Todos los Docentes",
+        "ADD-TEACHER": "Agregar Docente",
+        "EDIT-TEACHER": "Editar Docente",
+        "ABOUT-TEACHER": "Acerca del Docente",
+        "TEACHER-TIMETABLE": "Horario del Docente",
+        "ASSIGN-CLASS": "Asignar Docente"
       }
     },
     "COURSES": {
-      "TEXT": "Courses",
+      "TEXT": "Cursos",
       "LIST": {
-        "ALL-COURSES": "All Courses",
-        "ADD-COURSE": "Add Course",
-        "EDIT-COURSE": "Edit Course",
-        "ABOUT-COURSE": "About Course"
+        "ALL-COURSES": "Todos los Cursos",
+        "ADD-COURSE": "Agregar Curso",
+        "EDIT-COURSE": "Editar Curso",
+        "ABOUT-COURSE": "Acerca del Curso"
       }
     },
     "CLASS-SECTIONS": {
-      "TEXT": "Class Sections",
+      "TEXT": "Secciones",
       "LIST": {
-        "ALL-SECTIONS": "All Sections",
-        "TIMETABLE": "Class Timetable"
+        "ALL-SECTIONS": "Todas las Secciones",
+        "TIMETABLE": "Horario de Clase"
       }
     },
     "ENROLLMENTS": {
-      "TEXT": "Enrollments",
+      "TEXT": "Matrículas",
       "LIST": {
-        "ALL-ENROLLMENTS": "All Enrollments"
+        "ALL-ENROLLMENTS": "Todas las Matrículas"
       }
     },
     "ADMINISTRATION": {
-      "TEXT": "Administration"
+      "TEXT": "Administración"
     },
     "DEPARTMENTS": {
-      "TEXT": "Departments",
+      "TEXT": "Departamentos",
       "LIST": {
-        "ALL-DEPARTMENTS": "All Departments",
-        "ADD-DEPARTMENT": "Add Department",
-        "EDIT-DEPARTMENT": "Edit Department"
+        "ALL-DEPARTMENTS": "Todos los Departamentos",
+        "ADD-DEPARTMENT": "Agregar Departamento",
+        "EDIT-DEPARTMENT": "Editar Departamento"
       }
     },
     "USER-MANAGEMENT": {
-      "TEXT": "User Management"
+      "TEXT": "Gestión de Usuarios"
     },
     "USERS": {
-      "TEXT": "Users",
+      "TEXT": "Usuarios",
       "LIST": {
-        "ALL-USERS": "All Users",
-        "ADD-USER": "Add User"
+        "ALL-USERS": "Todos los Usuarios",
+        "ADD-USER": "Agregar Usuario"
       }
     },
     "TEACHER-PORTAL": {
-      "TEXT": "Teacher Portal",
+      "TEXT": "Portal del Docente",
       "LIST": {
-        "DASHBOARD": "Dashboard",
-        "LECTURES": "Lectures",
-        "LEAVE-REQUEST": "Leave Request",
-        "EXAM-SCHEDULE": "Exam Schedule",
-        "SETTINGS": "Settings"
+        "DASHBOARD": "Tablero",
+        "LECTURES": "Clases",
+        "LEAVE-REQUEST": "Solicitud de Licencia",
+        "EXAM-SCHEDULE": "Horario de Exámenes",
+        "SETTINGS": "Configuraciones"
       }
     },
     "STUDENT-PORTAL": {
-      "TEXT": "Student Portal",
+      "TEXT": "Portal del Estudiante",
       "LIST": {
-        "DASHBOARD": "Dashboard",
-        "HOMEWORK": "Homework",
-        "LEAVE-REQUEST": "Leave Request",
-        "TIMETABLE": "Timetable",
-        "SETTINGS": "Settings"
+        "DASHBOARD": "Tablero",
+        "HOMEWORK": "Tareas",
+        "LEAVE-REQUEST": "Solicitud de Licencia",
+        "TIMETABLE": "Horario",
+        "SETTINGS": "Configuraciones"
       }
     }
   }
