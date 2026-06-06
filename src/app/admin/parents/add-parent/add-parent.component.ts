@@ -45,8 +45,8 @@ export class AddParentComponent {
   ) {
     this.form = this.fb.group({
       name:           ['', Validators.required],
-      email:          ['', [Validators.required, Validators.email]],
-      dni:            [''],
+      email:          ['', Validators.email],
+      dni:            ['', Validators.required],
       mobile:         [''],
       gender:         [''],
       address:        [''],

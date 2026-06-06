@@ -1,0 +1,233 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+    <div class="block-header">
+      <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+    </div>
+    }
+
+    @if (!result) {
+    <div class="row clearfix">
+      <div class="col-12">
+        <div class="card">
+          <div class="header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h2>Importación Masiva de Padres de Familia</h2>
+            <button mat-stroked-button color="primary" (click)="downloadTemplate()">
+              <mat-icon>download</mat-icon> Plantilla Excel
+            </button>
+          </div>
+          <div class="body">
+
+            <div class="alert alert-info mb-4">
+              <mat-icon style="vertical-align:middle;margin-right:6px">info</mat-icon>
+              Columnas: <code>nombre, cedula, email, celular, genero, direccion, ocupacion, nivel_educativo</code>.
+              Solo <strong>nombre</strong> y <strong>cédula (10 dígitos)</strong> son obligatorios.
+            </div>
+
+            @if (parseError) {
+              <div class="alert alert-danger mb-3">{{ parseError }}</div>
+            }
+
+            <!-- Drop zone -->
+            <div class="p-5 text-center rounded mb-3"
+                 style="border:2px dashed #ccc;cursor:pointer;"
+                 (click)="fileInput.click()">
+              <mat-icon style="font-size:48px;color:#bbb;height:48px;width:48px">upload_file</mat-icon>
+              <p class="mt-2 mb-1 fw-bold">Seleccioná el archivo Excel</p>
+              <small class="text-muted">Formatos: .xlsx / .xls</small>
+            </div>
+            <input #fileInput type="file" accept=".xlsx,.xls" class="d-none" (change)="onFileChange($event)">
+
+            <!-- PREVIEW -->
+            @if (preview.length) {
+            <div class="mt-2">
+
+              <!-- Verificando duplicados -->
+              @if (isChecking) {
+                <mat-progress-bar mode="indeterminate" class="mb-3"></mat-progress-bar>
+                <p class="text-muted text-center mb-3">Verificando duplicados en la base de datos...</p>
+              }
+
+              <!-- Badges de estado -->
+              @if (!isChecking) {
+              <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                <span class="badge d-flex align-items-center gap-1"
+                      style="background:#e8f5e9;color:#2e7d32;padding:6px 10px;">
+                  <mat-icon style="font-size:16px;height:16px;width:16px">check_circle</mat-icon>
+                  {{ okRows.length }} para importar
+                </span>
+                @if (duplicateRows.length) {
+                  <span class="badge d-flex align-items-center gap-1"
+                        style="background:#fff8e1;color:#f57f17;padding:6px 10px;">
+                    <mat-icon style="font-size:16px;height:16px;width:16px">warning</mat-icon>
+                    {{ duplicateRows.length }} ya existen (se omitirán)
+                  </span>
+                }
+                @if (errorRows.length) {
+                  <span class="badge d-flex align-items-center gap-1"
+                        style="background:#ffebee;color:#c62828;padding:6px 10px;">
+                    <mat-icon style="font-size:16px;height:16px;width:16px">error</mat-icon>
+                    {{ errorRows.length }} con errores (se omitirán)
+                  </span>
+                }
+
+                <div class="ms-auto d-flex gap-2">
+                  <button mat-stroked-button color="warn" (click)="clearFile()" [disabled]="isSubmitting">
+                    <mat-icon>close</mat-icon> Limpiar
+                  </button>
+                  <button mat-flat-button color="primary" (click)="submit()"
+                          [disabled]="isSubmitting || !okRows.length">
+                    <mat-icon>cloud_upload</mat-icon>
+                    {{ isSubmitting ? 'Importando...' : 'Importar ' + okRows.length + ' registro(s)' }}
+                  </button>
+                </div>
+              </div>
+              }
+
+              @if (isSubmitting) {
+                <mat-progress-bar mode="indeterminate" class="mb-3"></mat-progress-bar>
+              }
+
+              <div class="table-responsive">
+                <mat-table [dataSource]="preview">
+
+                  <ng-container matColumnDef="status">
+                    <mat-header-cell *matHeaderCellDef style="max-width:52px"></mat-header-cell>
+                    <mat-cell *matCellDef="let row" style="max-width:52px">
+                      @switch (row.status) {
+                        @case ('ok') {
+                          <mat-icon style="color:#2e7d32" [matTooltip]="row.statusMsg">check_circle</mat-icon>
+                        }
+                        @case ('duplicate') {
+                          <mat-icon style="color:#f57f17" [matTooltip]="row.statusMsg">warning</mat-icon>
+                        }
+                        @case ('dni-error') {
+                          <mat-icon style="color:#c62828" [matTooltip]="row.statusMsg">error</mat-icon>
+                        }
+                      }
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                    <mat-cell *matCellDef="let row"
+                              [style.color]="row.status === 'ok' ? '' : row.status === 'duplicate' ? '#f57f17' : '#c62828'">
+                      {{ row.name }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dni">
+                    <mat-header-cell *matHeaderCellDef>Cédula</mat-header-cell>
+                    <mat-cell *matCellDef="let row"
+                              [style.color]="row.status === 'ok' ? '' : row.status === 'duplicate' ? '#f57f17' : '#c62828'">
+                      {{ row.dni }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="email">
+                    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.email || '—' }}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="mobile">
+                    <mat-header-cell *matHeaderCellDef>Celular</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.mobile || '—' }}</mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="gender">
+                    <mat-header-cell *matHeaderCellDef>Género</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.gender || '—' }}</mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;"
+                           [style.background]="row.status === 'duplicate' ? '#fffde7' : row.status === 'dni-error' ? '#fff3f3' : ''">
+                  </mat-row>
+                </mat-table>
+              </div>
+            </div>
+            }
+
+            <div class="mt-4">
+              <button mat-flat-button class="formCancelBtn" routerLink="/admin/parents/all-parents">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- RESULTADO -->
+    @if (result) {
+    <div class="row clearfix">
+      <div class="col-12">
+        <div class="card">
+          <div class="header"><h2>Resultado de la importación</h2></div>
+          <div class="body">
+
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <div class="card bg-light text-center p-3">
+                  <h4 class="mb-0">{{ result.total }}</h4>
+                  <small>Enviados al servidor</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-center p-3" style="background:#e8f5e9">
+                  <h4 class="mb-0 text-success">{{ result.successCount }}</h4>
+                  <small>Creados correctamente</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-center p-3"
+                     [style]="result.failureCount ? 'background:#ffebee' : 'background:#f5f5f5'">
+                  <h4 class="mb-0" [class.text-danger]="result.failureCount">{{ result.failureCount }}</h4>
+                  <small>Con errores</small>
+                </div>
+              </div>
+            </div>
+
+            @if (result.failed.length) {
+            <h5 class="text-danger">Filas con error</h5>
+            <div class="table-responsive mb-4">
+              <mat-table [dataSource]="result.failed">
+                <ng-container matColumnDef="row">
+                  <mat-header-cell *matHeaderCellDef style="max-width:70px">Fila</mat-header-cell>
+                  <mat-cell *matCellDef="let r" style="max-width:70px">{{ r.row }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+                  <mat-cell *matCellDef="let r">{{ r.data?.name }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="dni">
+                  <mat-header-cell *matHeaderCellDef>Cédula</mat-header-cell>
+                  <mat-cell *matCellDef="let r">{{ r.data?.dni }}</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="error">
+                  <mat-header-cell *matHeaderCellDef>Error</mat-header-cell>
+                  <mat-cell *matCellDef="let r" class="text-danger">{{ r.error }}</mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="resultFailedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: resultFailedColumns;"></mat-row>
+              </mat-table>
+            </div>
+            }
+
+            <div class="d-flex gap-3">
+              <a mat-flat-button color="primary" routerLink="/admin/parents/all-parents">
+                <mat-icon>list</mat-icon> Ver todos los padres
+              </a>
+              <button mat-stroked-button (click)="clearFile()">
+                <mat-icon>upload_file</mat-icon> Nueva importación
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+  </div>
+</section>

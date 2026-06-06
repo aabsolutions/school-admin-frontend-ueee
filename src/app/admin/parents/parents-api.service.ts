@@ -76,4 +76,25 @@ export class ParentsApiService {
   unlinkStudent(parentId: string, studentId: string): Observable<Parent> {
     return this.http.delete<any>(`${this.base}/${parentId}/unlink/${studentId}`).pipe(map((r) => r.data));
   }
+
+  bulkCreate(records: any[]): Observable<BulkParentResult> {
+    return this.http.post<any>(`${this.base}/bulk`, { records }).pipe(map((r) => r.data));
+  }
+
+  checkBulkDuplicates(dnis: string[], emails: string[]): Observable<BulkCheckResult> {
+    return this.http.post<any>(`${this.base}/check-bulk`, { dnis, emails }).pipe(map((r) => r.data));
+  }
+}
+
+export interface BulkCheckResult {
+  duplicateDnis: string[];
+  duplicateEmails: string[];
+}
+
+export interface BulkParentResult {
+  total: number;
+  successCount: number;
+  failureCount: number;
+  created: any[];
+  failed: { row: number; data: any; error: string }[];
 }

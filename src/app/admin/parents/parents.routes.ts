@@ -21,4 +21,9 @@ export const PARENTS_ROUTE: Route[] = [
     loadComponent: () =>
       import('./edit-parent/edit-parent.component').then((m) => m.EditParentComponent),
   },
+  {
+    path: 'bulk-import',
+    loadComponent: () =>
+      import('./bulk-parents/bulk-parents.component').then((m) => m.BulkParentsComponent),
+  },
 ];
