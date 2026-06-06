@@ -8,6 +8,19 @@ import { environment } from '@environments/environment';
 interface ApiList<T> { data: { data: T[] } }
 interface ApiOne<T>  { data: T }
 
+export interface BulkPreviewItem {
+  dni: string;
+  studentId?: string;
+  name?: string;
+  status: 'ready' | 'already_enrolled' | 'not_found';
+}
+
+export interface BulkEnrollResult {
+  created: number;
+  skipped: number;
+  errors: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class EnrollmentService {
   private readonly API_URL = `${environment.apiUrl}/enrollments`;
@@ -82,6 +95,20 @@ export class EnrollmentService {
   delete(id: string | number): Observable<string | number> {
     return this.http.delete<void>(`${this.API_URL}/${id}`).pipe(
       map(() => id),
+      catchError(this.handleError)
+    );
+  }
+
+  bulkPreview(cursoLectivoId: string, dnis: string[]): Observable<BulkPreviewItem[]> {
+    return this.http.post<{ data: BulkPreviewItem[] }>(`${this.API_URL}/bulk-preview`, { cursoLectivoId, dnis }).pipe(
+      map(r => r.data),
+      catchError(this.handleError)
+    );
+  }
+
+  bulkEnroll(cursoLectivoId: string, studentIds: string[]): Observable<BulkEnrollResult> {
+    return this.http.post<{ data: BulkEnrollResult }>(`${this.API_URL}/bulk`, { cursoLectivoId, studentIds }).pipe(
+      map(r => r.data),
       catchError(this.handleError)
     );
   }

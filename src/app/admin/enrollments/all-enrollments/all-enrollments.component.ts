@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { EnrollmentFormComponent } from './dialogs/form-dialog/form-dialog.component';
 import { EnrollmentDeleteComponent } from './dialogs/delete/delete.component';
+import { BulkEnrollmentDialogComponent } from './dialogs/bulk-enrollment/bulk-enrollment-dialog.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { EnrollmentService } from './enrollment.service';
 import { Enrollment } from './enrollment.model';
@@ -125,6 +126,24 @@ export class AllEnrollmentsComponent implements OnInit, OnDestroy {
 
   addNew() { this.openDialog('add'); }
   editCall(row: Enrollment) { this.openDialog('edit', row); }
+
+  openBulkEnrollment() {
+    const varDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
+    const dialogRef = this.dialog.open(BulkEnrollmentDialogComponent, {
+      width: '70vw', maxWidth: '860px',
+      direction: varDirection, autoFocus: false, data: {},
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadData();
+        this.showNotification(
+          'snackbar-success',
+          `${result.created} matriculados · ${result.skipped} ya existían`,
+          'bottom', 'center'
+        );
+      }
+    });
+  }
 
   openDialog(action: 'add' | 'edit', data?: Enrollment) {
     const varDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';

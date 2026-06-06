@@ -1,0 +1,156 @@
+<div class="dialog-header" style="padding:16px 24px 0; display:flex; align-items:center; justify-content:space-between;">
+  <h2 mat-dialog-title style="margin:0; font-size:18px;">Matriculación Masiva</h2>
+  <button mat-icon-button mat-dialog-close tabindex="-1"><mat-icon>close</mat-icon></button>
+</div>
+
+<mat-dialog-content style="min-width:620px; max-width:800px; padding:16px 24px;">
+  <mat-stepper [linear]="true" #stepper>
+
+    <!-- ── PASO 1: Curso Lectivo ── -->
+    <mat-step [stepControl]="step1Form" label="Curso Lectivo">
+      <form [formGroup]="step1Form" style="display:flex; flex-direction:column; gap:16px; padding:16px 0;">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Periodo Lectivo (Año)</mat-label>
+          <mat-select formControlName="academicYear">
+            @for (year of academicYears; track year) {
+              <mat-option [value]="year">{{ year }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Curso Lectivo</mat-label>
+          <mat-select formControlName="cursoLectivoId" [disabled]="!step1Form.value.academicYear">
+            @for (curso of filteredCursos; track curso.id) {
+              <mat-option [value]="curso.id">{{ curso.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div style="display:flex; justify-content:flex-end;">
+          <button mat-flat-button color="primary" matStepperNext [disabled]="step1Form.invalid">
+            Siguiente <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ── PASO 2: Importar y Preview ── -->
+    <mat-step label="Importar Estudiantes">
+      <div style="padding:16px 0; display:flex; flex-direction:column; gap:16px;">
+
+        <!-- Upload -->
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button mat-stroked-button color="primary" (click)="fileInput.click()" [disabled]="loadingPreview">
+            <mat-icon>upload_file</mat-icon>
+            {{ fileName || 'Seleccionar Excel' }}
+          </button>
+          <input #fileInput type="file" accept=".xlsx,.xls,.csv" style="display:none" (change)="onFileChange($event)">
+          <button mat-stroked-button (click)="downloadTemplate()" matTooltip="Descargar plantilla de ejemplo">
+            <mat-icon>download</mat-icon>
+            Plantilla
+          </button>
+          <span style="font-size:12px; color:#888;">Columna requerida: <code>DNI</code> o <code>Cedula</code></span>
+        </div>
+
+        <!-- Error -->
+        @if (previewError) {
+          <div style="color:#c62828; background:#fce4ec; padding:10px 14px; border-radius:4px; font-size:13px;">
+            ❌ {{ previewError }}
+          </div>
+        }
+
+        <!-- Spinner -->
+        @if (loadingPreview) {
+          <div style="display:flex; align-items:center; gap:12px;">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Verificando estudiantes...</span>
+          </div>
+        }
+
+        <!-- Counters -->
+        @if (previewData.length && !loadingPreview) {
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <span style="background:#e8f5e9; color:#2e7d32; padding:4px 12px; border-radius:16px; font-size:13px;">
+              ✅ {{ readyCount }} listos
+            </span>
+            <span style="background:#fff3e0; color:#e65100; padding:4px 12px; border-radius:16px; font-size:13px;">
+              ⚠️ {{ enrolledCount }} ya matriculados
+            </span>
+            <span style="background:#fce4ec; color:#c62828; padding:4px 12px; border-radius:16px; font-size:13px;">
+              ❌ {{ notFoundCount }} no encontrados
+            </span>
+          </div>
+
+          <!-- Preview table -->
+          <div style="max-height:320px; overflow-y:auto; border:1px solid #e0e0e0; border-radius:4px;">
+            <table mat-table [dataSource]="previewData" style="width:100%;">
+
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef style="width:48px;">
+                  <mat-checkbox
+                    [checked]="isAllReadySelected()"
+                    [indeterminate]="selection.hasValue() && !isAllReadySelected()"
+                    (change)="toggleAllReady()"
+                    color="primary">
+                  </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox
+                    *ngIf="row.status === 'ready'"
+                    [checked]="selection.isSelected(row)"
+                    (change)="$event ? selection.toggle(row) : null"
+                    color="primary">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="dni">
+                <th mat-header-cell *matHeaderCellDef>DNI</th>
+                <td mat-cell *matCellDef="let row">{{ row.dni }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let row">{{ row.name || '—' }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Estado</th>
+                <td mat-cell *matCellDef="let row">
+                  @if (row.status === 'ready') {
+                    <span style="color:#2e7d32; font-weight:500;">✅ Listo</span>
+                  } @else if (row.status === 'already_enrolled') {
+                    <span style="color:#e65100;">⚠️ Ya matriculado</span>
+                  } @else {
+                    <span style="color:#c62828;">❌ No encontrado</span>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="previewColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: previewColumns;"></tr>
+            </table>
+          </div>
+        }
+
+        <div style="display:flex; justify-content:space-between; margin-top:8px;">
+          <button mat-stroked-button matStepperPrevious>
+            <mat-icon>arrow_back</mat-icon> Anterior
+          </button>
+          <button
+            mat-flat-button color="primary"
+            [disabled]="!selectedReady.length || loadingEnroll"
+            (click)="confirm()">
+            @if (loadingEnroll) {
+              <mat-spinner diameter="20" style="display:inline-block; margin-right:8px;"></mat-spinner>
+            }
+            Matricular {{ selectedReady.length ? '(' + selectedReady.length + ')' : '' }}
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+  </mat-stepper>
+</mat-dialog-content>
