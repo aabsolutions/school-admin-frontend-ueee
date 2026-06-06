@@ -209,6 +209,55 @@
     },
     {
       "path": "",
+      "title": "Padres de Familia",
+      "iconType": "material-icons-outlined",
+      "icon": "family_restroom",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/admin/parents/all-parents",
+          "title": "Todos los Padres",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/parents/add-parent",
+          "title": "Agregar Padre",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/parents/bulk-import",
+          "title": "Importar Masivo",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
       "title": "MENUITEMS.TEACHERS.TEXT",
       "iconType": "material-icons-outlined",
       "icon": "person",
