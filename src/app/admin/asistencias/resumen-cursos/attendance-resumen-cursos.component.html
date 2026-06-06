@@ -1,0 +1,126 @@
+<app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
+
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Filtros -->
+    <div class="card">
+      <div class="header"><h2>Rango de Fechas</h2></div>
+      <div class="body">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Desde</mat-label>
+              <input matInput type="date" [(ngModel)]="dateFrom" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Hasta</mat-label>
+              <input matInput type="date" [(ngModel)]="dateTo" />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <button mat-flat-button color="primary" class="w-100 mb-3" (click)="generate()" [disabled]="isLoading">
+              <mat-icon>bar_chart</mat-icon> Generar Resumen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+    }
+
+    <!-- Métricas globales -->
+    @if (generated && !isLoading) {
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold text-primary">{{ dataSource.data.length }}</div>
+            <div class="text-muted">Cursos con registros</div>
+          </mat-card>
+        </div>
+        <div class="col-md-4">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold" [class.text-success]="avgRate >= 75" [class.text-danger]="avgRate < 75">
+              {{ avgRate }}%
+            </div>
+            <div class="text-muted">Tasa promedio de asistencia</div>
+          </mat-card>
+        </div>
+        <div class="col-md-4">
+          <mat-card class="text-center p-3">
+            <div class="fs-1 fw-bold text-danger">{{ grandTotalAbsences }}</div>
+            <div class="text-muted">Total ausencias institucionales</div>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="card mt-4">
+        <div class="header d-flex justify-content-between align-items-center">
+          <h2>Detalle por Curso</h2>
+          <button mat-stroked-button (click)="exportXls()" [disabled]="!dataSource.data.length">
+            <mat-icon>download</mat-icon> Exportar XLS
+          </button>
+        </div>
+        <div class="body table-responsive">
+          <table mat-table [dataSource]="dataSource" class="w-100">
+
+            <ng-container matColumnDef="label">
+              <th mat-header-cell *matHeaderCellDef>Curso</th>
+              <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalStudents">
+              <th mat-header-cell *matHeaderCellDef>Estudiantes</th>
+              <td mat-cell *matCellDef="let row">{{ row.totalStudents }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalDays">
+              <th mat-header-cell *matHeaderCellDef>Días Registrados</th>
+              <td mat-cell *matCellDef="let row">{{ row.totalDays }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="attendanceRate">
+              <th mat-header-cell *matHeaderCellDef>% Asistencia</th>
+              <td mat-cell *matCellDef="let row">
+                <strong [class.text-danger]="row.attendanceRate < 75" [class.text-success]="row.attendanceRate >= 75">
+                  {{ row.attendanceRate }}%
+                </strong>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalPresences">
+              <th mat-header-cell *matHeaderCellDef>Presencias</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge bg-success">{{ row.totalPresences }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalAbsences">
+              <th mat-header-cell *matHeaderCellDef>Ausencias</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge bg-danger">{{ row.totalAbsences }}</span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center py-4" [attr.colspan]="displayedColumns.length">
+                Sin datos para el rango seleccionado.
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    }
+
+  </div>
+</section>

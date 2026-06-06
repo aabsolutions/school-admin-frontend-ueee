@@ -88,7 +88,9 @@ export class AttendanceReportComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.consolidated = data;
-          this.dataSource.data = data.students;
+          this.dataSource.data = [...data.students].sort((a, b) =>
+            a.name.localeCompare(b.name, 'es'),
+          );
           this.isLoading = false;
         },
         error: (e) => {

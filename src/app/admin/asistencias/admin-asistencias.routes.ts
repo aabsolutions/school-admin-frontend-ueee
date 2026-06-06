@@ -23,5 +23,12 @@ export const ADMIN_ASISTENCIAS_ROUTE: Route[] = [
         (m) => m.AttendanceRegistroComponent,
       ),
   },
+  {
+    path: 'resumen-cursos',
+    loadComponent: () =>
+      import('./resumen-cursos/attendance-resumen-cursos.component').then(
+        (m) => m.AttendanceResumenCursosComponent,
+      ),
+  },
   { path: '**', redirectTo: 'config' },
 ];

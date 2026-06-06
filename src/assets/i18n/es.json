@@ -65,7 +65,8 @@
         "REGISTRO": "Tomar Asistencia",
         "HISTORIAL": "Historial",
         "MI_ASISTENCIA": "Mi Asistencia",
-        "RESUMEN": "Resumen de Asistencia"
+        "RESUMEN": "Resumen de Asistencia",
+        "RESUMEN_CURSOS": "Resumen General por Cursos"
       }
     },
     "COURSES": {
