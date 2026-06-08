@@ -105,6 +105,9 @@ export class AllEnrollmentsComponent implements OnInit, OnDestroy {
     this.paginator.pageIndex = 0;
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    if (!this.sort.active) {
+      this.sort.sort({ id: 'studentName', start: 'asc', disableClear: false });
+    }
   }
 
   applyFilter(event: Event) {
