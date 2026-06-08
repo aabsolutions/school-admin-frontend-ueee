@@ -1,50 +1,122 @@
 <section class="content">
   <div class="content-block">
-    <div class="block-header d-flex align-items-center gap-3">
-      <h2>Mis Hijos</h2>
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="breadscrums[0].title"
+        [items]="breadscrums[0].items"
+        [active_item]="breadscrums[0].active">
+      </app-breadcrumb>
     </div>
 
     @if (isLoading) {
-      <div class="text-center p-4">Cargando...</div>
+      <div class="text-center p-4">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
     } @else if (!hijos.length) {
       <div class="text-center p-4 text-muted">No tenés hijos vinculados aún.</div>
     } @else {
       <div class="row clearfix mt-3">
-        @for (hijo of hijos; track hijo._id) {
+        @for (item of hijos; track item.student._id) {
           <div class="col-xl-4 col-lg-6 col-md-12">
-            <mat-card class="mb-3">
+            <mat-card class="mb-4">
+
+              <!-- Header: foto + nombre -->
               <div class="d-flex align-items-center p-3 gap-3">
-                <img [src]="hijo.img || 'assets/images/user/user1.jpg'"
-                     style="width:64px;height:64px;border-radius:50%;object-fit:cover" alt="foto">
-                <div>
-                  <h4 class="mb-1">{{ hijo.name }}</h4>
-                  <p class="mb-0 text-muted small">{{ hijo.email }}</p>
-                  @if (hijo.dni) { <p class="mb-0 text-muted small">DNI: {{ hijo.dni }}</p> }
+                <img
+                  [src]="item.student.img || 'assets/images/user/user1.jpg'"
+                  style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #e0e0e0"
+                  alt="foto">
+                <div class="flex-grow-1">
+                  <h4 class="mb-1">{{ item.student.name }}</h4>
+                  @if (item.student.email) {
+                    <p class="mb-1 text-muted small">{{ item.student.email }}</p>
+                  }
+                  @if (item.student.dni) {
+                    <p class="mb-1 text-muted small">DNI: {{ item.student.dni }}</p>
+                  }
+                  @if (item.cursoNombre) {
+                    <p class="mb-1 small fw-semibold text-primary">
+                      <mat-icon style="font-size:14px;vertical-align:middle">school</mat-icon>
+                      {{ item.cursoNombre }}
+                      @if (item.academicYear) { — {{ item.academicYear }} }
+                    </p>
+                  } @else {
+                    <p class="mb-1 text-muted small fst-italic">Sin curso asignado</p>
+                  }
                   <mat-chip-set class="mt-1">
-                    <mat-chip [color]="getStatusColor(hijo.status || '')">{{ hijo.status }}</mat-chip>
+                    <mat-chip [color]="getStatusColor(item.student.status || '')">
+                      {{ getStatusLabel(item.student.status || '') }}
+                    </mat-chip>
                   </mat-chip-set>
                 </div>
               </div>
-              <mat-card-content class="px-3 pb-2">
-                <div class="row">
-                  @if (hijo.birthdate) {
-                    <div class="col-6 small"><strong>Nacimiento:</strong> {{ hijo.birthdate | date:'dd/MM/yyyy' }}</div>
+
+              <mat-card-content class="px-3 pb-1">
+
+                <!-- Curso info -->
+                @if (item.cursoNombre) {
+                  <div class="mb-2">
+                    <span class="badge bg-primary me-1">{{ item.cursoNombre }}</span>
+                    @if (item.academicYear) {
+                      <span class="badge bg-secondary">{{ item.academicYear }}</span>
+                    }
+                  </div>
+                }
+
+                <!-- Datos personales -->
+                <div class="row small mb-2">
+                  @if (item.student.birthdate) {
+                    <div class="col-6"><strong>Nacimiento:</strong> {{ item.student.birthdate | date:'dd/MM/yyyy' }}</div>
                   }
-                  @if (hijo.gender) {
-                    <div class="col-6 small"><strong>Género:</strong> {{ hijo.gender }}</div>
+                  @if (item.student.gender) {
+                    <div class="col-6"><strong>Género:</strong> {{ item.student.gender }}</div>
                   }
-                  @if (hijo.mobile) {
-                    <div class="col-6 small"><strong>Celular:</strong> {{ hijo.mobile }}</div>
+                  @if (item.student.mobile) {
+                    <div class="col-6"><strong>Celular:</strong> {{ item.student.mobile }}</div>
                   }
-                  @if (hijo.address) {
-                    <div class="col-12 small"><strong>Dirección:</strong> {{ hijo.address }}</div>
+                  @if (item.student.address) {
+                    <div class="col-12"><strong>Dirección:</strong> {{ item.student.address }}</div>
                   }
                 </div>
+
+                <!-- Registros disciplinarios / DECE -->
+                <div class="d-flex gap-2 mb-2">
+                  <span class="badge" [class]="item.expedientesCount > 0 ? 'bg-danger' : 'bg-success'">
+                    <mat-icon style="font-size:13px;vertical-align:middle">assignment</mat-icon>
+                    {{ item.expedientesCount }} exp. disciplinario{{ item.expedientesCount !== 1 ? 's' : '' }}
+                  </span>
+                  <span class="badge" [class]="item.deceCount > 0 ? 'bg-warning text-dark' : 'bg-success'">
+                    <mat-icon style="font-size:13px;vertical-align:middle">psychology</mat-icon>
+                    {{ item.deceCount }} atención{{ item.deceCount !== 1 ? 'es' : '' }} DECE
+                  </span>
+                </div>
+
+                <!-- Asistencia mini -->
+                <div class="small mb-1 d-flex justify-content-between">
+                  <span class="fw-semibold">Asistencia</span>
+                  <span [class]="item.attendanceStats.rate >= 80 ? 'text-success fw-bold' : 'text-danger fw-bold'">
+                    {{ item.attendanceStats.rate }}%
+                  </span>
+                </div>
+                <mat-progress-bar
+                  [value]="item.attendanceStats.rate"
+                  [color]="item.attendanceStats.rate >= 80 ? 'primary' : 'warn'"
+                  class="mb-2"
+                  style="border-radius:4px">
+                </mat-progress-bar>
+                <div class="d-flex gap-2 small text-muted">
+                  <span><span class="text-success fw-semibold">{{ item.attendanceStats.present }}</span> pres.</span>
+                  <span><span class="text-danger fw-semibold">{{ item.attendanceStats.absent }}</span> aus.</span>
+                  <span><span class="text-warning fw-semibold">{{ item.attendanceStats.late }}</span> tard.</span>
+                  <span><span class="text-secondary fw-semibold">{{ item.attendanceStats.excused }}</span> just.</span>
+                </div>
+
               </mat-card-content>
             </mat-card>
           </div>
         }
       </div>
     }
+
   </div>
 </section>

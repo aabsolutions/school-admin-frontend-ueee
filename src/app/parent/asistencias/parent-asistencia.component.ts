@@ -3,14 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { ChartCard4Component } from '@shared/components/chart-card4/chart-card4.component';
 import { AsistenciasService } from '@shared/services/asistencias.service';
-import { AttendanceStatus, ChildAttendanceSummary, STATUS_LABEL } from '@shared/services/asistencias.model';
+import { AttendanceStatus, ChildAttendanceSummary, StudentHistoryEntry, STATUS_LABEL } from '@shared/services/asistencias.model';
 
 // ─── Detail Dialog ────────────────────────────────────────────────────────────
 
@@ -65,6 +69,13 @@ export class AttendanceDetailDialogComponent {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
+interface ChildRecordState {
+  data: StudentHistoryEntry[];
+  total: number;
+  page: number;
+  isLoading: boolean;
+}
+
 @Component({
   selector: 'app-parent-asistencia',
   standalone: true,
@@ -73,9 +84,14 @@ export class AttendanceDetailDialogComponent {
     FormsModule,
     MatTabsModule,
     MatTableModule,
+    MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     BreadcrumbComponent,
     ChartCard4Component,
   ],
@@ -86,7 +102,13 @@ export class ParentAsistenciaComponent implements OnInit {
 
   children: ChildAttendanceSummary[] = [];
   chartDataMap = new Map<string, number[]>();
+  recordStates = new Map<string, ChildRecordState>();
   isLoading = true;
+
+  dateFrom = '';
+  dateTo = '';
+
+  readonly PAGE_SIZE = 10;
   readonly displayedColumns = ['date', 'status', 'note'];
   readonly statusLabel = STATUS_LABEL;
 
@@ -101,21 +123,89 @@ export class ParentAsistenciaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.svc.getMyChildrenAttendance().subscribe({
+    this.loadSummary();
+  }
+
+  loadSummary() {
+    this.isLoading = true;
+    const params: any = {};
+    if (this.dateFrom) params.dateFrom = this.dateFrom;
+    if (this.dateTo) params.dateTo = this.dateTo;
+
+    this.svc.getMyChildrenAttendance(params).subscribe({
       next: (data) => {
         this.children = data;
+        this.recordStates.clear();
         data.forEach(child => {
           this.chartDataMap.set(child.studentId, [
             child.present, child.absent, child.late, child.excused ?? 0,
           ]);
         });
         this.isLoading = false;
+        if (data.length) {
+          this.loadRecords(data[0].studentId, 1);
+        }
       },
       error: (e) => {
         this.snack.open(e.message, 'Cerrar', { duration: 4000 });
         this.isLoading = false;
       },
     });
+  }
+
+  applyFilter() {
+    this.loadSummary();
+  }
+
+  clearFilter() {
+    this.dateFrom = '';
+    this.dateTo = '';
+    this.loadSummary();
+  }
+
+  onTabChange(index: number) {
+    const child = this.children[index];
+    if (!child) return;
+    if (!this.recordStates.has(child.studentId)) {
+      this.loadRecords(child.studentId, 1);
+    }
+  }
+
+  loadRecords(studentId: string, page: number) {
+    const current = this.recordStates.get(studentId);
+    this.recordStates.set(studentId, {
+      data: current?.data ?? [],
+      total: current?.total ?? 0,
+      page,
+      isLoading: true,
+    });
+
+    const params: any = { studentId, page, limit: this.PAGE_SIZE };
+    if (this.dateFrom) params.dateFrom = this.dateFrom;
+    if (this.dateTo) params.dateTo = this.dateTo;
+
+    this.svc.getMyChildrenHistory(params).subscribe({
+      next: (res) => {
+        this.recordStates.set(studentId, {
+          data: res.data,
+          total: res.total,
+          page,
+          isLoading: false,
+        });
+      },
+      error: () => {
+        const cur = this.recordStates.get(studentId)!;
+        this.recordStates.set(studentId, { ...cur, isLoading: false });
+      },
+    });
+  }
+
+  onPage(event: PageEvent, studentId: string) {
+    this.loadRecords(studentId, event.pageIndex + 1);
+  }
+
+  getState(studentId: string): ChildRecordState {
+    return this.recordStates.get(studentId) ?? { data: [], total: 0, page: 1, isLoading: false };
   }
 
   onSliceClick(child: ChildAttendanceSummary, statusIndex: number): void {
@@ -131,12 +221,20 @@ export class ParentAsistenciaComponent implements OnInit {
 
   attendanceRate(child: ChildAttendanceSummary): number {
     const total = child.present + child.absent + child.late + (child.excused ?? 0);
-    return total > 0 ? Math.round((child.present / total) * 100) : 100;
+    return total > 0 ? Math.round(((child.present + child.late) / total) * 100) : 100;
   }
 
   statusClass(status: string): string {
     return (
       { present: 'bg-success', absent: 'bg-danger', late: 'bg-warning text-dark', excused: 'bg-secondary' }[status] ?? ''
     );
+  }
+
+  entryStatusClass(entry: StudentHistoryEntry): string {
+    return this.statusClass(entry.entry?.status ?? '');
+  }
+
+  entryStatusLabel(entry: StudentHistoryEntry): string {
+    return this.statusLabel[entry.entry?.status as AttendanceStatus] ?? '—';
   }
 }

@@ -28,6 +28,21 @@ export interface StudentSummary {
   mobile?: string;
 }
 
+export interface HijoDashboard {
+  student: StudentSummary;
+  cursoNombre: string;
+  academicYear: string;
+  expedientesCount: number;
+  deceCount: number;
+  attendanceStats: {
+    present: number;
+    absent: number;
+    late: number;
+    excused: number;
+    rate: number;
+  };
+}
+
 export interface Communicado {
   _id: string;
   teacherName: string;
@@ -51,6 +66,10 @@ export class ParentApiService {
 
   getHijos(): Observable<StudentSummary[]> {
     return this.http.get<any>(`${this.base}/parents/me/hijos`).pipe(map((r) => r.data));
+  }
+
+  getHijosDashboard(): Observable<HijoDashboard[]> {
+    return this.http.get<any>(`${this.base}/parents/me/hijos-dashboard`).pipe(map((r) => r.data));
   }
 
   getCommunicados(page = 1, limit = 10): Observable<any> {

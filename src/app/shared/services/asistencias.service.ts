@@ -150,6 +150,22 @@ export class AsistenciasService {
       );
   }
 
+  getMyChildrenHistory(params: {
+    studentId: string;
+    page?: number;
+    limit?: number;
+    dateFrom?: string;
+    dateTo?: string;
+  }): Observable<{ data: StudentHistoryEntry[]; total: number; totalPages: number }> {
+    const httpParams = this.buildParams(params);
+    return this.http
+      .get<ApiList<StudentHistoryEntry>>(`${this.BASE}/records/my-children/history`, { params: httpParams })
+      .pipe(
+        map((r) => r.data),
+        catchError(this.handleError),
+      );
+  }
+
   getMyStudentProfile(): Observable<{ _id: string; name: string }> {
     return this.http.get<ApiOne<any>>(`${environment.apiUrl}/students/me`).pipe(
       map((r) => r.data),

@@ -1,6 +1,12 @@
 <section class="content">
   <div class="content-block">
-    <div class="block-header"><h2>Mis Comunicados</h2></div>
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="breadscrums[0].title"
+        [items]="breadscrums[0].items"
+        [active_item]="breadscrums[0].active">
+      </app-breadcrumb>
+    </div>
 
     <div class="card mt-3">
       <div class="body">
@@ -16,7 +22,7 @@
               </ng-container>
 
               <ng-container matColumnDef="teacher">
-                <mat-header-cell *matHeaderCellDef>Docente</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>Reportado por</mat-header-cell>
                 <mat-cell *matCellDef="let row">{{ row.teacherName }}</mat-cell>
               </ng-container>
 

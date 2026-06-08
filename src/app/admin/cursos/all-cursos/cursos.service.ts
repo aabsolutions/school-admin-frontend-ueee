@@ -22,7 +22,7 @@ export class CursosService {
   }
 
   getAll(): Observable<Curso[]> {
-    return this.http.get<ApiList<any>>(this.API_URL).pipe(
+    return this.http.get<ApiList<any>>(this.API_URL, { params: { limit: '10000', sortBy: 'nivel', sortOrder: 'asc' } }).pipe(
       map(r => {
         const cursos = r.data.data.map(c => this.normalize(c));
         this.dataChange.next(cursos);

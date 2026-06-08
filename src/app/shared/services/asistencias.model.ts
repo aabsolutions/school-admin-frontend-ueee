@@ -92,6 +92,8 @@ export interface ChildAttendanceSummary {
   late: number;
   excused: number;
   recentRecords: Array<{ date: string; status: AttendanceStatus; note: string }>;
+  cursoNombre?: string;
+  academicYear?: string;
 }
 
 export const STATUS_LABEL: Record<AttendanceStatus, string> = {

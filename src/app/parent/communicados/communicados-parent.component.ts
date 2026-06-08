@@ -6,14 +6,16 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { ParentApiService, Communicado } from '../services/parent-api.service';
 
 @Component({
   selector: 'app-communicados-parent',
   templateUrl: './communicados-parent.component.html',
-  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatChipsModule, MatPaginatorModule],
+  imports: [CommonModule, RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatChipsModule, MatPaginatorModule, BreadcrumbComponent],
 })
 export class CommunicadosParentComponent implements OnInit {
+  breadscrums = [{ title: 'Comunicados', items: ['Representante'], active: 'Mis Comunicados' }];
   displayedColumns = ['subject', 'teacher', 'student', 'status', 'date', 'actions'];
   dataSource = new MatTableDataSource<Communicado>();
   total = 0;
