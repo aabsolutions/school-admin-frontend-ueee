@@ -1,1 +1,0 @@
-import"./chunk-WWX6BADO.js";var e=[{path:"",redirectTo:"docentes",pathMatch:"full"},{path:"docentes",loadComponent:()=>import("./chunk-THVWKSNN.js").then(t=>t.DocentesDocumentalComponent)},{path:"estudiantes",loadComponent:()=>import("./chunk-GSVWQ7VR.js").then(t=>t.EstudiantesDocumentalComponent)}];export{e as GESTION_DOCUMENTAL_ROUTE};
