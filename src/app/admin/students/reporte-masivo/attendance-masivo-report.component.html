@@ -1,0 +1,137 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="breadscrums[0].title"
+        [items]="breadscrums[0].items"
+        [active_item]="breadscrums[0].active">
+      </app-breadcrumb>
+    </div>
+
+    <!-- Filter card -->
+    <div class="card">
+      <div class="header"><h2>Filtros</h2></div>
+      <div class="body">
+        <div class="row g-3 align-items-end">
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Tipo de registro</mat-label>
+              <mat-select [(ngModel)]="status">
+                @for (opt of statusOptions; track opt.value) {
+                  <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-2">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Jornada</mat-label>
+              <mat-select [(ngModel)]="jornada">
+                @for (opt of jornadaOptions; track opt.value) {
+                  <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-2">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Desde</mat-label>
+              <input matInput type="date" [(ngModel)]="dateFrom" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-2">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Hasta</mat-label>
+              <input matInput type="date" [(ngModel)]="dateTo" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-1">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Mínimo</mat-label>
+              <input matInput type="number" [(ngModel)]="minCount" min="1" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-2">
+            <button
+              mat-flat-button color="primary"
+              class="w-100 mb-3"
+              (click)="search()"
+              [disabled]="isLoading">
+              <mat-icon>search</mat-icon> Generar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    @if (isLoading) {
+      <div class="d-flex justify-content-center p-4">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
+    }
+
+    <!-- Results card -->
+    @if (!isLoading && searched) {
+      <div class="card mt-3">
+        <div class="header d-flex justify-content-between align-items-center">
+          <h2>
+            Resultados
+            <span class="badge bg-danger ms-2">{{ items.length }} estudiantes</span>
+          </h2>
+          <button mat-stroked-button (click)="exportXls()" [disabled]="!items.length">
+            <mat-icon>download</mat-icon> Exportar Excel
+          </button>
+        </div>
+        <div class="body">
+
+          @if (!items.length) {
+            <p class="text-muted text-center py-4">Sin resultados para los filtros seleccionados.</p>
+          } @else {
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th style="width:40px">#</th>
+                    <th>Estudiante</th>
+                    <th>Curso</th>
+                    <th class="text-center">Cantidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (group of groups; track group.curso) {
+                    <tr class="table-success">
+                      <td colspan="4" class="fw-bold">
+                        <mat-icon style="font-size:16px;vertical-align:middle">school</mat-icon>
+                        {{ group.curso }}
+                      </td>
+                    </tr>
+                    @for (student of group.students; track student.studentId; let i = $index) {
+                      <tr>
+                        <td class="text-muted">{{ globalIndex(groups, group, i) }}</td>
+                        <td class="fw-medium">{{ student.name }}</td>
+                        <td class="text-muted">{{ student.cursoNombre }}</td>
+                        <td class="text-center">
+                          <span class="badge bg-danger rounded-pill">{{ student.count }}</span>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+
+        </div>
+      </div>
+    }
+
+  </div>
+</section>

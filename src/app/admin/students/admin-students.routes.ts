@@ -27,5 +27,12 @@ export const ADMIN_STUDENT_ROUTE: Route[] = [
     path: 'student-attendance',
     component: StudentAttendanceComponent,
   },
+  {
+    path: 'reporte-masivo-asistencias',
+    loadComponent: () =>
+      import('./reporte-masivo/attendance-masivo-report.component').then(
+        (m) => m.AttendanceMasivoReportComponent,
+      ),
+  },
   { path: '**', component: Page404Component },
 ];
