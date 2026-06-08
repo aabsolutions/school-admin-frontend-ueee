@@ -8,6 +8,7 @@ import {
   AttendanceConsolidated,
   AttendanceRecord,
   ChildAttendanceSummary,
+  ReporteMasivoItem,
   SaveAttendancePayload,
   StudentHistoryEntry,
 } from './asistencias.model';
@@ -115,6 +116,25 @@ export class AsistenciasService {
     const params = this.buildParams({ cursoLectivoId, dateFrom, dateTo });
     return this.http
       .get<ApiOne<AttendanceConsolidated>>(`${this.BASE}/records/consolidated`, { params })
+      .pipe(
+        map((r) => r.data),
+        catchError(this.handleError),
+      );
+  }
+
+  getReporteMasivo(params: {
+    status: string;
+    dateFrom?: string;
+    dateTo?: string;
+    minCount?: number;
+    jornada?: string;
+  }): Observable<ReporteMasivoItem[]> {
+    const httpParams = this.buildParams(params);
+    return this.http
+      .get<{ data: ReporteMasivoItem[] }>(
+        `${this.BASE}/records/reporte-masivo`,
+        { params: httpParams },
+      )
       .pipe(
         map((r) => r.data),
         catchError(this.handleError),

@@ -80,30 +80,43 @@
                 </div>
 
                 <!-- Registros disciplinarios / DECE -->
-                <div class="d-flex gap-2 mb-2">
-                  <span class="badge" [class]="item.expedientesCount > 0 ? 'bg-danger' : 'bg-success'">
-                    <mat-icon style="font-size:13px;vertical-align:middle">assignment</mat-icon>
-                    {{ item.expedientesCount }} exp. disciplinario{{ item.expedientesCount !== 1 ? 's' : '' }}
-                  </span>
-                  <span class="badge" [class]="item.deceCount > 0 ? 'bg-warning text-dark' : 'bg-success'">
-                    <mat-icon style="font-size:13px;vertical-align:middle">psychology</mat-icon>
-                    {{ item.deceCount }} atención{{ item.deceCount !== 1 ? 'es' : '' }} DECE
-                  </span>
+                <div class="d-flex gap-2 mb-3">
+                  <div class="d-flex align-items-center gap-1 px-2 py-1 rounded-3"
+                    [style.background]="item.expedientesCount > 0 ? '#fff3f3' : '#f0faf0'"
+                    [style.border]="item.expedientesCount > 0 ? '1px solid #f5c6c6' : '1px solid #b7ddb7'">
+                    <mat-icon [style.color]="item.expedientesCount > 0 ? '#dc3545' : '#28a745'" style="font-size:16px;width:16px;height:16px">
+                      {{ item.expedientesCount > 0 ? 'gavel' : 'check_circle' }}
+                    </mat-icon>
+                    <span class="small fw-semibold" [style.color]="item.expedientesCount > 0 ? '#dc3545' : '#28a745'">
+                      {{ item.expedientesCount }} exp. disciplinario{{ item.expedientesCount !== 1 ? 's' : '' }}
+                    </span>
+                  </div>
+                  <div class="d-flex align-items-center gap-1 px-2 py-1 rounded-3"
+                    [style.background]="item.deceCount > 0 ? '#fffbea' : '#f0f4ff'"
+                    [style.border]="item.deceCount > 0 ? '1px solid #ffd96a' : '1px solid #b3c6ff'">
+                    <mat-icon [style.color]="item.deceCount > 0 ? '#c77c00' : '#4a6cf7'" style="font-size:16px;width:16px;height:16px">
+                      {{ item.deceCount > 0 ? 'warning' : 'psychology' }}
+                    </mat-icon>
+                    <span class="small fw-semibold" [style.color]="item.deceCount > 0 ? '#c77c00' : '#4a6cf7'">
+                      {{ item.deceCount }} atención{{ item.deceCount !== 1 ? 'es' : '' }} DECE
+                    </span>
+                  </div>
                 </div>
 
-                <!-- Asistencia mini -->
-                <div class="small mb-1 d-flex justify-content-between">
-                  <span class="fw-semibold">Asistencia</span>
-                  <span [class]="item.attendanceStats.rate >= 80 ? 'text-success fw-bold' : 'text-danger fw-bold'">
+                <!-- Asistencia -->
+                <div class="mb-1 d-flex justify-content-between align-items-center">
+                  <span class="small fw-semibold text-muted">Asistencia</span>
+                  <span class="fw-bold" [style.color]="item.attendanceStats.rate >= 80 ? '#28a745' : '#dc3545'">
                     {{ item.attendanceStats.rate }}%
                   </span>
                 </div>
-                <mat-progress-bar
-                  [value]="item.attendanceStats.rate"
-                  [color]="item.attendanceStats.rate >= 80 ? 'primary' : 'warn'"
-                  class="mb-2"
-                  style="border-radius:4px">
-                </mat-progress-bar>
+                <div class="position-relative mb-2" style="height:10px;border-radius:6px;background:#e9ecef;overflow:hidden">
+                  <div class="position-absolute top-0 start-0 h-100"
+                    [style.width.%]="item.attendanceStats.rate"
+                    [style.background]="item.attendanceStats.rate >= 80 ? 'linear-gradient(90deg,#28a745,#5cb85c)' : 'linear-gradient(90deg,#dc3545,#e57373)'"
+                    style="border-radius:6px;transition:width .4s ease">
+                  </div>
+                </div>
                 <div class="d-flex gap-2 small text-muted">
                   <span><span class="text-success fw-semibold">{{ item.attendanceStats.present }}</span> pres.</span>
                   <span><span class="text-danger fw-semibold">{{ item.attendanceStats.absent }}</span> aus.</span>

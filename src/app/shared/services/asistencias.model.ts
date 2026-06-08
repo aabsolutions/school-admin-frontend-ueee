@@ -109,3 +109,12 @@ export const STATUS_COLOR: Record<AttendanceStatus, string> = {
   late: 'accent',
   excused: '',
 };
+
+export interface ReporteMasivoItem {
+  studentId: string;
+  name: string;
+  dni?: string;
+  cursoNombre: string;
+  academicYear: string;
+  count: number;
+}
