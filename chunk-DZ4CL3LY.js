@@ -1,1 +1,0 @@
-import"./chunk-WWX6BADO.js";var o=[{path:"all-users",loadComponent:()=>import("./chunk-EZLGBBP5.js").then(t=>t.AllUsersComponent)},{path:"add-user",loadComponent:()=>import("./chunk-6IIOLNH6.js").then(t=>t.AddUserComponent)},{path:"",redirectTo:"all-users",pathMatch:"full"}];export{o as USERS_ROUTE};
