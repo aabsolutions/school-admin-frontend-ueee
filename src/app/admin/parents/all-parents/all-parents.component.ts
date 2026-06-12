@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { ParentsApiService, Parent } from '../parents-api.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
@@ -32,6 +33,7 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
+    NgxPermissionsModule,
   ],
 })
 export class AllParentsComponent implements OnInit {

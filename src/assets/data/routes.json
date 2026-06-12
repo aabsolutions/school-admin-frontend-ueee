@@ -355,6 +355,18 @@
           "submenu": []
         },
         {
+          "path": "edit-student",
+          "title": "Modificación de Estudiantes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
           "path": "/admin/students/add-student",
           "title": "MENUITEMS.STUDENTS.LIST.ADD-STUDENT",
           "iconType": "",
@@ -452,6 +464,18 @@
           "submenu": []
         },
         {
+          "path": "edit-parent",
+          "title": "Modificación de Padres de Familia",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
           "path": "/admin/parents/add-parent",
           "title": "Agregar Padre",
           "iconType": "",
@@ -498,6 +522,18 @@
           "badge": "",
           "badgeClass": "",
           "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "edit-teacher",
+          "title": "Modificación de Docentes",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["ADMIN", "SUPERADMIN"],
           "submenu": []
         },
         {

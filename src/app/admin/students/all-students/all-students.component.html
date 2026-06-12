@@ -32,10 +32,10 @@
 
                 <app-table-show-hide-column [columnDefinitions]="columnDefinitions"></app-table-show-hide-column>
 
-                <button mat-icon-button (click)="openBulkImport()" class="tbl-header-btn col-blue" matTooltip="Alta Masiva">
+                <button *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']" mat-icon-button (click)="openBulkImport()" class="tbl-header-btn col-blue" matTooltip="Alta Masiva">
                   <mat-icon>upload_file</mat-icon>
                 </button>
-                <button mat-icon-button (click)="addNew()" class="tbl-header-btn col-green" matTooltip="Add">
+                <button *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']" mat-icon-button (click)="addNew()" class="tbl-header-btn col-green" matTooltip="Add">
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>
                 <button mat-icon-button (click)="refresh()" class="tbl-header-btn col-brown" matTooltip="Refresh">
@@ -188,7 +188,7 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                    <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editCall(row)"
+                    <button *ngxPermissionsOnly="['edit-student', 'SUPERADMIN']" mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editCall(row)"
                       class="tbl-action-btn">
                       <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                     </button>
@@ -199,8 +199,7 @@
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
-                <mat-row [@rowsAnimation]="" *matRowDef="let row; columns: getDisplayedColumns();"
-                  (click)="editCall(row)" [style.cursor]="'pointer'" matRipple>
+                <mat-row [@rowsAnimation]="" *matRowDef="let row; columns: getDisplayedColumns();" matRipple>
                 </mat-row>
               </table>
               <!-- Loading spinner -->

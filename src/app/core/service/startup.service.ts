@@ -35,12 +35,15 @@ export class StartupService {
   }
 
   private setPermissions(user: User) {
+    const roleNames: string[] = user['roles']?.map((e: any) => e['name']) || [];
+    const allPermissions = [...(user.permissions || []), ...roleNames];
+
+    this.permissonsService.loadPermissions(allPermissions);
+    this.rolesService.flushRoles();
+
     const role: any = {};
-    user['roles']?.forEach((e: any) => {
-      this.permissonsService.loadPermissions(user.permissions!);
-      this.rolesService.flushRoles();
-      const name = e['name'];
-      role[name] = user.permissions;
+    roleNames.forEach((name) => {
+      role[name] = allPermissions;
     });
     this.rolesService.addRolesWithPermissions(role);
   }

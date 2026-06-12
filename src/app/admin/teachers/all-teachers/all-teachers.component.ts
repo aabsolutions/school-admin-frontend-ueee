@@ -40,6 +40,7 @@ import { FeatherIconsComponent } from '@shared/components/feather-icons/feather-
 import { Direction } from '@angular/cdk/bidi';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 @Component({
   selector: 'app-all-teachers',
@@ -70,6 +71,7 @@ import { TableShowHideColumnComponent } from '@shared/components/table-show-hide
     MatPaginatorModule,
     DatePipe,
     TableShowHideColumnComponent,
+    NgxPermissionsModule,
   ],
 })
 export class AllTeachersComponent implements OnInit, OnDestroy {

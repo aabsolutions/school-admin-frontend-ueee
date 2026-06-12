@@ -123,13 +123,24 @@ export class AsistenciasService {
   }
 
   getReporteMasivo(params: {
-    status: string;
+    status?: string;
+    statuses?: string[];
     dateFrom?: string;
     dateTo?: string;
     minCount?: number;
     jornada?: string;
   }): Observable<ReporteMasivoItem[]> {
-    const httpParams = this.buildParams(params);
+    let httpParams = new HttpParams();
+    if (params.status) httpParams = httpParams.set('status', params.status);
+    if (params.statuses?.length) {
+      for (const s of params.statuses) {
+        httpParams = httpParams.append('statuses', s);
+      }
+    }
+    if (params.dateFrom) httpParams = httpParams.set('dateFrom', params.dateFrom);
+    if (params.dateTo) httpParams = httpParams.set('dateTo', params.dateTo);
+    if (params.minCount !== undefined) httpParams = httpParams.set('minCount', String(params.minCount));
+    if (params.jornada) httpParams = httpParams.set('jornada', params.jornada);
     return this.http
       .get<{ data: ReporteMasivoItem[] }>(
         `${this.BASE}/records/reporte-masivo`,
