@@ -35,10 +35,10 @@ import { ReporteMasivoItem } from '@shared/services/asistencias.model';
 export class AttendanceMasivoReportComponent {
   breadscrums = [{ title: 'Estudiantes', items: ['Admin'], active: 'Reporte Masivo' }];
 
-  status = 'absent';
+  statuses: string[] = ['absent'];
   jornada = '';
-  dateFrom = '';
-  dateTo = '';
+  dateFrom = new Date().toISOString().slice(0, 10);
+  dateTo = new Date().toISOString().slice(0, 10);
   minCount = 2;
 
   isLoading = false;
@@ -93,14 +93,14 @@ export class AttendanceMasivoReportComponent {
   }
 
   search() {
-    if (!this.status) {
-      this.snack.open('Seleccioná un tipo de registro', 'OK', { duration: 3000 });
+    if (!this.statuses.length) {
+      this.snack.open('Seleccioná al menos un tipo de registro', 'OK', { duration: 3000 });
       return;
     }
     this.isLoading = true;
     this.svc
       .getReporteMasivo({
-        status: this.status,
+        statuses: this.statuses,
         dateFrom: this.dateFrom || undefined,
         dateTo: this.dateTo || undefined,
         minCount: this.minCount,
@@ -133,6 +133,7 @@ export class AttendanceMasivoReportComponent {
       excused: 'justificadas',
     };
     const date = new Date().toISOString().slice(0, 10);
-    TableExportUtil.exportToExcel(rows, `reporte-${typeLabel[this.status] ?? this.status}-${date}`);
+    const typePart = this.statuses.map(s => typeLabel[s] ?? s).join('-');
+    TableExportUtil.exportToExcel(rows, `reporte-${typePart}-${date}`);
   }
 }
