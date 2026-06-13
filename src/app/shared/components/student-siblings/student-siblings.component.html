@@ -1,0 +1,89 @@
+<div class="siblings-section">
+
+  @if (loading) {
+    <div class="d-flex justify-content-center py-3">
+      <mat-spinner diameter="32"></mat-spinner>
+    </div>
+  } @else {
+
+    @if (suggestions.length) {
+      <div class="mb-3">
+        <div class="fw-semibold mb-2" style="font-size:13px; color:#555">
+          Sugerencias (comparten padre / madre)
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          @for (s of suggestions; track s._id) {
+            <div class="d-flex align-items-center gap-2 px-2 py-2 border rounded"
+                 style="background:#f9f9f9; font-size:13px; min-width:180px">
+              <mat-icon style="font-size:18px; width:18px; height:18px; color:#888">
+                person_outline
+              </mat-icon>
+              <div style="flex:1; min-width:0">
+                <div class="fw-semibold text-truncate">{{ s.name }}</div>
+                @if (s.dni) {
+                  <div class="text-muted" style="font-size:11px">{{ s.dni }}</div>
+                }
+              </div>
+              <button type="button" mat-icon-button color="primary"
+                      title="Vincular como hermano/a"
+                      [disabled]="linking"
+                      (click)="linkFromSuggestion(s)">
+                <mat-icon>link</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="mb-3">
+      <div class="fw-semibold mb-2" style="font-size:13px; color:#555">
+        Hermanos vinculados
+      </div>
+      @if (!siblings.length) {
+        <div class="text-muted" style="font-size:13px">Sin hermanos vinculados.</div>
+      }
+      @for (s of siblings; track s._id) {
+        <div class="d-flex align-items-center gap-2 px-2 py-2 border rounded mb-2"
+             style="background:#f5f5f5; font-size:13px">
+          <mat-icon style="font-size:18px; width:18px; height:18px; color:#26a69a">
+            people_outline
+          </mat-icon>
+          <div style="flex:1; min-width:0">
+            <span class="fw-semibold text-truncate">{{ s.name }}</span>
+            @if (s.dni) {
+              <span class="text-muted ms-2">{{ s.dni }}</span>
+            }
+          </div>
+          <button type="button"
+                  title="Desvincular"
+                  (click)="unlink(s)"
+                  style="background:none; border:none; cursor:pointer; color:#999; padding:2px 6px">
+            ✕
+          </button>
+        </div>
+      }
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Buscar y vincular hermano/a...</mat-label>
+      <input matInput [formControl]="searchCtrl" [matAutocomplete]="siblingAuto"
+             placeholder="Nombre, DNI o email...">
+      <mat-icon matSuffix>search</mat-icon>
+      <mat-autocomplete #siblingAuto (optionSelected)="linkFromSearch($event.option.value)">
+        @for (r of searchResults; track r._id) {
+          <mat-option [value]="r">
+            <span style="font-size:13px">{{ r.name }}</span>
+            @if (r.dni) {
+              <small class="ms-2 text-muted">({{ r.dni }})</small>
+            }
+          </mat-option>
+        }
+        @if (!searchResults.length && searchCtrl.value && searchCtrl.value.length >= 2) {
+          <mat-option disabled>Sin resultados</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+  }
+</div>
