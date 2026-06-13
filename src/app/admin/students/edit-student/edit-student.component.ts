@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { Subject, takeUntil } from 'rxjs';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { StudentSiblingsComponent } from '../student-siblings/student-siblings.component';
 import { StudentsService } from '../all-students/students.service';
@@ -19,9 +20,10 @@ import { StudentsService } from '../all-students/students.service';
     StudentSiblingsComponent,
   ],
 })
-export class EditStudentComponent implements OnInit {
+export class EditStudentComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private svc = inject(StudentsService);
+  private destroy$ = new Subject<void>();
 
   studentId = '';
   studentName = '';
@@ -33,10 +35,17 @@ export class EditStudentComponent implements OnInit {
   ngOnInit() {
     this.studentId = this.route.snapshot.paramMap.get('id') ?? '';
     if (this.studentId) {
-      this.svc.getStudentWithSiblings(this.studentId).subscribe({
+      this.svc.getStudentWithSiblings(this.studentId).pipe(
+        takeUntil(this.destroy$),
+      ).subscribe({
         next: (s) => { this.studentName = s.name ?? ''; },
-        error: () => {},
+        error: (err) => { console.warn('Failed to load student', err); },
       });
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
