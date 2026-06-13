@@ -70,7 +70,7 @@
       <input matInput [formControl]="searchCtrl" [matAutocomplete]="siblingAuto"
              placeholder="Nombre, DNI o email...">
       <mat-icon matSuffix>search</mat-icon>
-      <mat-autocomplete #siblingAuto (optionSelected)="linkFromSearch($event.option.value)">
+      <mat-autocomplete #siblingAuto [displayWith]="displayFn" (optionSelected)="linkFromSearch($event.option.value)">
         @for (r of searchResults; track r._id) {
           <mat-option [value]="r">
             <span style="font-size:13px">{{ r.name }}</span>

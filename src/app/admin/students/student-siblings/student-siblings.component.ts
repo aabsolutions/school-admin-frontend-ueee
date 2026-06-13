@@ -8,15 +8,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {
   Subject, debounceTime, distinctUntilChanged, switchMap, of, takeUntil,
 } from 'rxjs';
 import {
   StudentsService, StudentBasic,
-} from '../../../admin/students/all-students/students.service';
+} from '../all-students/students.service';
 
 @Component({
   selector: 'app-student-siblings',
@@ -29,8 +27,6 @@ import {
     MatAutocompleteModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule,
-    MatChipsModule,
     MatProgressSpinnerModule,
   ],
 })
@@ -73,7 +69,9 @@ export class StudentSiblingsComponent implements OnInit, OnDestroy {
 
   private load() {
     this.loading = true;
-    this.svc.getStudentWithSiblings(this.studentId).subscribe({
+    this.svc.getStudentWithSiblings(this.studentId).pipe(
+      takeUntil(this.destroy$),
+    ).subscribe({
       next: (student) => {
         this.siblings = student.siblingIds ?? [];
         this.loading = false;
@@ -84,13 +82,15 @@ export class StudentSiblingsComponent implements OnInit, OnDestroy {
   }
 
   private loadSuggestions() {
-    this.svc.getSuggestedSiblings(this.studentId).subscribe({
+    this.svc.getSuggestedSiblings(this.studentId).pipe(
+      takeUntil(this.destroy$),
+    ).subscribe({
       next: (list) => {
         this.suggestions = list.filter(
           (s) => !this.siblings.some((linked) => linked._id === s._id),
         );
       },
-      error: () => {},
+      error: (err) => { console.warn('Siblings: operation failed', err); },
     });
   }
 
@@ -102,27 +102,36 @@ export class StudentSiblingsComponent implements OnInit, OnDestroy {
 
   linkFromSuggestion(sibling: StudentBasic) {
     this.suggestions = this.suggestions.filter((s) => s._id !== sibling._id);
-    this.doLink(sibling);
+    this.doLink(sibling, 'suggestion');
   }
 
-  private doLink(sibling: StudentBasic) {
+  private doLink(sibling: StudentBasic, source?: 'suggestion') {
     this.linking = true;
-    this.svc.linkSibling(this.studentId, sibling._id).subscribe({
+    this.svc.linkSibling(this.studentId, sibling._id).pipe(
+      takeUntil(this.destroy$),
+    ).subscribe({
       next: () => {
         this.siblings = [...this.siblings, sibling];
         this.linking = false;
       },
-      error: () => { this.linking = false; },
+      error: () => {
+        this.linking = false;
+        if (source === 'suggestion') {
+          this.suggestions = [...this.suggestions, sibling];
+        }
+      },
     });
   }
 
   unlink(sibling: StudentBasic) {
-    this.svc.unlinkSibling(this.studentId, sibling._id).subscribe({
+    this.svc.unlinkSibling(this.studentId, sibling._id).pipe(
+      takeUntil(this.destroy$),
+    ).subscribe({
       next: () => {
         this.siblings = this.siblings.filter((s) => s._id !== sibling._id);
         this.suggestions = [...this.suggestions, sibling];
       },
-      error: () => {},
+      error: (err) => { console.warn('Siblings: operation failed', err); },
     });
   }
 
