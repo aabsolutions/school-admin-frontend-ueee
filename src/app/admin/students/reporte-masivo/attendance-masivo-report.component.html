@@ -102,13 +102,15 @@
                     <th style="width:40px">#</th>
                     <th>Estudiante</th>
                     <th>Curso</th>
-                    <th class="text-center">Cantidad</th>
+                    @for (col of selectedColumns; track col.value) {
+                      <th class="text-center">{{ col.label }}</th>
+                    }
                   </tr>
                 </thead>
                 <tbody>
                   @for (group of groups; track group.curso) {
                     <tr class="table-success">
-                      <td colspan="4" class="fw-bold">
+                      <td [attr.colspan]="tableColspan" class="fw-bold">
                         <mat-icon style="font-size:16px;vertical-align:middle">school</mat-icon>
                         {{ group.curso }}
                       </td>
@@ -118,9 +120,13 @@
                         <td class="text-muted">{{ globalIndex(groups, group, i) }}</td>
                         <td class="fw-medium">{{ student.name }}</td>
                         <td class="text-muted">{{ student.cursoNombre }}</td>
-                        <td class="text-center">
-                          <span class="badge bg-danger rounded-pill">{{ student.count }}</span>
-                        </td>
+                        @for (col of selectedColumns; track col.value) {
+                          <td class="text-center">
+                            <span class="badge rounded-pill" [ngClass]="col.badgeClass">
+                              {{ student.counts[col.value]}}
+                            </span>
+                          </td>
+                        }
                       </tr>
                     }
                   }

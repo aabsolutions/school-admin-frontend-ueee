@@ -46,10 +46,19 @@ export class AttendanceMasivoReportComponent {
   items: ReporteMasivoItem[] = [];
 
   readonly statusOptions = [
-    { value: 'absent',  label: 'Inasistencias' },
-    { value: 'late',    label: 'Tardanzas' },
-    { value: 'excused', label: 'Justificadas' },
+    { value: 'present', label: 'Asistencias',  badgeClass: 'bg-success' },
+    { value: 'absent',  label: 'Inasistencias', badgeClass: 'bg-danger' },
+    { value: 'late',    label: 'Tardanzas',     badgeClass: 'bg-warning text-dark' },
+    { value: 'excused', label: 'Justificadas',  badgeClass: 'bg-info text-dark' },
   ];
+
+  get selectedColumns() {
+    return this.statusOptions.filter(o => this.statuses.includes(o.value));
+  }
+
+  get tableColspan(): number {
+    return 3 + this.selectedColumns.length;
+  }
 
   readonly jornadaOptions = [
     { value: '',           label: 'Todas' },
@@ -121,19 +130,19 @@ export class AttendanceMasivoReportComponent {
 
   exportXls() {
     if (!this.items.length) return;
+    const cols = this.selectedColumns;
     const rows: Record<string, string | number>[] = [];
     for (const group of this.groups) {
       for (const s of group.students) {
-        rows.push({ Nombre: s.name, Curso: s.cursoNombre, Cantidad: s.count });
+        const row: Record<string, string | number> = { Nombre: s.name, Curso: s.cursoNombre };
+        for (const col of cols) {
+          row[col.label] = s.counts[col.value] ?? 0;
+        }
+        rows.push(row);
       }
     }
-    const typeLabel: Record<string, string> = {
-      absent: 'inasistencias',
-      late: 'tardanzas',
-      excused: 'justificadas',
-    };
     const date = new Date().toISOString().slice(0, 10);
-    const typePart = this.statuses.map(s => typeLabel[s] ?? s).join('-');
+    const typePart = cols.map(c => c.label.toLowerCase()).join('-');
     TableExportUtil.exportToExcel(rows, `reporte-${typePart}-${date}`);
   }
 }

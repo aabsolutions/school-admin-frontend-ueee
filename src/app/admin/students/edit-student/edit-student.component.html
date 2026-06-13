@@ -1,26 +1,38 @@
-<app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
+<section class="content">
+  <div class="content-block">
+    @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-<div class="container-fluid">
-  <div class="row clearfix">
-    <div class="col-lg-8 col-md-10 col-sm-12 mx-auto">
-      <div class="card">
-        <div class="header d-flex align-items-center gap-2 p-3 border-bottom">
-          <mat-icon color="primary">people</mat-icon>
-          <div>
-            <div class="fw-bold" style="font-size:16px">Hermanos</div>
-            @if (studentName) {
-              <div class="text-muted" style="font-size:13px">{{ studentName }}</div>
-            }
+        <div class="container-fluid">
+          <div class="row clearfix">
+            <div class="col-lg-8 col-md-10 col-sm-12 mx-auto">
+              <div class="card">
+                <div class="header d-flex align-items-center gap-2 p-3 border-bottom">
+                  <mat-icon color="primary">people</mat-icon>
+                  <div>
+                    <div class="fw-bold" style="font-size:16px">Hermanos</div>
+                    @if (studentName) {
+                      <div class="text-muted" style="font-size:13px">{{ studentName }}</div>
+                    }
+                  </div>
+                </div>
+                <div class="body p-3">
+                  @if (studentId) {
+                    <app-student-siblings [studentId]="studentId" />
+                  } @else {
+                    <p class="text-muted">ID de estudiante no encontrado.</p>
+                  }
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="body p-3">
-          @if (studentId) {
-            <app-student-siblings [studentId]="studentId" />
-          } @else {
-            <p class="text-muted">ID de estudiante no encontrado.</p>
-          }
         </div>
       </div>
     </div>
-  </div>
-</div>

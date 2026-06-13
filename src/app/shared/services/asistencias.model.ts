@@ -116,5 +116,6 @@ export interface ReporteMasivoItem {
   dni?: string;
   cursoNombre: string;
   academicYear: string;
-  count: number;
+  counts: Record<string, number>;
+  total: number;
 }
