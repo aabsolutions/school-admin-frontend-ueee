@@ -8,6 +8,13 @@ import { environment } from '@environments/environment';
 interface ApiList<T> { data: { data: T[] } }
 interface ApiOne<T>  { data: T }
 
+export interface StudentBasic {
+  _id: string;
+  name: string;
+  dni?: string;
+  img?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -127,6 +134,44 @@ export class StudentsService {
       map((r) => r.data?.data ?? []),
       catchError(() => throwError(() => new Error('Search failed'))),
     );
+  }
+
+  getStudentWithSiblings(id: string): Observable<any> {
+    return this.httpClient.get<ApiOne<any>>(`${this.API_URL}/${id}`).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  searchStudentsForSibling(q: string, excludeId: string): Observable<StudentBasic[]> {
+    const params = new HttpParams().set('q', q).set('excludeId', excludeId);
+    return this.httpClient
+      .get<{ data: StudentBasic[] }>(`${this.API_URL}/search`, { params })
+      .pipe(
+        map((r) => r.data),
+        catchError(() => throwError(() => new Error('Search failed'))),
+      );
+  }
+
+  getSuggestedSiblings(studentId: string): Observable<StudentBasic[]> {
+    return this.httpClient
+      .get<{ data: StudentBasic[] }>(`${this.API_URL}/${studentId}/suggested-siblings`)
+      .pipe(
+        map((r) => r.data),
+        catchError(this.handleError),
+      );
+  }
+
+  linkSibling(studentId: string, siblingId: string): Observable<void> {
+    return this.httpClient
+      .post<void>(`${this.API_URL}/${studentId}/siblings`, { siblingId })
+      .pipe(catchError(this.handleError));
+  }
+
+  unlinkSibling(studentId: string, siblingId: string): Observable<void> {
+    return this.httpClient
+      .delete<void>(`${this.API_URL}/${studentId}/siblings/${siblingId}`)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {
