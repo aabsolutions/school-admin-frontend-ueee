@@ -16,7 +16,7 @@ export const ADMIN_STUDENT_ROUTE: Route[] = [
     component: AddStudentComponent,
   },
   {
-    path: 'edit-student',
+    path: 'edit-student/:id',
     component: EditStudentComponent,
   },
   {

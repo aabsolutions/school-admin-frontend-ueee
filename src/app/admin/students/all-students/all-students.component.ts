@@ -24,6 +24,7 @@ import { StudentsService } from './students.service';
 import { Students } from './students.model';
 import { rowsAnimation, TableExportUtil } from '@shared';
 import { formatDate, DatePipe, CommonModule, NgClass } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -51,6 +52,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     BreadcrumbComponent,
     FeatherIconsComponent,
     CommonModule,
+    RouterModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,

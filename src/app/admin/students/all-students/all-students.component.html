@@ -192,6 +192,12 @@
                       class="tbl-action-btn">
                       <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
                     </button>
+                    <a *ngxPermissionsOnly="['edit-student', 'SUPERADMIN']"
+                       mat-icon-button color="primary"
+                       [routerLink]="['/admin/students/edit-student', row.id]"
+                       title="Gestionar hermanos">
+                      <mat-icon>people</mat-icon>
+                    </a>
                     <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="deleteItem(row)"
                       class="tbl-action-btn">
                       <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
