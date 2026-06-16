@@ -147,6 +147,18 @@
       ]
     },
     {
+      "path": "/admin/expediente-academico",
+      "title": "Expedientes Académicos",
+      "iconType": "material-icons-outlined",
+      "icon": "school",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
       "path": "/admin/expedientes",
       "title": "Expedientes Disciplinarios",
       "iconType": "material-icons-outlined",
@@ -929,6 +941,18 @@
       "submenu": []
     },
     {
+      "path": "/student/mi-expediente-academico",
+      "title": "Mi Expediente Académico",
+      "iconType": "material-icons-outlined",
+      "icon": "school",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["STUDENT"],
+      "submenu": []
+    },
+    {
       "path": "/student/mi-expediente",
       "title": "Mi Expediente Disciplinario",
       "iconType": "material-icons-outlined",
@@ -1078,6 +1102,30 @@
       "title": "Centro de Mensajería",
       "iconType": "material-icons-outlined",
       "icon": "chat",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/expediente-academico",
+      "title": "Expedientes Académicos",
+      "iconType": "material-icons-outlined",
+      "icon": "school",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["PARENT"],
+      "submenu": []
+    },
+    {
+      "path": "/parent/expedientes",
+      "title": "Expedientes Disciplinarios",
+      "iconType": "material-icons-outlined",
+      "icon": "folder_special",
       "class": "",
       "groupTitle": false,
       "badge": "",
