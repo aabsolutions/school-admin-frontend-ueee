@@ -104,6 +104,26 @@
                   </div>
                 </div>
               }
+
+              <!-- Google Drive links -->
+              @if (reg.driveFiles && reg.driveFiles.length > 0) {
+                <div class="evidencias mt-2">
+                  <span class="evidencias-label">
+                    <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle;color:#4285F4">folder_open</mat-icon>
+                    Archivos de Drive:
+                  </span>
+                  <div class="d-flex flex-wrap gap-2 mt-1">
+                    @for (df of reg.driveFiles; track df.url) {
+                      <a [href]="df.url" target="_blank" rel="noopener noreferrer"
+                        class="evidencia-doc" matTooltip="{{ df.url }}"
+                        style="text-decoration:none">
+                        <mat-icon style="color:#4285F4">folder_open</mat-icon>
+                        <span>{{ df.nombre }}</span>
+                      </a>
+                    }
+                  </div>
+                </div>
+              }
             </div>
           </div>
         }

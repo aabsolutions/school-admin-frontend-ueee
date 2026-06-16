@@ -77,6 +77,42 @@
         </div>
       </div>
 
+      <!-- Google Drive links -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <label class="upload-label">
+              <mat-icon style="vertical-align:middle;margin-right:6px;color:#4285F4">folder_open</mat-icon>
+              <strong>Archivos de Google Drive</strong>
+            </label>
+            <button mat-stroked-button type="button" (click)="addDriveLink()" style="height:32px;line-height:32px;font-size:12px">
+              <mat-icon style="font-size:16px;height:16px;width:16px;margin-right:4px">add</mat-icon>Agregar link
+            </button>
+          </div>
+          @for (link of driveLinks; track $index; let i = $index) {
+            <div class="d-flex gap-2 mb-2 align-items-center">
+              <mat-form-field appearance="outline" style="flex:1;margin-bottom:0">
+                <mat-label>Nombre</mat-label>
+                <input matInput [(ngModel)]="driveLinks[i].nombre" [ngModelOptions]="{standalone:true}"
+                  placeholder="Ej: Acta de reunión">
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="flex:2;margin-bottom:0">
+                <mat-label>URL de Google Drive</mat-label>
+                <input matInput [(ngModel)]="driveLinks[i].url" [ngModelOptions]="{standalone:true}"
+                  placeholder="https://drive.google.com/...">
+              </mat-form-field>
+              <button mat-icon-button type="button" (click)="removeDriveLink(i)" color="warn"
+                style="flex-shrink:0">
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+            </div>
+          }
+          @if (driveLinks.length === 0) {
+            <p class="text-muted mb-0" style="font-size:12px">Sin archivos de Drive enlazados.</p>
+          }
+        </div>
+      </div>
+
       <!-- Evidencias -->
       <div class="row mb-3">
         <div class="col-12">

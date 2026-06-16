@@ -134,5 +134,12 @@ export const ADMIN_ROUTE: Route[] = [
         (m) => m.ADMIN_TRAMITOLOGIA_ROUTE,
       ),
   },
+  {
+    path: 'expediente-academico',
+    loadChildren: () =>
+      import('./expediente-academico/expediente-academico.routes').then(
+        (m) => m.EXPEDIENTE_ACADEMICO_ROUTE,
+      ),
+  },
   { path: '**', component: Page404Component },
 ];

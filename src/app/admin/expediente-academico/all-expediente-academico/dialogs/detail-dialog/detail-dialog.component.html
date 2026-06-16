@@ -1,0 +1,91 @@
+<div class="expediente-detail-container">
+
+  <!-- Header -->
+  <div class="detail-header">
+    <div class="student-avatar">
+      @if (studentInfo?.img) {
+        <img [src]="studentInfo?.img" [alt]="studentInfo?.name" class="avatar-img">
+      } @else {
+        <div class="avatar-placeholder"><mat-icon>person</mat-icon></div>
+      }
+    </div>
+    <div class="student-info">
+      <h2 class="student-name">{{ studentInfo?.name }}</h2>
+      <div class="student-meta">
+        <span><mat-icon class="meta-icon">badge</mat-icon> {{ studentInfo?.dni || '—' }}</span>
+        <span><mat-icon class="meta-icon">email</mat-icon> {{ studentInfo?.email }}</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button mat-flat-button color="primary" (click)="openDocumentoDialog()">
+        <mat-icon>add</mat-icon> Agregar documento
+      </button>
+      <button mat-icon-button color="warn" matTooltip="Eliminar expediente" (click)="deleteExpediente()">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Cerrar" (click)="dialogRef.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Secciones y documentos -->
+  <div class="detail-body">
+    @if (loading) {
+      <div class="d-flex justify-content-center p-5">
+        <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else if (secciones.length === 0) {
+      <div class="empty-state">
+        <mat-icon>folder_open</mat-icon>
+        <p>Sin documentos aún. Presioná <strong>Agregar documento</strong> para comenzar.</p>
+      </div>
+    } @else {
+      <div class="secciones">
+        @for (seccion of secciones; track seccion.nombre) {
+          <div class="seccion-block">
+            <div class="seccion-header">
+              <mat-icon style="color:#4285F4;margin-right:6px;vertical-align:middle">folder</mat-icon>
+              <span class="seccion-nombre">{{ seccion.nombre }}</span>
+              <span class="seccion-count">({{ seccion.documentos.length }})</span>
+              <button mat-icon-button color="warn" class="seccion-delete-btn"
+                [matTooltip]="'Eliminar sección ' + seccion.nombre"
+                (click)="deleteSeccion(seccion.nombre)">
+                <mat-icon style="font-size:18px;height:18px;width:18px">delete</mat-icon>
+              </button>
+            </div>
+            <div class="documentos-list">
+              @for (doc of seccion.documentos; track doc._id) {
+                <div class="documento-row">
+                  <mat-icon class="doc-icon" style="color:#4285F4">insert_drive_file</mat-icon>
+                  <div class="doc-info">
+                    <a [href]="doc.url" target="_blank" rel="noopener noreferrer"
+                      class="doc-nombre" [matTooltip]="doc.url">{{ doc.nombre }}</a>
+                    @if (doc.descripcion) {
+                      <span class="doc-desc">{{ doc.descripcion }}</span>
+                    }
+                    <span class="doc-meta">
+                      @if (doc.creadoPor) { <span>{{ doc.creadoPor }}</span> · }
+                      {{ doc.fecha | date:'dd/MM/yyyy' }}
+                    </span>
+                  </div>
+                  <div class="doc-actions">
+                    <button mat-icon-button matTooltip="Editar" (click)="openDocumentoDialog(doc)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="deleteDocumento(doc)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        }
+      </div>
+    }
+  </div>
+</div>

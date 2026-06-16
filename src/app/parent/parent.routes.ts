@@ -43,6 +43,20 @@ export const PARENT_ROUTE: Route[] = [
       ),
   },
   {
+    path: 'expedientes',
+    loadComponent: () =>
+      import('./expedientes/parent-expedientes.component').then(
+        (m) => m.ParentExpedientesComponent,
+      ),
+  },
+  {
+    path: 'expediente-academico',
+    loadComponent: () =>
+      import('./expediente-academico/parent-expediente-academico.component').then(
+        (m) => m.ParentExpedienteAcademicoComponent,
+      ),
+  },
+  {
     path: 'messaging',
     component: MessagingComponent,
   },

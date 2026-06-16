@@ -1,0 +1,54 @@
+<div class="gestion-secciones-container">
+
+  <div class="gs-header">
+    <div class="gs-title">
+      <mat-icon>label</mat-icon>
+      <span>Gestión de secciones</span>
+    </div>
+    <button mat-icon-button matTooltip="Cerrar" (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="gs-body">
+    @if (loading) {
+      <div class="d-flex justify-content-center p-5">
+        <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else if (secciones.length === 0) {
+      <div class="empty-state">
+        <mat-icon>label_off</mat-icon>
+        <p>No hay secciones creadas.</p>
+      </div>
+    } @else {
+      <p class="gs-hint">
+        Eliminá secciones que fueron creadas por error. Al eliminar una sección se borran
+        <strong>todos sus documentos</strong> en todos los expedientes.
+      </p>
+      <div class="secciones-list">
+        @for (sec of secciones; track sec.nombre) {
+          <div class="seccion-item">
+            <mat-icon class="sec-icon">folder</mat-icon>
+            <div class="sec-info">
+              <span class="sec-nombre">{{ sec.nombre }}</span>
+              <span class="sec-count">{{ sec.count }} documento(s)</span>
+            </div>
+            <button mat-icon-button color="warn"
+              [matTooltip]="'Eliminar sección ' + sec.nombre"
+              [disabled]="deleting.has(sec.nombre)"
+              (click)="deleteSeccion(sec.nombre, sec.count)">
+              @if (deleting.has(sec.nombre)) {
+                <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+              } @else {
+                <mat-icon>delete</mat-icon>
+              }
+            </button>
+          </div>
+          <mat-divider></mat-divider>
+        }
+      </div>
+    }
+  </div>
+</div>

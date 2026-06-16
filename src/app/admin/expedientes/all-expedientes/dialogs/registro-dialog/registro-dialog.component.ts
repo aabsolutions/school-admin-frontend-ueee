@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { ExpedientesService } from '../../expedientes.service';
-import { ExpedienteRegistro, TIPO_OPTIONS } from '../../expediente.model';
+import { DriveFile, ExpedienteRegistro, TIPO_OPTIONS } from '../../expediente.model';
 
 export interface RegistroDialogData {
   expedienteId: string;
@@ -42,6 +42,7 @@ export class RegistroDialogComponent implements OnInit {
   loadingTeachers = true;
   selectedFiles: File[] = [];
   uploading = false;
+  driveLinks: DriveFile[] = [];
 
   get isEditMode(): boolean { return !!this.data.registro; }
 
@@ -60,6 +61,7 @@ export class RegistroDialogComponent implements OnInit {
       descripcion: [reg?.descripcion ?? '',         Validators.required],
       creadoPor:   [reg?.creadoPor   ?? '',         Validators.required],
     });
+    this.driveLinks = (reg?.driveFiles ?? []).map(df => ({ ...df }));
   }
 
   ngOnInit() {
@@ -83,15 +85,21 @@ export class RegistroDialogComponent implements OnInit {
 
   removeFile(index: number) { this.selectedFiles.splice(index, 1); }
 
+  addDriveLink() { this.driveLinks.push({ nombre: '', url: '' }); }
+
+  removeDriveLink(index: number) { this.driveLinks.splice(index, 1); }
+
   submit() {
     if (!this.form.valid) return;
     this.uploading = true;
     const { tipo, fecha, descripcion, creadoPor } = this.form.getRawValue();
+    const validDriveLinks = this.driveLinks.filter(dl => dl.nombre.trim() && dl.url.trim());
     const fd = new FormData();
-    fd.append('tipo',        tipo);
-    fd.append('fecha',       (fecha as Date).toISOString());
-    fd.append('descripcion', descripcion);
-    fd.append('creadoPor',   creadoPor);
+    fd.append('tipo',           tipo);
+    fd.append('fecha',          (fecha as Date).toISOString());
+    fd.append('descripcion',    descripcion);
+    fd.append('creadoPor',      creadoPor);
+    fd.append('driveFilesJson', JSON.stringify(validDriveLinks));
     this.selectedFiles.forEach(f => fd.append('files', f));
 
     const request$ = this.isEditMode

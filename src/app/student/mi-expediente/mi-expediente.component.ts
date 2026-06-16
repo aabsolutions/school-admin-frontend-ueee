@@ -14,6 +14,8 @@ import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.co
 import { environment } from '@environments/environment';
 import { RegistroDetailDialogComponent } from './registro-detail-dialog/registro-detail-dialog.component';
 
+interface DriveFile { nombre: string; url: string; }
+
 interface RegistroRow {
   tipo: string;
   fecha: string;
@@ -21,6 +23,7 @@ interface RegistroRow {
   creadoPor: string;
   evidencias: number;
   evidenciasUrls: string[];
+  driveFiles: DriveFile[];
 }
 
 @Component({
@@ -60,6 +63,7 @@ export class MiExpedienteComponent implements OnInit {
           creadoPor:     r.creadoPor    ?? '—',
           evidencias:    (r.evidencias  ?? []).length,
           evidenciasUrls: r.evidencias  ?? [],
+          driveFiles:    r.driveFiles   ?? [],
         }));
         this.loading = false;
       },
@@ -73,11 +77,12 @@ export class MiExpedienteComponent implements OnInit {
       maxWidth: '95vw',
       autoFocus: false,
       data: {
-        tipo:          row.tipo,
-        fecha:         row.fecha,
-        descripcion:   row.descripcion,
-        creadoPor:     row.creadoPor,
+        tipo:           row.tipo,
+        fecha:          row.fecha,
+        descripcion:    row.descripcion,
+        creadoPor:      row.creadoPor,
         evidenciasUrls: row.evidenciasUrls,
+        driveFiles:     row.driveFiles,
       },
     });
   }

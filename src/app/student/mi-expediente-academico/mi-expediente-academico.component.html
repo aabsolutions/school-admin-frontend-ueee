@@ -1,0 +1,67 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb
+        [title]="breadscrums[0].title"
+        [items]="breadscrums[0].items"
+        [active_item]="breadscrums[0].active">
+      </app-breadcrumb>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+
+        @if (loading) {
+          <div class="d-flex justify-content-center p-5">
+            <mat-spinner [diameter]="48"></mat-spinner>
+          </div>
+        } @else if (!tieneExpediente) {
+          <mat-card class="p-5 text-center">
+            <mat-icon style="font-size:64px;width:64px;height:64px;color:#ccc">folder_open</mat-icon>
+            <p class="text-muted mt-3 mb-0">No tenés un expediente académico registrado aún.<br>Consultá a la institución.</p>
+          </mat-card>
+        } @else if (secciones.length === 0) {
+          <mat-card class="p-5 text-center">
+            <mat-icon style="font-size:64px;width:64px;height:64px;color:#ccc">insert_drive_file</mat-icon>
+            <p class="text-muted mt-3 mb-0">Tu expediente aún no tiene documentos cargados.</p>
+          </mat-card>
+        } @else {
+          @for (seccion of secciones; track seccion.nombre) {
+            <mat-card class="mb-3">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon style="color:#4285F4;vertical-align:middle;margin-right:8px">folder</mat-icon>
+                  {{ seccion.nombre }}
+                </mat-card-title>
+                <mat-card-subtitle>{{ seccion.documentos.length }} documento(s)</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content class="mt-2">
+                <div class="documentos-list">
+                  @for (doc of seccion.documentos; track doc._id) {
+                    <div class="documento-row">
+                      <mat-icon class="doc-icon" style="color:#4285F4">insert_drive_file</mat-icon>
+                      <div class="doc-info">
+                        <a [href]="doc.url" target="_blank" rel="noopener noreferrer"
+                          class="doc-nombre" matTooltip="Abrir en Drive">
+                          {{ doc.nombre }}
+                          <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle;margin-left:4px">open_in_new</mat-icon>
+                        </a>
+                        @if (doc.descripcion) {
+                          <span class="doc-desc">{{ doc.descripcion }}</span>
+                        }
+                        @if (doc.fecha) {
+                          <span class="doc-meta">{{ doc.fecha | date:'dd/MM/yyyy' }}</span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        }
+
+      </div>
+    </div>
+  </div>
+</section>

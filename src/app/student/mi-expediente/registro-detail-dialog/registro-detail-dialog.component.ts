@@ -7,12 +7,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TIPO_CONFIG } from '../../../admin/expedientes/all-expedientes/expediente.model';
 
+export interface DriveFile { nombre: string; url: string; }
+
 export interface RegistroDetailData {
   tipo: string;
   fecha: string;
   descripcion: string;
   creadoPor: string;
   evidenciasUrls: string[];
+  driveFiles?: DriveFile[];
 }
 
 @Component({

@@ -73,6 +73,13 @@ export const STUDENT_ROUTE: Route[] = [
       ),
   },
   {
+    path: 'mi-expediente-academico',
+    loadComponent: () =>
+      import('./mi-expediente-academico/mi-expediente-academico.component').then(
+        (m) => m.MiExpedienteAcademicoComponent,
+      ),
+  },
+  {
     path: 'settings',
     component: SettingsComponent,
   },

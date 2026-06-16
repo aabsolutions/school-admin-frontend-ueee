@@ -1,3 +1,8 @@
+export interface DriveFile {
+  nombre: string;
+  url: string;
+}
+
 export interface ExpedienteRegistro {
   _id: string;
   expedienteId: string;
@@ -5,6 +10,7 @@ export interface ExpedienteRegistro {
   fecha: string;
   descripcion: string;
   evidencias: string[];
+  driveFiles?: DriveFile[];
   creadoPor?: string;
   createdAt: string;
 }

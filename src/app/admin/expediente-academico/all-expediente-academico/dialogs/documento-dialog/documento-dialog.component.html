@@ -1,0 +1,124 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">{{ isEditMode ? 'Editar Documento' : 'Agregar Documento' }}</div>
+      <div class="modalSubTitle">{{ data.studentName }}</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="form" (ngSubmit)="submit()">
+
+      <!-- Sección -->
+      <div class="row">
+        <div class="col-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Sección</mat-label>
+            <input matInput formControlName="seccion" placeholder="Ej: 1er Quimestre 2024"
+              [matAutocomplete]="autoSeccion">
+            <mat-autocomplete #autoSeccion="matAutocomplete">
+              @for (s of data.secciones; track s) {
+                <mat-option [value]="s">{{ s }}</mat-option>
+              }
+            </mat-autocomplete>
+            @if (form.get('seccion')?.hasError('required') && form.get('seccion')?.touched) {
+              <mat-error>La sección es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Nombre + Fecha -->
+      <div class="row">
+        <div class="col-xl-8 col-lg-8 col-md-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Nombre del documento</mat-label>
+            <input matInput formControlName="nombre" placeholder="Ej: Certificado de matrícula">
+            @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+              <mat-error>El nombre es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-md-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fecha">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- URL de Drive -->
+      <div class="row">
+        <div class="col-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>URL de Google Drive</mat-label>
+            <mat-icon matPrefix style="color:#4285F4;margin-right:8px">folder_open</mat-icon>
+            <input matInput formControlName="url"
+              placeholder="https://drive.google.com/file/d/...">
+            @if (form.get('url')?.hasError('required') && form.get('url')?.touched) {
+              <mat-error>La URL es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="row">
+        <div class="col-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Descripción (opcional)</mat-label>
+            <textarea matInput formControlName="descripcion" rows="2"
+              placeholder="Descripción breve del documento..."></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Cargado por -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Cargado por</mat-label>
+            @if (loadingTeachers) {
+              <mat-select formControlName="creadoPor" [disabled]="true">
+                <mat-option value="">Cargando...</mat-option>
+              </mat-select>
+            } @else {
+              <mat-select formControlName="creadoPor" required>
+                @for (t of teachers; track t.id) {
+                  <mat-option [value]="t.name">{{ t.name }}</mat-option>
+                }
+              </mat-select>
+            }
+            @if (form.get('creadoPor')?.hasError('required') && form.get('creadoPor')?.touched) {
+              <mat-error>Requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      @if (saving) {
+        <mat-progress-bar mode="indeterminate" class="mb-3"></mat-progress-bar>
+      }
+
+      <div class="row">
+        <div class="col-12">
+          <div class="example-button-row">
+            <button mat-flat-button class="formSubmitBtn"
+              [disabled]="!form.valid || saving" type="submit">
+              {{ isEditMode ? 'Guardar Cambios' : 'Agregar Documento' }}
+            </button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" type="button" tabindex="-1">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

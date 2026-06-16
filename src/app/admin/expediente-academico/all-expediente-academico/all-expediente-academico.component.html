@@ -1,0 +1,138 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title"><h2>Expedientes Académicos</h2></li>
+                <li class="tbl-search-box">
+                  <label for="exp-acad-search">
+                    <i class="material-icons search-icon">search</i>
+                  </label>
+                  <input id="exp-acad-search" placeholder="Buscar estudiante..." type="text"
+                    [value]="searchTerm" (input)="onSearch($any($event.target).value)"
+                    class="browser-default search-field" aria-label="Buscar">
+                </li>
+              </ul>
+            </div>
+            <div class="right">
+              <div class="right-side-btn">
+                <button mat-icon-button (click)="openGestionSecciones()" class="tbl-header-btn col-blue"
+                  matTooltip="Gestionar secciones">
+                  <mat-icon>label</mat-icon>
+                </button>
+                <button mat-icon-button (click)="loadData()" class="tbl-header-btn col-brown"
+                  matTooltip="Refrescar">
+                  <mat-icon>refresh</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-auto">
+            <div class="responsive_table">
+              <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">
+
+                <!-- Estudiante -->
+                <ng-container matColumnDef="student">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Estudiante</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <div class="student-cell">
+                      <div class="student-avatar-sm">
+                        @if (row.img) {
+                          <img [src]="row.img" class="avatar-sm">
+                        } @else {
+                          <mat-icon class="avatar-icon-sm">person</mat-icon>
+                        }
+                      </div>
+                      <span class="truncate-text">{{ row.name }}</span>
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- DNI -->
+                <ng-container matColumnDef="dni">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>Cédula</mat-header-cell>
+                  <mat-cell *matCellDef="let row">{{ row.dni || '—' }}</mat-cell>
+                </ng-container>
+
+                <!-- Documentos -->
+                <ng-container matColumnDef="totalDocumentos">
+                  <mat-header-cell *matHeaderCellDef style="justify-content:center">Documentos</mat-header-cell>
+                  <mat-cell *matCellDef="let row" style="justify-content:center">
+                    @if (row.expedienteId) {
+                      <span class="badge badge-solid-blue">{{ row.totalDocumentos ?? 0 }}</span>
+                    } @else {
+                      <span class="badge badge-solid-default">Sin expediente</span>
+                    }
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Última actividad -->
+                <ng-container matColumnDef="ultimaActividad">
+                  <mat-header-cell *matHeaderCellDef>Última actividad</mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    @if (row.ultimaActividad) {
+                      {{ row.ultimaActividad | date:'dd/MM/yyyy' }}
+                    } @else {
+                      <span class="text-muted">—</span>
+                    }
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Acciones -->
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef class="pr-0">Acciones</mat-header-cell>
+                  <mat-cell *matCellDef="let row" class="pr-0">
+                    <button mat-icon-button color="primary"
+                      [matTooltip]="row.expedienteId ? 'Ver expediente' : 'Crear y abrir expediente'"
+                      (click)="$event.stopPropagation(); openExpediente(row)">
+                      <mat-icon>{{ row.expedienteId ? 'folder_open' : 'create_new_folder' }}</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"
+                  (click)="openExpediente(row)" [style.cursor]="'pointer'">
+                </mat-row>
+
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" [attr.colspan]="displayedColumns.length"
+                    style="text-align:center;padding:32px">
+                    @if (isLoading) {
+                      <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"
+                        style="margin:0 auto"></mat-progress-spinner>
+                    } @else {
+                      <div>
+                        <mat-icon style="font-size:48px;height:48px;width:48px;color:#ccc">school</mat-icon>
+                        <p class="mt-2 text-muted">No se encontraron estudiantes.</p>
+                      </div>
+                    }
+                  </td>
+                </tr>
+              </table>
+
+              <mat-paginator
+                [length]="total"
+                [pageSize]="limit"
+                [pageSizeOptions]="[10, 15, 25, 50]"
+                (page)="onPage($event)"
+                showFirstLastButtons>
+              </mat-paginator>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
