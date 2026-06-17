@@ -109,14 +109,16 @@ export class SidebarComponent
         .subscribe((routes: RouteInfo[]) => {
           this.sidebarItems = routes;
         });
-      if (userRole === Role.Admin) {
+      if (userRole === Role.Admin || userRole === Role.SuperAdmin) {
         this.userType = this.capitalizeString(Role.Admin);
       } else if (userRole === Role.Teacher) {
         this.userType = this.capitalizeString(Role.Teacher);
       } else if (userRole === Role.Student) {
         this.userType = this.capitalizeString(Role.Student);
+      } else if (userRole === Role.Parent) {
+        this.userType = this.capitalizeString(Role.Parent);
       } else {
-        this.userType = this.capitalizeString(Role.Admin);
+        this.userType = userRole ?? '';
       }
     }
 

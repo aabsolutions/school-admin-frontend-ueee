@@ -109,7 +109,7 @@ export class HeaderComponent
     );
     this.docElement = document.documentElement;
 
-    if (userRole === Role.Admin) {
+    if (userRole === Role.Admin || userRole === Role.SuperAdmin) {
       this.homePage = 'admin/dashboard/main';
       this.profileRoute = '/admin/account';
     } else if (userRole === Role.Teacher) {
@@ -118,6 +118,9 @@ export class HeaderComponent
     } else if (userRole === Role.Student) {
       this.homePage = 'student/dashboard';
       this.profileRoute = '/student/settings';
+    } else if (userRole === Role.Parent) {
+      this.homePage = 'parent/dashboard';
+      this.profileRoute = '/parent/dashboard';
     } else {
       this.homePage = 'admin/dashboard/main';
       this.profileRoute = '/admin/account';
