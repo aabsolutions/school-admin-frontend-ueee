@@ -367,18 +367,6 @@
           "submenu": []
         },
         {
-          "path": "edit-student",
-          "title": "Modificación de Estudiantes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
           "path": "/admin/students/add-student",
           "title": "MENUITEMS.STUDENTS.LIST.ADD-STUDENT",
           "iconType": "",
@@ -476,18 +464,6 @@
           "submenu": []
         },
         {
-          "path": "edit-parent",
-          "title": "Modificación de Padres de Familia",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
           "path": "/admin/parents/add-parent",
           "title": "Agregar Padre",
           "iconType": "",
@@ -537,18 +513,6 @@
           "submenu": []
         },
         {
-          "path": "edit-teacher",
-          "title": "Modificación de Docentes",
-          "iconType": "",
-          "icon": "",
-          "class": "ml-menu",
-          "groupTitle": false,
-          "badge": "",
-          "badgeClass": "",
-          "role": ["ADMIN", "SUPERADMIN"],
-          "submenu": []
-        },
-        {
           "path": "/admin/teachers/add-teacher",
           "title": "MENUITEMS.TEACHERS.LIST.ADD-TEACHER",
           "iconType": "",
@@ -563,6 +527,18 @@
         {
           "path": "/admin/teachers/assign-class-teacher",
           "title": "MENUITEMS.TEACHERS.LIST.ASSIGN-CLASS",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": [""],
+          "submenu": []
+        },
+        {
+          "path": "/admin/teachers/bulk-teachers",
+          "title": "MENUITEMS.TEACHERS.LIST.BULK-TEACHERS",
           "iconType": "",
           "icon": "",
           "class": "ml-menu",
