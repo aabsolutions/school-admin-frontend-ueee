@@ -45,18 +45,7 @@ export type ChartOptions = {
   templateUrl: './dashboard2.component.html',
   styleUrls: ['./dashboard2.component.scss'],
   imports: [
-    BreadcrumbComponent,
-    MatButtonModule,
-    MatCardModule,
-    MatMenuModule,
-    MatIconModule,
-    NgScrollbar,
-    NgApexchartsModule,
-    TableCardComponent,
-    EmpScheduleComponent,
-    OrderInfoBoxComponent,
-    ReportCardWidgetComponent,
-    TopPerformerComponent,
+
   ],
 })
 export class Dashboard2Component implements OnInit {

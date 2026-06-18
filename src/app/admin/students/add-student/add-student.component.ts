@@ -20,6 +20,7 @@ import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.co
 import { StudentsService } from '../all-students/students.service';
 import { ParentSingleSelectComponent } from '@shared/components/parent-selector/parent-single-select.component';
 import { AddParentInlineDialogComponent } from '@shared/components/parent-selector/add-parent-inline-dialog.component';
+import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
 @Component({
   selector: 'app-add-student',
@@ -38,6 +39,7 @@ import { AddParentInlineDialogComponent } from '@shared/components/parent-select
     MatDatepickerModule,
     MatButtonModule,
     ParentSingleSelectComponent,
+    UppercaseDirective,
   ],
 })
 export class AddStudentComponent {

@@ -19,7 +19,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
                   <mat-form-field class="example-full-width mb-3" appearance="outline">
                     <mat-label>Nombre completo *</mat-label>
-                    <input matInput formControlName="name">
+                    <input matInput formControlName="name" appUppercase>
                     @if (form.get('name')?.hasError('required')) {
                       <mat-error>El nombre es requerido</mat-error>
                     }

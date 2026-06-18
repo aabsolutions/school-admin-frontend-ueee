@@ -62,18 +62,7 @@ export type areaChartOptions = {
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     imports: [
-        BreadcrumbComponent,
-        BaseChartDirective,
-        MatProgressBarModule,
-        MatCardModule,
-        NgApexchartsModule,
-        NgScrollbar,
-        MatButtonModule,
-        ProgressTableComponent,
-        EmpScheduleComponent,
-        DocumentListComponent,
-        NoticeboardComponent,
-        TableCardComponent,
+
     ]
 })
 export class DashboardComponent implements OnInit {

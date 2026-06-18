@@ -27,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { environment } from '@environments/environment';
+import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
 export interface DialogData {
   id: string | number;
@@ -51,6 +52,7 @@ export interface DialogData {
     MatSelectModule,
     MatOptionModule,
     MatDialogClose,
+    UppercaseDirective,
   ],
 })
 export class TeachersFormComponent implements OnInit {

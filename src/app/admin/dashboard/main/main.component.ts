@@ -59,21 +59,7 @@ export type chartOptions = {
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   imports: [
-    BreadcrumbComponent,
-    MatButtonModule,
-    MatMenuModule,
-    MatCardModule,
-    MatIconModule,
-    NgApexchartsModule,
-    NgScrollbar,
-    StatisticCard2Component,
-    AttendanceChartComponent,
-    ChartCard4Component,
-    EventCardComponent,
-    ScheduleCardComponent,
-    TableCardComponent,
-    EmpStatusComponent,
-    ChartCard1Component,
+
   ],
 })
 export class MainComponent implements OnInit {

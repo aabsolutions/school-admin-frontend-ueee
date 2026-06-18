@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { ParentsApiService } from '../parents-api.service';
+import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
 @Component({
   selector: 'app-add-parent',
@@ -30,6 +31,7 @@ import { ParentsApiService } from '../parents-api.service';
     MatOptionModule,
     MatButtonModule,
     MatIconModule,
+    UppercaseDirective,
   ],
 })
 export class AddParentComponent {
@@ -52,8 +54,6 @@ export class AddParentComponent {
       address:        [''],
       occupation:     [''],
       educationLevel: [''],
-      username:       [''],
-      password:       [''],
     });
   }
 

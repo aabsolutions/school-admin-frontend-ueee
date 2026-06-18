@@ -26,6 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ParentSingleSelectComponent } from '@shared/components/parent-selector/parent-single-select.component';
+import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
 export interface DialogData {
   id: string | number;
@@ -50,6 +51,7 @@ export interface DialogData {
     MatDatepickerModule,
     MatDialogClose,
     ParentSingleSelectComponent,
+    UppercaseDirective,
   ],
 })
 export class StudentsFormComponent {

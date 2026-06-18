@@ -54,12 +54,7 @@ export type pieChartOptions = {
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     imports: [
-        BreadcrumbComponent,
-        NgApexchartsModule,
-        MatButtonModule,
-        MatCardModule,
-        NgScrollbar,
-        TableCardComponent,
+
     ]
 })
 export class DashboardComponent implements OnInit {

@@ -15,6 +15,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { ParentsApiService, Parent } from '../parents-api.service';
+import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
 @Component({
   selector: 'app-edit-parent',
@@ -32,6 +33,7 @@ import { ParentsApiService, Parent } from '../parents-api.service';
     MatButtonModule,
     MatIconModule,
     MatChipsModule,
+    UppercaseDirective,
   ],
 })
 export class EditParentComponent implements OnInit {

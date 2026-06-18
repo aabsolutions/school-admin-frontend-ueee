@@ -16,7 +16,7 @@
                 <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
                   <mat-form-field class="example-full-width mb-3" appearance="outline">
                     <mat-label>Nombre completo *</mat-label>
-                    <input matInput formControlName="name">
+                    <input matInput formControlName="name" appUppercase>
                     @if (form.get('name')?.hasError('required')) {
                       <mat-error>El nombre es requerido</mat-error>
                     }
@@ -89,21 +89,6 @@
                   <mat-form-field class="example-full-width mb-3" appearance="outline">
                     <mat-label>Dirección</mat-label>
                     <input matInput formControlName="address">
-                  </mat-form-field>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Usuario (opcional — default: DNI o email)</mat-label>
-                    <input matInput formControlName="username">
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Contraseña (opcional — default: DNI o email)</mat-label>
-                    <input matInput formControlName="password" type="password">
                   </mat-form-field>
                 </div>
               </div>

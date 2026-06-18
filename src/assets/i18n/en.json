@@ -67,7 +67,8 @@
         "EDIT-TEACHER": "Editar Docente",
         "ABOUT-TEACHER": "Acerca del Docente",
         "TEACHER-TIMETABLE": "Horario del Docente",
-        "ASSIGN-CLASS": "Asignar Docente"
+        "ASSIGN-CLASS": "Asignar Docente",
+        "BULK-TEACHERS": "Importar Masivo"
       }
     },
     "COURSES": {

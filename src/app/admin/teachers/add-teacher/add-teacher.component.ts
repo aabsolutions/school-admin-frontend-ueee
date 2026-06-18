@@ -17,6 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { TeachersService } from '../all-teachers/teachers.service';
+import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 
@@ -36,6 +37,7 @@ import { environment } from '@environments/environment';
     MatOptionModule,
     MatDatepickerModule,
     MatButtonModule,
+    UppercaseDirective,
   ],
 })
 export class AddTeacherComponent {
@@ -58,8 +60,8 @@ export class AddTeacherComponent {
   ) {
     this.proForm = this.fb.group({
       name:              ['', [Validators.required]],
-      email:             ['', [Validators.required, Validators.email]],
-      dni:               [''],
+      email:             ['', [Validators.email]],
+      dni:               ['', [Validators.required]],
       gender:            [''],
       mobile:            [''],
       areaEstudioId:     [''],

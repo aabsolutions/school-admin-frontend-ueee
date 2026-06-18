@@ -1,11 +1,10 @@
 import { Route } from '@angular/router';
 import { AllTeachersComponent } from './all-teachers/all-teachers.component';
 import { AddTeacherComponent } from './add-teacher/add-teacher.component';
-import { EditTeacherComponent } from './edit-teacher/edit-teacher.component';
-import { AboutTeacherComponent } from './about-teacher/about-teacher.component';
 import { Page404Component } from 'app/authentication/page404/page404.component';
 import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
 import { AssignClassTeacherComponent } from './assign-class-teacher/assign-class-teacher.component';
+import { BulkTeachersComponent } from './bulk-teachers/bulk-teachers.component';
 
 export const ADMIN_TEACHER_ROUTE: Route[] = [
   {
@@ -17,12 +16,8 @@ export const ADMIN_TEACHER_ROUTE: Route[] = [
     component: AddTeacherComponent,
   },
   {
-    path: 'edit-teacher',
-    component: EditTeacherComponent,
-  },
-  {
-    path: 'about-teacher',
-    component: AboutTeacherComponent,
+    path: 'bulk-teachers',
+    component: BulkTeachersComponent,
   },
   {
     path: 'teacher-timetable',

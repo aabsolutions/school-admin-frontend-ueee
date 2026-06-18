@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParentsApiService } from '../../../admin/parents/parents-api.service';
+import { UppercaseDirective } from '../../directives/uppercase.directive';
 
 @Component({
   selector: 'app-add-parent-inline-dialog',
@@ -21,7 +22,7 @@ import { ParentsApiService } from '../../../admin/parents/parents-api.service';
       <form [formGroup]="form" class="mt-2">
         <mat-form-field appearance="outline" class="w-100 mb-2">
           <mat-label>Nombre completo *</mat-label>
-          <input matInput formControlName="name" required>
+          <input matInput formControlName="name" appUppercase required>
           @if (form.get('name')?.hasError('required')) {
             <mat-error>El nombre es obligatorio</mat-error>
           }
@@ -60,6 +61,7 @@ import { ParentsApiService } from '../../../admin/parents/parents-api.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    UppercaseDirective,
   ],
 })
 export class AddParentInlineDialogComponent {

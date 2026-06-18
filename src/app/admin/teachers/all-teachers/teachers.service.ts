@@ -43,7 +43,7 @@ export class TeachersService {
   private toPayload(teacher: any): any {
     const payload: any = {
       name: teacher.name,
-      email: teacher.email,
+      email: teacher.email || undefined,
       dni: teacher.dni || undefined,
       gender: teacher.gender,
       mobile: teacher.mobile,
@@ -91,6 +91,13 @@ export class TeachersService {
         map((response) => this.normalize(response.data)),
         catchError(this.handleError)
       );
+  }
+
+  checkBulkDuplicates(dnis: string[], emails: string[]): Observable<{ duplicateDnis: string[]; duplicateEmails: string[] }> {
+    return this.httpClient.post<any>(`${this.API_URL}/check-bulk`, { dnis, emails }).pipe(
+      map((r) => r.data),
+      catchError(this.handleError)
+    );
   }
 
   bulkCreate(records: Record<string, any>[]): Observable<any> {
