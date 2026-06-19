@@ -42,7 +42,7 @@ export class ParentsApiService {
   constructor(private http: HttpClient) {}
 
   getAll(page = 1, limit = 10, search = ''): Observable<PaginatedParents> {
-    let params = new HttpParams().set('page', page).set('limit', limit);
+    let params = new HttpParams().set('page', page).set('limit', limit).set('sortBy', 'name').set('sortOrder', 'asc');
     if (search) params = params.set('search', search);
     return this.http.get<any>(this.base, { params }).pipe(map((r) => r.data));
   }

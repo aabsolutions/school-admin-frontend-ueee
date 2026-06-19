@@ -101,7 +101,7 @@ export class TeachersFormComponent implements OnInit {
       id:                    [this.teachers.id],
       img:                   [this.teachers.img],
       name:                  [this.teachers.name, [Validators.required]],
-      email:                 [this.teachers.email, [Validators.required, Validators.email]],
+      email:                 [this.teachers.email, [Validators.email]],
       dni:                   [this.teachers.dni, [Validators.required]],
       gender:                [this.teachers.gender],
       mobile:                [this.teachers.mobile],

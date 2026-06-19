@@ -51,6 +51,12 @@ export class DocumentalDocenteService {
       .pipe(map(r => r.data));
   }
 
+  addDocumentoUrl(teacherId: string, payload: { nombre: string; categoria: 'profesional' | 'planificacion'; url: string; descripcion?: string }): Observable<DocumentalDocente> {
+    return this.http
+      .post<ApiOne<DocumentalDocente>>(`${API}/teacher/${teacherId}/documentos/url`, payload)
+      .pipe(map(r => r.data));
+  }
+
   deleteDocumento(teacherId: string, docId: string): Observable<DocumentalDocente> {
     return this.http
       .delete<ApiOne<DocumentalDocente>>(`${API}/teacher/${teacherId}/documentos/${docId}`)

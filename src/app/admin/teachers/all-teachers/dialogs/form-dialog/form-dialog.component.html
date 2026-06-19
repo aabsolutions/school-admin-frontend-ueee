@@ -47,9 +47,9 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width mb-3" appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" required>
+            <input matInput formControlName="email">
             <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
-            @if (teacherForm.get('email')?.hasError('required') || (teacherForm.get('email')?.hasError('email') && teacherForm.get('email')?.touched)) {
+            @if (teacherForm.get('email')?.hasError('email') && teacherForm.get('email')?.touched) {
             <mat-error>Please enter a valid email address</mat-error>
             }
           </mat-form-field>

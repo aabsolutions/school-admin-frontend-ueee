@@ -151,7 +151,7 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
         this.refreshTable();
         this.dataSource.filterPredicate = (data: Teachers, filter: string) =>
           Object.values(data).some((value) =>
-            value.toString().toLowerCase().includes(filter)
+            value != null && value.toString().toLowerCase().includes(filter)
           );
       },
       error: (err) => console.error(err),

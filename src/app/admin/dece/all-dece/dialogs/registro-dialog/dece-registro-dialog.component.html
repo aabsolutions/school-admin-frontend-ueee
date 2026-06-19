@@ -54,25 +54,13 @@
         </div>
       </div>
 
-      <!-- Registrado por (docente) -->
+      <!-- Registrado por -->
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width mb-3" appearance="outline">
             <mat-label>Registrado por</mat-label>
-            @if (loadingTeachers) {
-              <mat-select formControlName="creadoPor" required [disabled]="true">
-                <mat-option value="">Cargando docentes...</mat-option>
-              </mat-select>
-            } @else {
-              <mat-select formControlName="creadoPor" required>
-                @for (t of teachers; track t.id) {
-                  <mat-option [value]="t.name">{{ t.name }}</mat-option>
-                }
-              </mat-select>
-            }
-            @if (form.get('creadoPor')?.hasError('required') && form.get('creadoPor')?.touched) {
-              <mat-error>El responsable es requerido</mat-error>
-            }
+            <input matInput formControlName="creadoPor" readonly>
+            <mat-icon matSuffix>lock</mat-icon>
           </mat-form-field>
         </div>
       </div>

@@ -70,11 +70,21 @@
       </div>
     </mat-tab>
 
-    <!-- Tab: Subir documento -->
-    <mat-tab label="+ Subir">
+    <!-- Tab: Agregar documento -->
+    <mat-tab label="+ Agregar">
       <div class="p-3">
-        <h6 class="text-muted mb-3">Subir nuevo documento</h6>
 
+        <!-- Toggle modo -->
+        <mat-button-toggle-group [(ngModel)]="uploadMode" (change)="onModeChange()" class="mb-3 w-100">
+          <mat-button-toggle value="file" class="flex-grow-1">
+            <mat-icon>upload_file</mat-icon> Subir archivo
+          </mat-button-toggle>
+          <mat-button-toggle value="url" class="flex-grow-1">
+            <mat-icon>link</mat-icon> Registrar URL
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <!-- Campos comunes -->
         <mat-form-field appearance="outline" class="w-100 mb-2">
           <mat-label>Categoría</mat-label>
           <mat-select [(ngModel)]="uploadCategoria">
@@ -93,19 +103,34 @@
           <input matInput [(ngModel)]="uploadDescripcion" placeholder="Descripción breve...">
         </mat-form-field>
 
-        <div class="mb-3">
-          <label class="btn btn-outline-secondary" style="cursor:pointer">
-            <mat-icon style="vertical-align:middle">upload_file</mat-icon>
-            {{ selectedFile ? selectedFile.name : 'Seleccionar archivo' }}
-            <input type="file" hidden
-              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
-              (change)="onFileSelected($event)">
-          </label>
-        </div>
+        <!-- Modo: archivo -->
+        @if (uploadMode === 'file') {
+          <div class="mb-3">
+            <label class="btn btn-outline-secondary" style="cursor:pointer">
+              <mat-icon style="vertical-align:middle">upload_file</mat-icon>
+              {{ selectedFile ? selectedFile.name : 'Seleccionar archivo' }}
+              <input type="file" hidden
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
+                (change)="onFileSelected($event)">
+            </label>
+          </div>
+          <button mat-raised-button color="primary" (click)="upload()" [disabled]="uploading || !selectedFile">
+            <mat-icon>cloud_upload</mat-icon> Subir documento
+          </button>
+        }
 
-        <button mat-raised-button color="primary" (click)="upload()" [disabled]="uploading || !selectedFile">
-          <mat-icon>cloud_upload</mat-icon> Subir documento
-        </button>
+        <!-- Modo: URL -->
+        @if (uploadMode === 'url') {
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>URL del documento</mat-label>
+            <input matInput [(ngModel)]="uploadUrl" placeholder="https://...">
+            <mat-icon matSuffix>link</mat-icon>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="saveUrl()" [disabled]="uploading || !uploadUrl.trim() || !uploadNombre.trim()">
+            <mat-icon>save</mat-icon> Guardar referencia
+          </button>
+        }
+
       </div>
     </mat-tab>
 

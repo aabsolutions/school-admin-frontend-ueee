@@ -12,8 +12,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@environments/environment';
+import { AuthService } from '@core/service/auth.service';
 import { DeceService } from '../../dece.service';
 import { DeceRegistro, DECE_TIPO_OPTIONS } from '../../dece.model';
 
@@ -38,8 +37,6 @@ interface TeacherOption { id: string; name: string; }
 export class DeceRegistroDialogComponent implements OnInit {
   form: UntypedFormGroup;
   readonly tipoOptions = DECE_TIPO_OPTIONS;
-  teachers: TeacherOption[] = [];
-  loadingTeachers = true;
   selectedFiles: File[] = [];
   uploading = false;
 
@@ -50,31 +47,20 @@ export class DeceRegistroDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: DeceRegistroDialogData,
     private fb: UntypedFormBuilder,
     private svc: DeceService,
-    private http: HttpClient,
     private snackBar: MatSnackBar,
+    private auth: AuthService,
   ) {
     const reg = data.registro;
+    const currentUserName = auth.currentUserValue?.name ?? '';
     this.form = this.fb.group({
       tipo:        [reg?.tipo        ?? '',         Validators.required],
       fecha:       [reg?.fecha ? new Date(reg.fecha) : new Date(), Validators.required],
       descripcion: [reg?.descripcion ?? '',         Validators.required],
-      creadoPor:   [reg?.creadoPor   ?? '',         Validators.required],
+      creadoPor:   [{ value: reg?.creadoPor ?? currentUserName, disabled: true }, Validators.required],
     });
   }
 
-  ngOnInit() {
-    this.http.get<any>(`${environment.apiUrl}/teachers?limit=200&sortBy=name&sortOrder=asc`)
-      .subscribe({
-        next: (res) => {
-          this.teachers = (res.data?.data ?? []).map((t: any) => ({
-            id:   t._id ?? t.id,
-            name: t.name,
-          }));
-          this.loadingTeachers = false;
-        },
-        error: () => { this.loadingTeachers = false; },
-      });
-  }
+  ngOnInit() {}
 
   onFilesSelected(event: Event) {
     const input = event.target as HTMLInputElement;

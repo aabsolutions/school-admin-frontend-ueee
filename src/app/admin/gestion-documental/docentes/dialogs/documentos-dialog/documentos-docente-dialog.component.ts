@@ -17,6 +17,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
   DocumentalDocenteService,
   DocumentalDocente,
@@ -37,7 +38,7 @@ export interface DocumentosDialogData {
     MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
     MatSelectModule, MatOptionModule, MatProgressBarModule, MatDividerModule,
     MatChipsModule, MatDialogContent, MatDialogActions, MatDialogTitle,
-    MatSnackBarModule, MatTabsModule, MatTooltipModule,
+    MatSnackBarModule, MatTabsModule, MatTooltipModule, MatButtonToggleModule,
   ],
 })
 export class DocumentosDocenteDialogComponent implements OnInit {
@@ -46,10 +47,12 @@ export class DocumentosDocenteDialogComponent implements OnInit {
   deletingId: string | null = null;
 
   // Upload form
+  uploadMode: 'file' | 'url' = 'file';
   selectedFile: File | null = null;
   uploadNombre = '';
   uploadCategoria: 'profesional' | 'planificacion' = 'profesional';
   uploadDescripcion = '';
+  uploadUrl = '';
 
   get profesionales(): DocumentoItem[] {
     return this.documentos.filter(d => d.categoria === 'profesional');
@@ -68,6 +71,13 @@ export class DocumentosDocenteDialogComponent implements OnInit {
 
   ngOnInit() {
     this.documentos = [...(this.data.record.documentos ?? [])];
+  }
+
+  onModeChange() {
+    this.selectedFile = null;
+    this.uploadUrl = '';
+    this.uploadNombre = '';
+    this.uploadDescripcion = '';
   }
 
   onFileSelected(event: Event) {
@@ -109,6 +119,33 @@ export class DocumentosDocenteDialogComponent implements OnInit {
         this.snackBar.open('Error al subir el documento', '', {
           duration: 4000, panelClass: 'snackbar-danger',
         });
+      },
+    });
+  }
+
+  saveUrl() {
+    if (!this.uploadUrl.trim() || !this.uploadNombre.trim()) {
+      this.snackBar.open('Completá el nombre y la URL', '', { duration: 3000, panelClass: 'snackbar-danger' });
+      return;
+    }
+    this.uploading = true;
+    this.svc.addDocumentoUrl(this.data.teacherId, {
+      nombre: this.uploadNombre.trim(),
+      categoria: this.uploadCategoria,
+      url: this.uploadUrl.trim(),
+      descripcion: this.uploadDescripcion.trim() || undefined,
+    }).subscribe({
+      next: updated => {
+        this.documentos = updated.documentos ?? [];
+        this.uploading = false;
+        this.uploadUrl = '';
+        this.uploadNombre = '';
+        this.uploadDescripcion = '';
+        this.snackBar.open('Documento registrado correctamente', '', { duration: 3000, panelClass: 'snackbar-success' });
+      },
+      error: () => {
+        this.uploading = false;
+        this.snackBar.open('Error al registrar el documento', '', { duration: 4000, panelClass: 'snackbar-danger' });
       },
     });
   }

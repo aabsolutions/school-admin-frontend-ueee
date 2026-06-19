@@ -67,7 +67,7 @@ export class TeachersService {
   }
 
   getAllTeachers(): Observable<Teachers[]> {
-    return this.httpClient.get<ApiList<any>>(this.API_URL, { params: { limit: '10000' } }).pipe(
+    return this.httpClient.get<ApiList<any>>(this.API_URL, { params: { limit: '10000', sortBy: 'name', sortOrder: 'asc' } }).pipe(
       map((response) => {
         const teachers = response.data.data.map((t) => this.normalize(t));
         this.dataChange.next(teachers);

@@ -74,7 +74,7 @@ export class EstudiantesDocumentalComponent implements OnInit {
 
   loadData() {
     this.isLoading = true;
-    let params = new HttpParams().set('limit', 200);
+    let params = new HttpParams().set('limit', 200).set('sortBy', 'name').set('sortOrder', 'asc');
     if (this.searchTerm) params = params.set('search', this.searchTerm);
 
     this.http
