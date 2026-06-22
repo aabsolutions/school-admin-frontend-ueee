@@ -48,6 +48,72 @@
               </div>
             </div>
           </div>
+          <!-- Filter panel -->
+          <div class="filter-panel px-3 pt-2 pb-1">
+            <div class="row g-2 align-items-center">
+              <div class="col-auto">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:190px">
+                  <mat-label>Dep. Laboral</mat-label>
+                  <mat-select [(ngModel)]="filterLaboralDep" (ngModelChange)="applyFilters()">
+                    <mat-option value="">Todas</mat-option>
+                    @for (opt of laboralOptions; track opt) {
+                      <mat-option [value]="opt">{{ opt }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-auto">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:150px">
+                  <mat-label>Jornada</mat-label>
+                  <mat-select [(ngModel)]="filterJornada" (ngModelChange)="applyFilters()">
+                    <mat-option value="">Todas</mat-option>
+                    @for (opt of jornadaOptions; track opt) {
+                      <mat-option [value]="opt">{{ opt }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-auto">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:130px">
+                  <mat-label>Sexo</mat-label>
+                  <mat-select [(ngModel)]="filterGender" (ngModelChange)="applyFilters()">
+                    <mat-option value="">Todos</mat-option>
+                    @for (opt of genderOptions; track opt) {
+                      <mat-option [value]="opt">{{ opt }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-auto">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:200px">
+                  <mat-label>Área de Estudio</mat-label>
+                  <mat-select [(ngModel)]="filterAreaEstudio" (ngModelChange)="applyFilters()">
+                    <mat-option value="">Todas</mat-option>
+                    @for (opt of areaEstudioOptions; track opt) {
+                      <mat-option [value]="opt">{{ opt }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-auto">
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" style="width:150px">
+                  <mat-label>Rango Edad</mat-label>
+                  <mat-select [(ngModel)]="filterEdadRango" (ngModelChange)="applyFilters()">
+                    <mat-option value="">Todos</mat-option>
+                    @for (r of edadRangos; track r.value) {
+                      <mat-option [value]="r.value">{{ r.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-auto">
+                <button mat-stroked-button (click)="clearFilters()" matTooltip="Limpiar filtros">
+                  <mat-icon>filter_alt_off</mat-icon> Limpiar
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div class="overflow-auto">
             <div class="responsive_table">
               <table mat-table [dataSource]="dataSource" matSort class="mat-cell advance-table">

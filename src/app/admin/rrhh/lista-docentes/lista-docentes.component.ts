@@ -49,7 +49,7 @@ export class ListaDocentesComponent implements OnInit {
   filterDependencia   = '';
 
   readonly generoOptions      = ['Male', 'Female', 'Other'];
-  readonly dependenciaOptions = ['Contrato', 'Nomb. Definitivo', 'Nomb. Provisional'];
+  readonly dependenciaOptions = ['CONTRATO', 'NOMBRAMIENTO DEFINITIVO', 'NOMBRAMIENTO PROVISIONAL'];
 
   private allTeachers: TeacherRow[] = [];
   isLoading = true;

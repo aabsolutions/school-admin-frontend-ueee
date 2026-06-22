@@ -22,6 +22,7 @@ export class Students {
   motherId: any;
   guardianId: any;
   status: string;
+  edad?: number | null;
 
   constructor(students: Partial<Students>) {
     this.id = students.id || this.getRandomID();

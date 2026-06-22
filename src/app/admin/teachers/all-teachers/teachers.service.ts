@@ -30,6 +30,8 @@ export class TeachersService {
       areaEstudioId: raw.areaEstudioId?._id ?? raw.areaEstudioId?.id ?? raw.areaEstudioId ?? '',
       dni: raw.dni ?? '',
       laboralDependency: raw.laboralDependency ?? '',
+      jornadaLaboral: raw.jornadaLaboral ?? '',
+      correoInstitucional: raw.correoInstitucional ?? '',
       salarialCategory: raw.salarialCategory ?? '',
       emergencyName: raw.emergencyName ?? '',
       emergencyMobile: raw.emergencyMobile ?? '',
@@ -51,6 +53,8 @@ export class TeachersService {
       areaEstudioId: teacher.areaEstudioId || undefined,
       address: teacher.address,
       laboralDependency: teacher.laboralDependency || undefined,
+      jornadaLaboral: teacher.jornadaLaboral || undefined,
+      correoInstitucional: teacher.correoInstitucional || undefined,
       salarialCategory: teacher.salarialCategory || undefined,
       emergencyName: teacher.emergencyName || undefined,
       emergencyMobile: teacher.emergencyMobile || undefined,
@@ -110,6 +114,27 @@ export class TeachersService {
   deleteTeacher(id: string | number): Observable<string | number> {
     return this.httpClient.delete<void>(`${this.API_URL}/${id}`).pipe(
       map(() => id),
+      catchError(this.handleError)
+    );
+  }
+
+  updateTeacherMedical(id: string, data: any): Observable<any> {
+    return this.httpClient.patch<any>(`${this.API_URL}/${id}/medical`, data).pipe(
+      map((res) => res.data),
+      catchError(this.handleError)
+    );
+  }
+
+  updateTeacherFamily(id: string, data: any): Observable<any> {
+    return this.httpClient.patch<any>(`${this.API_URL}/${id}/family`, data).pipe(
+      map((res) => res.data),
+      catchError(this.handleError)
+    );
+  }
+
+  deleteTeachersBulk(ids: string[]): Observable<{ deleted: number }> {
+    return this.httpClient.delete<any>(`${this.API_URL}/bulk`, { body: { ids } }).pipe(
+      map((res) => res.data),
       catchError(this.handleError)
     );
   }

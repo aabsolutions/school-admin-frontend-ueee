@@ -67,7 +67,7 @@ export class DirectorioDocentesComponent implements OnInit {
 
   readonly genderOptions   = ['Male', 'Female', 'Other'];
   readonly statusOptions   = ['active', 'inactive', 'on-leave'];
-  readonly laboralOptions  = ['Contrato', 'Nomb. Definitivo', 'Nomb. Provisional'];
+  readonly laboralOptions  = ['CONTRATO', 'NOMBRAMIENTO DEFINITIVO', 'NOMBRAMIENTO PROVISIONAL'];
   readonly categoryOptions = ['A','B','C','D','E','F','G','H','I','J'];
 
   departments: { id: string; name: string }[] = [];

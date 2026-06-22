@@ -11,10 +11,11 @@ import { TeachersService } from '../../teachers.service';
 import { MatButtonModule } from '@angular/material/button';
 
 export interface DialogData {
-  id: string | number;
-  name: string;
-  department: string;
-  mobile: string;
+  id?: string | number;
+  ids?: string[];
+  name?: string;
+  department?: string;
+  mobile?: string;
 }
 
 @Component({
@@ -36,17 +37,21 @@ export class TeachersDeleteComponent {
     public teachersService: TeachersService
   ) {}
 
+  get isBulk(): boolean {
+    return Array.isArray(this.data.ids) && this.data.ids.length > 0;
+  }
+
   confirmDelete(): void {
-    this.teachersService.deleteTeacher(this.data.id).subscribe({
-      next: (response) => {
-        // console.log('Delete Response:', response);
-        this.dialogRef.close(response); // Close with the response data
-        // Handle successful deletion, e.g., refresh the table or show a notification
-      },
-      error: (error) => {
-        console.error('Delete Error:', error);
-        // Handle the error appropriately
-      },
-    });
+    if (this.isBulk) {
+      this.teachersService.deleteTeachersBulk(this.data.ids!).subscribe({
+        next: (response) => this.dialogRef.close(response),
+        error: (error) => console.error('Bulk Delete Error:', error),
+      });
+    } else {
+      this.teachersService.deleteTeacher(this.data.id!).subscribe({
+        next: (response) => this.dialogRef.close(response),
+        error: (error) => console.error('Delete Error:', error),
+      });
+    }
   }
 }

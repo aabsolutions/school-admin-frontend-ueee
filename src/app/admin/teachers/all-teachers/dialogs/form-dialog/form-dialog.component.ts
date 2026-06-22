@@ -26,8 +26,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { environment } from '@environments/environment';
 import { UppercaseDirective } from '@shared/directives/uppercase.directive';
+import { forkJoin, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export interface DialogData {
   id: string | number;
@@ -52,6 +56,8 @@ export interface DialogData {
     MatSelectModule,
     MatOptionModule,
     MatDialogClose,
+    MatTabsModule,
+    MatSlideToggleModule,
     UppercaseDirective,
   ],
 })
@@ -59,10 +65,15 @@ export class TeachersFormComponent implements OnInit {
   action: string;
   dialogTitle: string;
   teacherForm: UntypedFormGroup;
+  medicalForm: UntypedFormGroup;
+  familyForm: UntypedFormGroup;
   teachers: Teachers;
   areasEstudio: { id: string; nombre: string }[] = [];
 
   readonly salarialCategories = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+  readonly bloodTypes = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
+  readonly maritalStatuses = ['Soltero/a', 'Casado/a', 'Divorciado/a', 'Viudo/a', 'Unión libre'];
+  readonly housingTypes = ['Propia', 'Arrendada', 'Prestada', 'Otra'];
 
   constructor(
     public dialogRef: MatDialogRef<TeachersFormComponent>,
@@ -73,9 +84,11 @@ export class TeachersFormComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.action = data.action;
-    this.dialogTitle = this.action === 'edit' ? data.teachers.name : 'New Teacher';
+    this.dialogTitle = this.action === 'edit' ? data.teachers.name : 'Nuevo Docente';
     this.teachers = this.action === 'edit' ? data.teachers : new Teachers({});
     this.teacherForm = this.createTeacherForm();
+    this.medicalForm = this.createMedicalForm();
+    this.familyForm = this.createFamilyForm();
   }
 
   ngOnInit() {
@@ -96,7 +109,6 @@ export class TeachersFormComponent implements OnInit {
   }
 
   createTeacherForm(): UntypedFormGroup {
-    const isAdd = this.action === 'add';
     return this.fb.group({
       id:                    [this.teachers.id],
       img:                   [this.teachers.img],
@@ -107,6 +119,8 @@ export class TeachersFormComponent implements OnInit {
       mobile:                [this.teachers.mobile],
       areaEstudioId:         [this.teachers.areaEstudioId],
       laboralDependency:     [this.teachers.laboralDependency],
+      jornadaLaboral:        [this.teachers.jornadaLaboral],
+      correoInstitucional:   [this.teachers.correoInstitucional],
       salarialCategory:      [this.teachers.salarialCategory],
       emergencyName:         [this.teachers.emergencyName],
       emergencyMobile:       [this.teachers.emergencyMobile],
@@ -116,6 +130,44 @@ export class TeachersFormComponent implements OnInit {
       status:                [this.teachers.status],
       birthdate:             [this.safeDate(this.teachers.birthdate)],
       bio:                   [this.teachers.bio],
+      peso:                  [this.teachers.peso ?? null],
+      talla:                 [this.teachers.talla ?? null],
+    });
+  }
+
+  private createMedicalForm(): UntypedFormGroup {
+    const m = (this.teachers as any).medicalInfo ?? {};
+    return this.fb.group({
+      bloodType:               [m.bloodType ?? ''],
+      hasAllergies:            [m.hasAllergies ?? false],
+      allergiesDetail:         [m.allergiesDetail ?? ''],
+      hasChronicCondition:     [m.hasChronicCondition ?? false],
+      chronicConditionDetail:  [m.chronicConditionDetail ?? ''],
+      currentMedications:      [m.currentMedications ?? ''],
+      hasDisability:           [m.hasDisability ?? false],
+      disabilityDetail:        [m.disabilityDetail ?? ''],
+      hasConadis:              [m.hasConadis ?? false],
+      conadisNumber:           [m.conadisNumber ?? ''],
+      healthInsurance:         [m.healthInsurance ?? ''],
+      policyNumber:            [m.policyNumber ?? ''],
+      emergencyContactName:    [m.emergencyContactName ?? ''],
+      emergencyContactPhone:   [m.emergencyContactPhone ?? ''],
+      emergencyContactRelation:[m.emergencyContactRelation ?? ''],
+      medicalNotes:            [m.medicalNotes ?? ''],
+    });
+  }
+
+  private createFamilyForm(): UntypedFormGroup {
+    const f = (this.teachers as any).familyInfo ?? {};
+    return this.fb.group({
+      maritalStatus:   [f.maritalStatus ?? ''],
+      spouseName:      [f.spouseName ?? ''],
+      spouseOccupation:[f.spouseOccupation ?? ''],
+      spouseMobile:    [f.spouseMobile ?? ''],
+      numberOfChildren:[f.numberOfChildren ?? 0],
+      childrenAges:    [f.childrenAges ?? ''],
+      housingType:     [f.housingType ?? ''],
+      familyNotes:     [f.familyNotes ?? ''],
     });
   }
 
@@ -127,19 +179,32 @@ export class TeachersFormComponent implements OnInit {
   }
 
   submit() {
-    if (this.teacherForm.valid) {
-      const formData = this.teacherForm.getRawValue();
-      if (this.action === 'edit') {
-        this.teachersService.updateTeacher(formData).subscribe({
-          next: (response) => this.dialogRef.close(response),
-          error: (err) => this.showError(err.message),
-        });
-      } else {
-        this.teachersService.addTeacher(formData).subscribe({
-          next: (response) => this.dialogRef.close(response),
-          error: (err) => this.showError(err.message),
-        });
-      }
+    if (!this.teacherForm.valid) return;
+    const formData = this.teacherForm.getRawValue();
+    const medical = this.medicalForm.value;
+    const family = this.familyForm.value;
+
+    if (this.action === 'edit') {
+      forkJoin([
+        this.teachersService.updateTeacher(formData),
+        this.teachersService.updateTeacherMedical(formData.id, medical),
+        this.teachersService.updateTeacherFamily(formData.id, family),
+      ]).subscribe({
+        next: ([teacher]) => this.dialogRef.close(teacher),
+        error: (err) => this.showError(err.message),
+      });
+    } else {
+      this.teachersService.addTeacher(formData).pipe(
+        switchMap((teacher) =>
+          forkJoin([
+            this.teachersService.updateTeacherMedical(teacher.id as string, medical),
+            this.teachersService.updateTeacherFamily(teacher.id as string, family),
+          ]).pipe(map(() => teacher))
+        )
+      ).subscribe({
+        next: (teacher) => this.dialogRef.close(teacher),
+        error: (err) => this.showError(err.message),
+      });
     }
   }
 

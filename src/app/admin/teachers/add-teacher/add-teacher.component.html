@@ -1,204 +1,406 @@
 <section class="content">
   <div class="content-block">
     @for (breadscrum of breadscrums; track breadscrum) {
-    <div class="block-header">
-      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
-      </app-breadcrumb>
-    </div>
+      <div class="block-header">
+        <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+        </app-breadcrumb>
+      </div>
     }
     <div class="row clearfix">
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
         <div class="card">
-          <div class="header">
-            <h2>Add Teacher</h2>
-          </div>
+          <div class="header"><h2>Agregar Docente</h2></div>
           <div class="body">
-            <form class="m-4" [formGroup]="proForm" (ngSubmit)="onSubmit()">
 
-              <!-- Name + Department -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Full Name</mat-label>
-                    <input matInput formControlName="name" appUppercase required>
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>face</mat-icon>
-                    @if (proForm.get('name')?.hasError('required')) {
-                    <mat-error>Name is required</mat-error>
+            <mat-tab-group animationDuration="200ms">
+
+              <!-- ─── Tab 1: General ─────────────────────────────── -->
+              <mat-tab label="General">
+                <form class="m-4" [formGroup]="generalForm" (ngSubmit)="onSubmit()">
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Nombre completo</mat-label>
+                        <input matInput formControlName="name" appUppercase required>
+                        <mat-icon matSuffix>face</mat-icon>
+                        @if (generalForm.get('name')?.hasError('required')) {
+                          <mat-error>Nombre es obligatorio</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Área de Estudio</mat-label>
+                        <mat-select formControlName="areaEstudioId">
+                          <mat-option value="">— Sin asignar —</mat-option>
+                          @for (area of areasEstudio; track area.id) {
+                            <mat-option [value]="area.id">{{ area.nombre }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email">
+                        <mat-icon matSuffix>email</mat-icon>
+                        @if (generalForm.get('email')?.hasError('email') && generalForm.get('email')?.touched) {
+                          <mat-error>Email inválido</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>DNI / Cédula</mat-label>
+                        <input matInput formControlName="dni" required>
+                        <mat-icon matSuffix>badge</mat-icon>
+                        @if (generalForm.get('dni')?.hasError('required')) {
+                          <mat-error>DNI es obligatorio</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Género</mat-label>
+                        <mat-select formControlName="gender">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          <mat-option value="Male">Male</mat-option>
+                          <mat-option value="Female">Female</mat-option>
+                          <mat-option value="Other">Other</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Celular</mat-label>
+                        <input matInput formControlName="mobile">
+                        <mat-icon matSuffix>phone</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Dependencia Laboral</mat-label>
+                        <mat-select formControlName="laboralDependency">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          <mat-option value="CONTRATO">Contrato</mat-option>
+                          <mat-option value="NOMBRAMIENTO DEFINITIVO">Nombramiento Definitivo</mat-option>
+                          <mat-option value="NOMBRAMIENTO PROVISIONAL">Nombramiento Provisional</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Jornada Laboral</mat-label>
+                        <mat-select formControlName="jornadaLaboral">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          <mat-option value="MATUTINA">Matutina</mat-option>
+                          <mat-option value="VESPERTINA">Vespertina</mat-option>
+                          <mat-option value="NOCTURNA">Nocturna</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Correo Institucional</mat-label>
+                        <input matInput formControlName="correoInstitucional" type="email" placeholder="docente@institucion.edu.ec" />
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Categoría Salarial</mat-label>
+                        <mat-select formControlName="salarialCategory">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          @for (cat of salarialCategories; track cat) {
+                            <mat-option [value]="cat">{{ cat }}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Contacto de Emergencia</mat-label>
+                        <input matInput formControlName="emergencyName" appUppercase>
+                        <mat-icon matSuffix>emergency</mat-icon>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Tel. Emergencia</mat-label>
+                        <input matInput formControlName="emergencyMobile">
+                        <mat-icon matSuffix>phone_in_talk</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Dirección</mat-label>
+                        <textarea matInput formControlName="address" rows="2"></textarea>
+                        <mat-icon matSuffix>home</mat-icon>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Especialización</mat-label>
+                        <input matInput formControlName="subject_specialization">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Años de experiencia</mat-label>
+                        <input matInput formControlName="experience_years" type="number">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Fecha de nacimiento</mat-label>
+                        <input matInput type="date" formControlName="birthdate">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Estado</mat-label>
+                        <mat-select formControlName="status">
+                          <mat-option value="active">Active</mat-option>
+                          <mat-option value="inactive">Inactive</mat-option>
+                          <mat-option value="on-leave">On Leave</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Peso (kg)</mat-label>
+                        <input matInput formControlName="peso" type="number">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Talla (cm)</mat-label>
+                        <input matInput formControlName="talla" type="number">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xl-12 mb-2">
+                      <mat-form-field class="example-full-width mb-3" appearance="outline">
+                        <mat-label>Bio / Descripción profesional</mat-label>
+                        <textarea matInput formControlName="bio" rows="3"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </form>
+              </mat-tab>
+
+              <!-- ─── Tab 2: Información Médica ──────────────────── -->
+              <mat-tab label="Inf. Médica">
+                <form class="m-4" [formGroup]="medicalForm">
+
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Tipo de sangre</mat-label>
+                        <mat-select formControlName="bloodType">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          @for (bt of bloodTypes; track bt) { <mat-option [value]="bt">{{ bt }}</mat-option> }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Seguro médico</mat-label>
+                        <input matInput formControlName="healthInsurance" placeholder="IESS, Privado...">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>N° de póliza</mat-label>
+                        <input matInput formControlName="policyNumber">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Medicamentos actuales</mat-label>
+                        <input matInput formControlName="currentMedications">
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <h6 class="mt-1 mb-3">Condiciones de salud</h6>
+
+                  <div class="row mb-2">
+                    <div class="col-auto"><mat-slide-toggle formControlName="hasAllergies">¿Tiene alergias?</mat-slide-toggle></div>
+                  </div>
+                  @if (medicalForm.get('hasAllergies')?.value) {
+                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                      <mat-label>Detalle de alergias</mat-label>
+                      <textarea matInput formControlName="allergiesDetail" rows="2"></textarea>
+                    </mat-form-field>
+                  }
+
+                  <div class="row mb-2">
+                    <div class="col-auto"><mat-slide-toggle formControlName="hasChronicCondition">¿Enfermedades crónicas?</mat-slide-toggle></div>
+                  </div>
+                  @if (medicalForm.get('hasChronicCondition')?.value) {
+                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                      <mat-label>Detalle de la condición</mat-label>
+                      <textarea matInput formControlName="chronicConditionDetail" rows="2"></textarea>
+                    </mat-form-field>
+                  }
+
+                  <div class="row mb-2">
+                    <div class="col-auto"><mat-slide-toggle formControlName="hasDisability">¿Tiene discapacidad?</mat-slide-toggle></div>
+                  </div>
+                  @if (medicalForm.get('hasDisability')?.value) {
+                    <mat-form-field appearance="outline" class="w-100 mb-3">
+                      <mat-label>Detalle de discapacidad</mat-label>
+                      <input matInput formControlName="disabilityDetail">
+                    </mat-form-field>
+                    <div class="row mb-2">
+                      <div class="col-auto"><mat-slide-toggle formControlName="hasConadis">¿Tiene carnet CONADIS?</mat-slide-toggle></div>
+                    </div>
+                    @if (medicalForm.get('hasConadis')?.value) {
+                      <mat-form-field appearance="outline" class="w-100 mb-3">
+                        <mat-label>N° CONADIS</mat-label>
+                        <input matInput formControlName="conadisNumber">
+                      </mat-form-field>
                     }
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Área de Estudio</mat-label>
-                    <mat-select formControlName="areaEstudioId">
-                      <mat-option value="">— Sin asignar —</mat-option>
-                      @for (area of areasEstudio; track area.id) {
-                        <mat-option [value]="area.id">{{ area.nombre }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
+                  }
 
-              <!-- Email + DNI -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Email</mat-label>
-                    <input matInput formControlName="email">
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>email</mat-icon>
-                    @if (proForm.get('email')?.hasError('email') && proForm.get('email')?.touched) {
-                    <mat-error>Ingresá un email válido</mat-error>
-                    }
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>DNI</mat-label>
-                    <input matInput formControlName="dni" required>
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>badge</mat-icon>
-                    @if (proForm.get('dni')?.hasError('required')) {
-                    <mat-error>El DNI es obligatorio</mat-error>
-                    }
-                  </mat-form-field>
-                </div>
-              </div>
+                  <h6 class="mt-2 mb-3">Contacto de emergencia médica</h6>
+                  <div class="row">
+                    <div class="col-md-4 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="emergencyContactName">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Teléfono</mat-label>
+                        <input matInput formControlName="emergencyContactPhone">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Relación</mat-label>
+                        <input matInput formControlName="emergencyContactRelation" placeholder="Cónyuge, Hijo/a...">
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-              <!-- Gender + Mobile -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Gender</mat-label>
-                    <mat-select formControlName="gender">
-                      <mat-option value="Male">Male</mat-option>
-                      <mat-option value="Female">Female</mat-option>
-                      <mat-option value="Other">Other</mat-option>
-                    </mat-select>
+                  <mat-form-field appearance="outline" class="w-100 mb-3">
+                    <mat-label>Notas médicas adicionales</mat-label>
+                    <textarea matInput formControlName="medicalNotes" rows="3"></textarea>
                   </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Mobile</mat-label>
-                    <input matInput formControlName="mobile">
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone</mat-icon>
-                  </mat-form-field>
-                </div>
-              </div>
 
-              <!-- Laboral Dependency + Salarial Category -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Dependencia Laboral</mat-label>
-                    <mat-select formControlName="laboralDependency">
-                      <mat-option value="Contrato">Contrato</mat-option>
-                      <mat-option value="Nomb. Definitivo">Nomb. Definitivo</mat-option>
-                      <mat-option value="Nomb. Provisional">Nomb. Provisional</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Categoría Salarial</mat-label>
-                    <mat-select formControlName="salarialCategory">
-                      @for (cat of salarialCategories; track cat) {
-                        <mat-option [value]="cat">{{ cat }}</mat-option>
-                      }
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
+                </form>
+              </mat-tab>
 
-              <!-- Emergency Contact -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Contacto de Emergencia</mat-label>
-                    <input matInput formControlName="emergencyName" appUppercase>
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>emergency</mat-icon>
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Tel. Emergencia</mat-label>
-                    <input matInput formControlName="emergencyMobile">
-                    <mat-icon class="material-icons-outlined color-icon p-3" matSuffix>phone_in_talk</mat-icon>
-                  </mat-form-field>
-                </div>
-              </div>
+              <!-- ─── Tab 3: Información Familiar ────────────────── -->
+              <mat-tab label="Inf. Familiar">
+                <form class="m-4" [formGroup]="familyForm">
 
-              <!-- Address -->
-              <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Address</mat-label>
-                    <textarea matInput formControlName="address" rows="2"></textarea>
-                  </mat-form-field>
-                </div>
-              </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Estado civil</mat-label>
+                        <mat-select formControlName="maritalStatus">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          @for (m of maritalStatuses; track m) { <mat-option [value]="m">{{ m }}</mat-option> }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Tipo de vivienda</mat-label>
+                        <mat-select formControlName="housingType">
+                          <mat-option value="">— Sin especificar —</mat-option>
+                          @for (h of housingTypes; track h) { <mat-option [value]="h">{{ h }}</mat-option> }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Nombre del cónyuge</mat-label>
+                        <input matInput formControlName="spouseName">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Teléfono del cónyuge</mat-label>
+                        <input matInput formControlName="spouseMobile">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Ocupación del cónyuge</mat-label>
+                        <input matInput formControlName="spouseOccupation">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>N° de hijos</mat-label>
+                        <input matInput type="number" formControlName="numberOfChildren" min="0">
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Edades de los hijos</mat-label>
+                        <input matInput formControlName="childrenAges" placeholder="Ej: 5, 8, 12">
+                      </mat-form-field>
+                    </div>
+                  </div>
 
-              <!-- Specialization + Experience -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Subject Specialization</mat-label>
-                    <input matInput formControlName="subject_specialization">
+                  <mat-form-field appearance="outline" class="w-100 mb-3">
+                    <mat-label>Notas familiares</mat-label>
+                    <textarea matInput formControlName="familyNotes" rows="3"></textarea>
                   </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Years of Experience</mat-label>
-                    <input matInput formControlName="experience_years" type="number">
-                  </mat-form-field>
-                </div>
-              </div>
 
-              <!-- Birthdate + Status -->
-              <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Date of Birth</mat-label>
-                    <input matInput [matDatepicker]="dobPicker" formControlName="birthdate">
-                    <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #dobPicker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Status</mat-label>
-                    <mat-select formControlName="status">
-                      <mat-option value="active">Active</mat-option>
-                      <mat-option value="inactive">Inactive</mat-option>
-                      <mat-option value="on-leave">On Leave</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
+                </form>
+              </mat-tab>
 
-              <!-- Bio -->
-              <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                  <mat-form-field class="example-full-width mb-3" appearance="outline">
-                    <mat-label>Bio</mat-label>
-                    <textarea matInput formControlName="bio" rows="3"></textarea>
-                  </mat-form-field>
-                </div>
-              </div>
+            </mat-tab-group>
 
-              <div class="row">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
-                  <button mat-flat-button color="primary" class="btn-space"
-                    [disabled]="proForm.invalid || isSaving" type="submit">
-                    Submit
-                  </button>
-                  <button type="button" mat-flat-button class="formCancelBtn"
-                    routerLink="/admin/teachers/all-teachers">
-                    Cancel
-                  </button>
-                </div>
-              </div>
+            <div class="m-4">
+              <button mat-flat-button color="primary" class="btn-space"
+                [disabled]="generalForm.invalid || isSaving" (click)="onSubmit()">
+                @if (isSaving) { <mat-spinner diameter="18" style="display:inline-block;margin-right:8px"></mat-spinner> }
+                Guardar
+              </button>
+              <button type="button" mat-flat-button class="formCancelBtn"
+                routerLink="/admin/teachers/all-teachers">
+                Cancelar
+              </button>
+            </div>
 
-            </form>
           </div>
         </div>
       </div>

@@ -42,6 +42,16 @@ import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.co
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
+function calcAge(birthdate: string | undefined): number | null {
+  if (!birthdate) return null;
+  const b = new Date(birthdate);
+  if (isNaN(b.getTime())) return null;
+  const today = new Date();
+  let age = today.getFullYear() - b.getFullYear();
+  if (today.getMonth() < b.getMonth() || (today.getMonth() === b.getMonth() && today.getDate() < b.getDate())) age--;
+  return age;
+}
+
 @Component({
   selector: 'app-all-teachers',
   templateUrl: './all-teachers.component.html',
@@ -84,8 +94,10 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     { def: 'dni', label: 'DNI', type: 'text', visible: true },
     { def: 'gender', label: 'Gender', type: 'text', visible: true },
     { def: 'mobile', label: 'Mobile', type: 'phone', visible: true },
-    { def: 'laboralDependency', label: 'Dep. Laboral', type: 'text', visible: true },
-    { def: 'salarialCategory', label: 'Cat. Salarial', type: 'text', visible: true },
+    { def: 'laboralDependency',   label: 'Dep. Laboral',    type: 'text',  visible: true },
+    { def: 'jornadaLaboral',      label: 'Jornada',         type: 'text',  visible: true },
+    { def: 'correoInstitucional', label: 'Correo Inst.',    type: 'email', visible: false },
+    { def: 'salarialCategory',    label: 'Cat. Salarial',   type: 'text',  visible: true },
     { def: 'emergencyName', label: 'Contacto Emergencia', type: 'text', visible: false },
     { def: 'emergencyMobile', label: 'Tel. Emergencia', type: 'text', visible: false },
     { def: 'address', label: 'Address', type: 'address', visible: false },
@@ -93,6 +105,7 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     { def: 'experience_years', label: 'Experience (Years)', type: 'number', visible: false },
     { def: 'status', label: 'Status', type: 'text', visible: false },
     { def: 'birthdate', label: 'Birthdate', type: 'date', visible: false },
+    { def: 'edad',      label: 'Edad',      type: 'number', visible: true },
     { def: 'bio', label: 'Bio', type: 'text', visible: false },
     { def: 'actions', label: 'Actions', type: 'actionBtn', visible: true },
   ];
@@ -101,6 +114,26 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<Teachers>(true, []);
   contextMenuPosition = { x: '0px', y: '0px' };
   isLoading = true;
+
+  filterSearch          = '';
+  filterLaboralDep      = '';
+  filterJornada         = '';
+  filterGender          = '';
+  filterAreaEstudio     = '';
+  filterEdadRango       = '';
+
+  readonly laboralOptions = ['CONTRATO', 'NOMBRAMIENTO DEFINITIVO', 'NOMBRAMIENTO PROVISIONAL'];
+  readonly jornadaOptions = ['MATUTINA', 'VESPERTINA', 'NOCTURNA'];
+  readonly genderOptions  = ['Male', 'Female', 'Other'];
+  readonly edadRangos = [
+    { label: '< 30 años', value: '<30'   },
+    { label: '30 – 39',   value: '30-39' },
+    { label: '40 – 49',   value: '40-49' },
+    { label: '50 – 59',   value: '50-59' },
+    { label: '60+',       value: '60+'   },
+  ];
+  areaEstudioOptions: string[] = [];
+
   private destroy$ = new Subject<void>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -145,14 +178,36 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
   loadData() {
     this.teachersService.getAllTeachers().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
-        console.debug(data);
+        this.dataSource.data = data.map(t => { t.edad = calcAge(t.birthdate); return t; });
         this.isLoading = false;
+        this.areaEstudioOptions = [...new Set(data.map(t => t.areaEstudio).filter(Boolean))].sort();
         this.refreshTable();
-        this.dataSource.filterPredicate = (data: Teachers, filter: string) =>
-          Object.values(data).some((value) =>
-            value != null && value.toString().toLowerCase().includes(filter)
-          );
+        this.dataSource.filterPredicate = (row: Teachers, filterStr: string) => {
+          if (!filterStr) return true;
+          let f: any;
+          try { f = JSON.parse(filterStr); } catch { return true; }
+          if (f.laboralDep  && row.laboralDependency !== f.laboralDep)  return false;
+          if (f.jornada     && row.jornadaLaboral     !== f.jornada)     return false;
+          if (f.gender      && row.gender             !== f.gender)      return false;
+          if (f.areaEstudio && row.areaEstudio        !== f.areaEstudio) return false;
+          if (f.edadRango) {
+            const age = (row as any).edad as number | null;
+            if (age == null) return false;
+            if (f.edadRango === '<30'   && age >= 30)                return false;
+            if (f.edadRango === '30-39' && (age < 30 || age > 39))  return false;
+            if (f.edadRango === '40-49' && (age < 40 || age > 49))  return false;
+            if (f.edadRango === '50-59' && (age < 50 || age > 59))  return false;
+            if (f.edadRango === '60+'   && age < 60)                 return false;
+          }
+          if (f.search) {
+            const s = f.search.toLowerCase();
+            const vals = Object.entries(row)
+              .filter(([k]) => !['medicalInfo', 'familyInfo'].includes(k))
+              .map(([, v]) => v);
+            if (!vals.some(v => v != null && v.toString().toLowerCase().includes(s))) return false;
+          }
+          return true;
+        };
       },
       error: (err) => console.error(err),
     });
@@ -165,10 +220,30 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
-    this.dataSource.filter = filterValue;
+    this.filterSearch = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    this.dataSource.filter = JSON.stringify({
+      search:      this.filterSearch,
+      laboralDep:  this.filterLaboralDep,
+      jornada:     this.filterJornada,
+      gender:      this.filterGender,
+      areaEstudio: this.filterAreaEstudio,
+      edadRango:   this.filterEdadRango,
+    });
+  }
+
+  clearFilters() {
+    this.filterSearch      = '';
+    this.filterLaboralDep  = '';
+    this.filterJornada     = '';
+    this.filterGender      = '';
+    this.filterAreaEstudio = '';
+    this.filterEdadRango   = '';
+    if (this.filter?.nativeElement) this.filter.nativeElement.value = '';
+    this.applyFilters();
   }
 
   addNew() {
@@ -258,18 +333,44 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
 
   openBulkImport() {
     const TEACHER_BULK_COLUMNS: BulkImportColumn[] = [
-      { key: 'name',                label: 'Nombre',              required: true,  example: 'Ana González' },
-      { key: 'dni',                 label: 'Cédula',              required: true,  example: '0987654321' },
-      { key: 'email',               label: 'Email',               required: false, example: 'ana@email.com' },
-      { key: 'mobile',              label: 'Celular',             required: false, example: '0991234567' },
-      { key: 'gender',              label: 'Sexo',                required: false, example: 'Female' },
-      { key: 'birthdate',           label: 'Fecha Nacimiento',    required: false, example: '1985-06-20' },
-      { key: 'address',             label: 'Dirección',           required: false, example: 'Calle 5 de Agosto' },
-      { key: 'subjectSpecialization',label: 'Especialización',    required: false, example: 'Matemáticas' },
-      { key: 'experienceYears',     label: 'Años Experiencia',    required: false, example: '5' },
-      { key: 'laboralDependency',   label: 'Dependencia Laboral', required: false, example: 'Contrato' },
-      { key: 'salarialCategory',    label: 'Categoría Salarial',  required: false, example: 'C' },
-      { key: 'status',              label: 'Estado',              required: false, example: 'active' },
+      // ── Datos básicos ──────────────────────────────────────────────
+      { key: 'name',                  label: 'Nombre',              required: true,  example: 'Ana González' },
+      { key: 'dni',                   label: 'Cédula',              required: true,  example: '0987654321' },
+      { key: 'email',                 label: 'Email',               required: false, example: 'ana@email.com' },
+      { key: 'mobile',                label: 'Celular',             required: false, example: '0991234567' },
+      { key: 'gender',                label: 'Sexo',                required: false, example: 'Female' },
+      { key: 'birthdate',             label: 'Fecha Nacimiento',    required: false, example: '1985-06-20' },
+      { key: 'address',               label: 'Dirección',           required: false, example: 'Calle 5 de Agosto' },
+      { key: 'subjectSpecialization', label: 'Especialización',     required: false, example: 'Matemáticas' },
+      { key: 'experienceYears',       label: 'Años Experiencia',    required: false, example: '5' },
+      { key: 'laboralDependency',     label: 'Dependencia Laboral', required: false, example: 'CONTRATO' },
+      { key: 'jornadaLaboral',        label: 'Jornada Laboral',     required: false, example: 'MATUTINA' },
+      { key: 'correoInstitucional',   label: 'Correo Institucional',required: false, example: 'docente@institucion.edu.ec' },
+      { key: 'salarialCategory',      label: 'Categoría Salarial',  required: false, example: 'C' },
+      { key: 'status',                label: 'Estado',              required: false, example: 'active' },
+      { key: 'peso',                  label: 'Peso (kg)',            required: false, example: '70' },
+      { key: 'talla',                 label: 'Talla (cm)',           required: false, example: '165' },
+      // ── Información médica ─────────────────────────────────────────
+      { key: 'bloodType',             label: 'Tipo de Sangre',      required: false, example: 'O+' },
+      { key: 'healthInsurance',       label: 'Seguro Médico',       required: false, example: 'IESS' },
+      { key: 'policyNumber',          label: 'N° Póliza',           required: false, example: '123456' },
+      { key: 'currentMedications',    label: 'Medicamentos',        required: false, example: 'Metformina' },
+      { key: 'hasAllergies',          label: 'Tiene Alergias',      required: false, example: 'false' },
+      { key: 'allergiesDetail',       label: 'Detalle Alergias',    required: false, example: 'Polen' },
+      { key: 'hasChronicCondition',   label: 'Enfermedad Crónica',  required: false, example: 'false' },
+      { key: 'chronicConditionDetail',label: 'Detalle Crónica',     required: false, example: 'Diabetes' },
+      { key: 'hasDisability',         label: 'Discapacidad',        required: false, example: 'false' },
+      { key: 'disabilityDetail',      label: 'Detalle Discapacidad',required: false, example: 'Visual' },
+      { key: 'hasConadis',            label: 'Carnet CONADIS',      required: false, example: 'false' },
+      { key: 'conadisNumber',         label: 'N° CONADIS',          required: false, example: 'CON-001' },
+      // ── Información familiar ───────────────────────────────────────
+      { key: 'maritalStatus',         label: 'Estado Civil',        required: false, example: 'Casado/a' },
+      { key: 'housingType',           label: 'Tipo Vivienda',       required: false, example: 'Propia' },
+      { key: 'spouseName',            label: 'Cónyuge',             required: false, example: 'Carlos Pérez' },
+      { key: 'spouseMobile',          label: 'Tel. Cónyuge',        required: false, example: '0991234000' },
+      { key: 'spouseOccupation',      label: 'Ocupación Cónyuge',   required: false, example: 'Ingeniero' },
+      { key: 'numberOfChildren',      label: 'N° Hijos',            required: false, example: '2' },
+      { key: 'childrenAges',          label: 'Edades Hijos',        required: false, example: '5, 8' },
     ];
     const dialogRef = this.dialog.open(BulkImportDialogComponent, {
       width: '900px',
@@ -320,17 +421,25 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
   }
 
   removeSelectedRows() {
-    const totalSelect = this.selection.selected.length;
-    this.dataSource.data = this.dataSource.data.filter(
-      (item) => !this.selection.selected.includes(item)
-    );
-    this.selection.clear();
-    this.showNotification(
-      'snackbar-danger',
-      `${totalSelect} Record(s) Deleted Successfully...!!!`,
-      'bottom',
-      'center'
-    );
+    const selected = this.selection.selected;
+    const ids = selected.map((t) => t.id as string);
+    const dialogRef = this.dialog.open(TeachersDeleteComponent, {
+      data: { ids },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const idSet = new Set(ids);
+        this.dataSource.data = this.dataSource.data.filter((item) => !idSet.has(item.id as string));
+        this.selection.clear();
+        this.refreshTable();
+        this.showNotification(
+          'snackbar-danger',
+          `${result.deleted ?? ids.length} registro(s) eliminado(s) correctamente`,
+          'bottom',
+          'center'
+        );
+      }
+    });
   }
   onContextMenu(event: MouseEvent, item: Teachers) {
     event.preventDefault();

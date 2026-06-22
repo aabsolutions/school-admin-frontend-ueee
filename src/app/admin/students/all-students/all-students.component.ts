@@ -43,6 +43,16 @@ import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.co
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 
+function calcAge(birthdate: string | undefined): number | null {
+  if (!birthdate) return null;
+  const b = new Date(birthdate);
+  if (isNaN(b.getTime())) return null;
+  const today = new Date();
+  let age = today.getFullYear() - b.getFullYear();
+  if (today.getMonth() < b.getMonth() || (today.getMonth() === b.getMonth() && today.getDate() < b.getDate())) age--;
+  return age;
+}
+
 @Component({
   selector: 'app-all-students',
   templateUrl: './all-students.component.html',
@@ -87,6 +97,7 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
     { def: 'gender', label: 'Sexo', type: 'text', visible: true },
     { def: 'residenceZone', label: 'Zona de Residencia', type: 'text', visible: true },
     { def: 'birthdate', label: 'Fecha de Nac.', type: 'date', visible: true },
+    { def: 'edad',      label: 'Edad',          type: 'number', visible: true },
     { def: 'address', label: 'Dirección', type: 'address', visible: false },
     { def: 'parentGuardianName', label: 'Encargado', type: 'text', visible: true },
     { def: 'parentGuardianMobile', label: 'Tel. Encargado', type: 'text', visible: true },
@@ -146,11 +157,11 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
   loadData() {
     this.studentsService.getAllStudents().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
+        this.dataSource.data = data.map(s => { s.edad = calcAge(s.birthdate); return s; });
         this.isLoading = false;
         this.refreshTable();
-        this.dataSource.filterPredicate = (data: Students, filter: string) =>
-          Object.values(data).some((value) =>
+        this.dataSource.filterPredicate = (row: Students, filter: string) =>
+          Object.values(row).some((value) =>
             value != null && value.toString().toLowerCase().includes(filter)
           );
       },

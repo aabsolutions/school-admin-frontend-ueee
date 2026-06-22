@@ -15,7 +15,10 @@ export class Teachers {
   areaEstudioId: string;
   address: string;
   laboralDependency: string;
+  jornadaLaboral: string;
+  correoInstitucional: string;
   salarialCategory: string;
+  edad?: number | null;
   emergencyName: string;
   emergencyMobile: string;
   subject_specialization: string;
@@ -23,6 +26,8 @@ export class Teachers {
   status: string;
   birthdate: string;
   bio: string;
+  medicalInfo?: Record<string, any>;
+  familyInfo?: Record<string, any>;
 
   constructor(teachers: Partial<Teachers>) {
     this.id = teachers.id || this.getRandomID();
@@ -41,6 +46,8 @@ export class Teachers {
     this.areaEstudioId = teachers.areaEstudioId || '';
     this.address = teachers.address || '';
     this.laboralDependency = teachers.laboralDependency || '';
+    this.jornadaLaboral = teachers.jornadaLaboral || '';
+    this.correoInstitucional = teachers.correoInstitucional || '';
     this.salarialCategory = teachers.salarialCategory || '';
     this.emergencyName = teachers.emergencyName || '';
     this.emergencyMobile = teachers.emergencyMobile || '';

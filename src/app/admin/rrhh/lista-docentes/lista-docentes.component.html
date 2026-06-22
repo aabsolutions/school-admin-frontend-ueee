@@ -144,9 +144,9 @@
                         <mat-cell *matCellDef="let row">
                           <span class="mobile-label">{{ column.label }}:</span>
                           @switch (row.laboralDependency) {
-                            @case ('Contrato')          { <span class="badge badge-solid-orange">{{ row.laboralDependency }}</span> }
-                            @case ('Nomb. Definitivo')  { <span class="badge badge-solid-green">{{ row.laboralDependency }}</span> }
-                            @case ('Nomb. Provisional') { <span class="badge badge-solid-blue">{{ row.laboralDependency }}</span> }
+                            @case ('CONTRATO')               { <span class="badge badge-solid-orange">{{ row.laboralDependency }}</span> }
+                            @case ('NOMBRAMIENTO DEFINITIVO') { <span class="badge badge-solid-green">{{ row.laboralDependency }}</span> }
+                            @case ('NOMBRAMIENTO PROVISIONAL'){ <span class="badge badge-solid-blue">{{ row.laboralDependency }}</span> }
                             @default                    { <span class="truncate-text">{{ row.laboralDependency }}</span> }
                           }
                         </mat-cell>
