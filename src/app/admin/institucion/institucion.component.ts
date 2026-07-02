@@ -39,6 +39,8 @@ export class InstitucionComponent implements OnInit {
   logoPreview: string | null = null;
   membretePreview: string | null = null;
   uploadingMembrete = false;
+  coverImagePreview: string | null = null;
+  uploadingCoverImage = false;
 
   docentes: { id: string; name: string; email: string }[] = [];
   periodosOptions: string[] = [];
@@ -78,6 +80,7 @@ export class InstitucionComponent implements OnInit {
         this.form.patchValue({ ...data, autoridad: autoridad ?? '' });
         this.logoPreview = data.logotipo ?? null;
         this.membretePreview = data.membrete ?? null;
+        this.coverImagePreview = data.coverImage ?? null;
         this.loading = false;
         if (data.autoridad && typeof data.autoridad === 'object') {
           const d = data.autoridad as any;
@@ -147,6 +150,23 @@ export class InstitucionComponent implements OnInit {
       error: () => {
         this.uploadingLogo = false;
         this.snackBar.open('Error al subir el logo', '', { duration: 3000, panelClass: 'snackbar-danger' });
+      },
+    });
+  }
+
+  onCoverImageChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.uploadingCoverImage = true;
+    this.service.uploadCoverImage(file).subscribe({
+      next: (res) => {
+        this.coverImagePreview = res.coverImage ?? null;
+        this.uploadingCoverImage = false;
+        this.snackBar.open('Imagen de portada actualizada', '', { duration: 3000, panelClass: 'snackbar-success' });
+      },
+      error: () => {
+        this.uploadingCoverImage = false;
+        this.snackBar.open('Error al subir la imagen de portada', '', { duration: 3000, panelClass: 'snackbar-danger' });
       },
     });
   }

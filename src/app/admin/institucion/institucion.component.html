@@ -179,6 +179,42 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- ── Imagen de portada del login ── -->
+      <mat-card class="mb-4">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="me-2 align-middle">wallpaper</mat-icon>
+            Imagen de Portada (Login)
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <div class="d-flex align-items-center gap-4 flex-wrap">
+            @if (coverImagePreview) {
+              <img [src]="coverImagePreview" alt="Imagen de portada del login"
+                    style="max-height:160px;max-width:140px;object-fit:cover;border:1px solid #e0e0e0;border-radius:4px;padding:4px;">
+            } @else {
+              <div class="d-flex align-items-center justify-content-center"
+                    style="height:160px;width:140px;border:1px dashed #bbb;border-radius:4px;color:#bbb">
+                <mat-icon style="font-size:48px;height:48px;width:48px">add_photo_alternate</mat-icon>
+              </div>
+            }
+            <div>
+              <input #coverImageInput type="file" accept="image/jpeg,image/png,image/webp"
+                      style="display:none" (change)="onCoverImageChange($event)">
+              <button mat-stroked-button type="button" [disabled]="uploadingCoverImage" (click)="coverImageInput.click()">
+                @if (uploadingCoverImage) {
+                  <mat-spinner diameter="20" style="display:inline-block" />
+                } @else {
+                  <mat-icon>upload</mat-icon>
+                }
+                {{ uploadingCoverImage ? 'Subiendo...' : 'Subir imagen de portada' }}
+              </button>
+              <p class="text-muted small mt-2 mb-0">JPG, PNG o WEBP — máx. 5 MB.<br>Se muestra en el panel izquierdo de la pantalla de inicio de sesión (recomendado 800×940).</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <!-- ── Membrete institucional (PDF) ── -->
       <mat-card class="mb-4">
         <mat-card-header>

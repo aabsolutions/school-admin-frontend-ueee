@@ -14,6 +14,7 @@ export interface InstitucionData {
   direccion?: string;
   autoridad?: string | { _id: string; name: string; email: string } | null;
   logotipo?: string;
+  coverImage?: string;
   periodoLectivoFuncional?: string;
   membrete?: string;
   membreteContentTopMm?: number;
@@ -44,5 +45,11 @@ export class InstitucionService {
     const form = new FormData();
     form.append('file', file);
     return this.http.post<any>(`${this.API}/membrete`, form).pipe(map((r) => r.data ?? r));
+  }
+
+  uploadCoverImage(file: File): Observable<InstitucionData> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<any>(`${this.API}/cover-image`, form).pipe(map((r) => r.data ?? r));
   }
 }

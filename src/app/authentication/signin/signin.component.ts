@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { InstitucionService } from 'app/admin/institucion/institucion.service';
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
@@ -38,11 +39,14 @@ export class SigninComponent
   loading = false;
   error = '';
   hide = true;
+  coverImageUrl = 'assets/images/pages/bg-01.png';
+  logoUrl = 'assets/images/logo.png';
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private institucionService: InstitucionService
   ) {
     super();
   }
@@ -51,6 +55,17 @@ export class SigninComponent
     this.authForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
+    });
+    this.institucionService.get().subscribe({
+      next: (data) => {
+        if (data.coverImage) {
+          this.coverImageUrl = data.coverImage;
+        }
+        if (data.logotipo) {
+          this.logoUrl = data.logotipo;
+        }
+      },
+      error: () => {},
     });
   }
   get f() {

@@ -1,12 +1,13 @@
 <div class="auth-container">
   <div class="row auth-main">
     <div class="col-sm-6 px-0 d-none d-sm-block">
-      <div class="left-img" style="background-image: url(assets/images/pages/bg-01.png);">
+      <div class="left-img" [style.background-image]="'url(' + coverImageUrl + ')'">
       </div>
     </div>
     <div class="col-sm-6 auth-form-section">
       <div class="form-section">
         <div class="auth-wrapper">
+          <img [src]="logoUrl" alt="Logo institucional" class="signin-logo">
           <h6 class="welcome-msg"> Bienvenido a Smart</h6>
           <h6 class="login-title">Iniciar sesión</h6>
           <form class="validate-form" [formGroup]="authForm" (ngSubmit)="onSubmit()">
