@@ -42,7 +42,7 @@ export class CursoLectivoService {
   }
 
   getAll(): Observable<CursoLectivo[]> {
-    return this.http.get<ApiList<any>>(this.API_URL).pipe(
+    return this.http.get<ApiList<any>>(this.API_URL, { params: { limit: '10000' } }).pipe(
       map(r => {
         const items = r.data.data.map(c => this.normalize(c));
         this.dataChange.next(items);

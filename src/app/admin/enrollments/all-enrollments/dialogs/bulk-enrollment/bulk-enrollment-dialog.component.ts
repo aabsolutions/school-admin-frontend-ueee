@@ -82,7 +82,8 @@ export class BulkEnrollmentDialogComponent implements OnInit {
     this.step1Form.get('academicYear')!.valueChanges.subscribe(year => {
       this.filteredCursos = this.allCursosLectivos
         .filter(c => c.academicYear === year)
-        .map(c => ({ id: c.id, label: c.label }));
+        .map(c => ({ id: c.id, label: c.label }))
+        .sort((a, b) => a.label.localeCompare(b.label));
       this.step1Form.patchValue({ cursoLectivoId: '' });
       this.previewData = [];
       this.selection.clear();

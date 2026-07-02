@@ -130,6 +130,7 @@ export class ListaNominaComponent implements OnInit {
             female:       st.female,
           };
         });
+        this.allCursosLectivos.sort((a, b) => this.cursoSortKey(a).localeCompare(this.cursoSortKey(b)));
         this.filteredCursos = this.allCursosLectivos;
         this.hasSearched = true;
         this.loadingCursos  = false;
@@ -149,9 +150,14 @@ export class ListaNominaComponent implements OnInit {
       (!paralelo             || cl.paralelo.includes(paralelo))                             &&
       (!this.filterJornada   || cl.jornada   === this.filterJornada)
     );
+    this.filteredCursos.sort((a, b) => this.cursoSortKey(a).localeCompare(this.cursoSortKey(b)));
     this.hasSearched     = true;
     this.selectedCurso   = null;
     this.dataSource.data = [];
+  }
+
+  private cursoSortKey(cl: CursoLectivoItem): string {
+    return `${cl.nivel} ${cl.especialidad} ${cl.paralelo} ${cl.jornada}`;
   }
 
   selectCurso(cl: CursoLectivoItem) {

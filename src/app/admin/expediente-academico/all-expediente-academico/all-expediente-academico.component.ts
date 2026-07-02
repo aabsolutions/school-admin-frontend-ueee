@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -45,7 +45,9 @@ export class AllExpedienteAcademicoComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   @ViewChild(MatSort) set matSort(s: MatSort) { this.dataSource.sort = s; }
-  @ViewChild(MatPaginator) set matPaginator(p: MatPaginator) { this.dataSource.paginator = p; }
+  // No dataSource.paginator: la paginación es server-side (loadData() vía onPage()).
+  // Asignar paginator acá hace que MatTableDataSource re-recorte localmente
+  // la página ya recortada por el backend, vaciando la tabla desde la página 2.
 
   constructor(
     private svc: ExpedienteAcademicoService,

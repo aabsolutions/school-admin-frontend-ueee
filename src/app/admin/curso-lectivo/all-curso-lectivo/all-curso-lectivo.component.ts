@@ -85,7 +85,9 @@ export class AllCursoLectivoComponent implements OnInit, OnDestroy {
   loadData() {
     this.service.getAll().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
+        this.dataSource.data = [...data].sort((a, b) =>
+          (a.cursoDisplay ?? '').localeCompare(b.cursoDisplay ?? '')
+        );
         this.isLoading = false;
         this.refreshTable();
         this.dataSource.filterPredicate = (row: CursoLectivo, filter: string) =>

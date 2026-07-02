@@ -64,7 +64,7 @@ export class EnrollmentFormComponent {
         const c = cl.cursoId;
         const display = c ? `${c.nivel} - ${c.especialidad} - ${c.paralelo} - ${c.jornada}` : cl._id;
         return { id: cl._id ?? cl.id, label: `${display} (${cl.academicYear})` };
-      }),
+      }).sort((a: { label: string }, b: { label: string }) => a.label.localeCompare(b.label)),
     });
 
     if (this.action === 'add') {
@@ -74,18 +74,22 @@ export class EnrollmentFormComponent {
             id: s._id ?? s.id,
             label: `${s.name}${s.dni ? ' — ' + s.dni : ''}`,
           }));
-          this.filteredStudents = this.allStudents;
+          this.applyStudentFilter(this.studentSearch.value);
         },
       });
 
       this.studentSearch.valueChanges.subscribe(val => {
-        const term = (val ?? '').toLowerCase();
-        this.filteredStudents = term
-          ? this.allStudents.filter(s => s.label.toLowerCase().includes(term))
-          : this.allStudents;
+        this.applyStudentFilter(val);
         if (!val) this.enrollmentForm.patchValue({ studentId: '' });
       });
     }
+  }
+
+  private applyStudentFilter(val: unknown) {
+    const term = (typeof val === 'string' ? val : (val as { label?: string } | null)?.label ?? '').toLowerCase();
+    this.filteredStudents = term
+      ? this.allStudents.filter(s => s.label.toLowerCase().includes(term))
+      : this.allStudents;
   }
 
   selectStudent(student: { id: string; label: string }) {
