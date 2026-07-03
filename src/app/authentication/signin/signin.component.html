@@ -1,14 +1,17 @@
 <div class="auth-container">
   <div class="row auth-main">
     <div class="col-sm-6 px-0 d-none d-sm-block">
-      <div class="left-img" [style.background-image]="'url(' + coverImageUrl + ')'">
+      <div class="left-img" [class.fade-in]="coverImageUrl"
+        [style.background-image]="coverImageUrl ? 'url(' + coverImageUrl + ')' : null">
       </div>
     </div>
     <div class="col-sm-6 auth-form-section">
       <div class="form-section">
         <div class="auth-wrapper">
-          <img [src]="logoUrl" alt="Logo institucional" class="signin-logo">
-          <h6 class="welcome-msg"> Bienvenido a Smart</h6>
+          @if (logoUrl) {
+          <img [src]="logoUrl" alt="Logo institucional" class="signin-logo fade-in">
+          }
+          <h6 class="welcome-msg"> Bienvenido a Smart Admin</h6>
           <h6 class="login-title">Iniciar sesión</h6>
           <form class="validate-form" [formGroup]="authForm" (ngSubmit)="onSubmit()">
             <div class="row">
@@ -49,7 +52,6 @@
                   </span>
                 </label>
               </div>
-              <a class="txt1" routerLink="/authentication/forgot-password">Forgot Password?</a>
             </div>
             @if (error) {
             <div class="alert alert-danger mt-3 mb-0">{{error}}</div>

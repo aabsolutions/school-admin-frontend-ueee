@@ -185,9 +185,9 @@
 
 // Action buttons on timeline items
 .action-btn {
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
+  --mat-icon-button-state-layer-size: 30px;
+  --mat-icon-button-icon-size: 17px;
+  --mat-icon-button-touch-target-display: none;
   border-radius: 6px;
   transition: background 0.15s, color 0.15s;
 
@@ -237,12 +237,12 @@
   align-items: flex-start;
 
   .evidencia-delete-btn {
+    --mat-icon-button-state-layer-size: 22px;
+    --mat-icon-button-icon-size: 14px;
+    --mat-icon-button-touch-target-display: none;
     position: absolute;
     top: -8px;
     right: -8px;
-    width: 22px;
-    height: 22px;
-    line-height: 22px;
     background: #fff;
     border-radius: 50%;
     box-shadow: 0 2px 5px rgba(0,0,0,0.25);

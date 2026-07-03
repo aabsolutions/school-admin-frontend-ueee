@@ -21,7 +21,6 @@ import { InstitucionService } from 'app/admin/institucion/institucion.service';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss'],
   imports: [
-    RouterLink,
     MatButtonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -39,8 +38,10 @@ export class SigninComponent
   loading = false;
   error = '';
   hide = true;
-  coverImageUrl = 'assets/images/pages/bg-01.png';
-  logoUrl = 'assets/images/logo.png';
+  coverImageUrl: string | null = null;
+  logoUrl: string | null = null;
+  private readonly COVER_CACHE_KEY = 'app_cover_image';
+  private readonly LOGO_CACHE_KEY = 'app_logo';
   constructor(
     private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
@@ -56,13 +57,25 @@ export class SigninComponent
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    const cachedCover = localStorage.getItem(this.COVER_CACHE_KEY);
+    if (cachedCover) {
+      this.coverImageUrl = cachedCover;
+    }
+    const cachedLogo = localStorage.getItem(this.LOGO_CACHE_KEY);
+    if (cachedLogo) {
+      this.logoUrl = cachedLogo;
+    }
+
     this.institucionService.get().subscribe({
       next: (data) => {
         if (data.coverImage) {
           this.coverImageUrl = data.coverImage;
+          localStorage.setItem(this.COVER_CACHE_KEY, data.coverImage);
         }
         if (data.logotipo) {
           this.logoUrl = data.logotipo;
+          localStorage.setItem(this.LOGO_CACHE_KEY, data.logotipo);
         }
       },
       error: () => {},
