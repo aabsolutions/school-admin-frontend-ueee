@@ -21,7 +21,8 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run build:prod
-
-      - name: Deploy to gh-pages
-        run: npx angular-cli-ghpages --dir=dist/smart/browser --repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aabsolutions/school-admin-frontend-ueee.git --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
+      # `ng deploy` (not a plain build + angular-cli-ghpages) so it picks up the
+      # `baseHref: /school-admin-frontend-ueee/` from angular.json's "deploy" target —
+      # a separate build step does NOT apply it, which 404s every lazy chunk on GH Pages.
+      - name: Build and deploy to gh-pages
+        run: npx ng deploy --repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aabsolutions/school-admin-frontend-ueee.git --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
