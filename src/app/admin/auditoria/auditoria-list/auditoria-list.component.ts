@@ -138,9 +138,8 @@ export class AuditoriaListComponent implements OnInit {
 
   openDetail(row: AuditLogEntry) {
     this.dialog.open(AuditDetailDialogComponent, {
-      width: '640px',
-      maxWidth: '95vw',
-      maxHeight: '90vh',
+      width: '70vw',
+      maxWidth: '800px',
       autoFocus: false,
       data: { entry: row },
     });

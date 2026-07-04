@@ -1,7 +1,11 @@
-<app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
-
 <section class="content">
-  <div class="container-fluid">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="breadscrums[0].title" [items]="breadscrums[0].items" [active_item]="breadscrums[0].active"></app-breadcrumb>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
     <div class="card">
       <div class="header">
@@ -10,7 +14,7 @@
       <div class="body">
         <div class="row g-3 align-items-end">
           <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
               <mat-label>Desde</mat-label>
               <input matInput [matDatepicker]="dp1" [(ngModel)]="dateFrom">
               <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
@@ -18,7 +22,7 @@
             </mat-form-field>
           </div>
           <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
               <mat-label>Hasta</mat-label>
               <input matInput [matDatepicker]="dp2" [(ngModel)]="dateTo">
               <mat-datepicker-toggle matIconSuffix [for]="dp2"></mat-datepicker-toggle>
@@ -26,13 +30,13 @@
             </mat-form-field>
           </div>
           <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
               <mat-label>Actor (ID)</mat-label>
               <input matInput [(ngModel)]="actorId" placeholder="ID de usuario">
             </mat-form-field>
           </div>
           <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
               <mat-label>Acción</mat-label>
               <mat-select [(ngModel)]="action">
                 <mat-option [value]="null">Todas</mat-option>
@@ -42,7 +46,7 @@
           </div>
 
           <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
               <mat-label>Plataforma</mat-label>
               <mat-select [(ngModel)]="platform">
                 <mat-option [value]="null">Todas</mat-option>
@@ -51,7 +55,7 @@
             </mat-form-field>
           </div>
           <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
+            <mat-form-field appearance="outline" class="w-100" subscriptSizing="dynamic">
               <mat-label>Resultado</mat-label>
               <mat-select [(ngModel)]="outcome">
                 <mat-option [value]="null">Todos</mat-option>
@@ -140,6 +144,9 @@
           [pageSizeOptions]="pageSizeOptions"
           (page)="onPageChange($event)">
         </mat-paginator>
+      </div>
+    </div>
+
       </div>
     </div>
   </div>
