@@ -183,6 +183,30 @@
       "submenu": []
     },
     {
+      "path": "/admin/novedades",
+      "title": "Registro de Novedades",
+      "iconType": "material-icons-outlined",
+      "icon": "report_problem",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/novedades/reporte",
+      "title": "Reporte de Novedades",
+      "iconType": "material-icons-outlined",
+      "icon": "summarize",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
       "path": "",
       "title": "Matrículas",
       "iconType": "material-icons-outlined",
