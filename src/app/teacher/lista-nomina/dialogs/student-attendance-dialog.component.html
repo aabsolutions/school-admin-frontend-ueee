@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Asistencia — {{ data.studentName }}</h2>
+
+<mat-dialog-content>
+  <div class="attendance-summary-grid">
+    <div class="attendance-stat">
+      <mat-icon class="col-green">check_circle</mat-icon>
+      <span class="value">{{ data.present }}</span>
+      <span class="label">Asistidos</span>
+    </div>
+    <div class="attendance-stat">
+      <mat-icon class="col-red">cancel</mat-icon>
+      <span class="value">{{ data.absent }}</span>
+      <span class="label">No Asistidos</span>
+    </div>
+    <div class="attendance-stat">
+      <mat-icon class="col-orange">schedule</mat-icon>
+      <span class="value">{{ data.late }}</span>
+      <span class="label">Tardanza</span>
+    </div>
+    <div class="attendance-stat">
+      <mat-icon class="col-blue">event_available</mat-icon>
+      <span class="value">{{ data.excused }}</span>
+      <span class="label">Justificado</span>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

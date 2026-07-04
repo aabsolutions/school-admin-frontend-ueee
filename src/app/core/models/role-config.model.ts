@@ -5,6 +5,7 @@ export interface RoleConfig {
   description: string;
   isSystem: boolean;
   sidebarPermissions: string[];
+  permissionsConfigured: boolean;
   priority: number;
   createdAt: string;
   updatedAt: string;

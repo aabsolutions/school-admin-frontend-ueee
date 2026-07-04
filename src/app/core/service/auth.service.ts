@@ -63,6 +63,13 @@ export class AuthService {
           (response.user as any)['sidebarPermissions'] ?? [];
         this.store.set('sidebarPermissions', sidebarPermissions);
 
+        // Whether a SuperAdmin has explicitly saved a permission selection for this
+        // role (distinct from sidebarPermissions being empty, which is ambiguous:
+        // "never configured" vs "configured to show nothing")
+        const permissionsConfigured: boolean =
+          (response.user as any)['permissionsConfigured'] ?? false;
+        this.store.set('permissionsConfigured', permissionsConfigured);
+
         // Store role names in a new array
         const roleNames = this.tokenService.roleArray.map(
           (role: { name: string }) => role.name

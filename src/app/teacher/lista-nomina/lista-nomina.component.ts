@@ -12,18 +12,44 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
 import { TableExportUtil } from '@shared';
 import { environment } from '@environments/environment';
+import { StudentAttendanceDialogComponent } from './dialogs/student-attendance-dialog.component';
 
 interface StudentRow {
+  _id: string;
   dni: string;
   name: string;
-  email: string;
-  gender: string;
   birthdate: string | null;
+  edad: number | null;
   mobile: string;
+  address: string;
+  parentGuardianName: string;
+  parentGuardianMobile: string;
+  fatherName: string;
+  fatherMobile: string;
+  motherName: string;
+  motherMobile: string;
+  present: number;
+  absent: number;
+  late: number;
+  excused: number;
+}
+
+function calcularEdad(birthdate: string | null): number | null {
+  if (!birthdate) return null;
+  const nacimiento = new Date(birthdate);
+  if (isNaN(nacimiento.getTime())) return null;
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const aunNoCumple =
+    hoy.getMonth() < nacimiento.getMonth() ||
+    (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate());
+  if (aunNoCumple) edad--;
+  return edad;
 }
 
 @Component({
@@ -45,12 +71,18 @@ export class ListaNominaTeacherComponent implements OnInit {
   cursoLabel = '';
 
   columnDefinitions = [
-    { def: 'dni',       label: 'Cédula',              type: 'text',   visible: true  },
-    { def: 'name',      label: 'Apellidos y Nombres', type: 'text',   visible: true  },
-    { def: 'email',     label: 'Email',               type: 'text',   visible: false },
-    { def: 'gender',    label: 'Género',              type: 'gender', visible: true  },
-    { def: 'birthdate', label: 'Fecha de Nac.',       type: 'date',   visible: true  },
-    { def: 'mobile',    label: 'Contacto',            type: 'text',   visible: true  },
+    { def: 'dni',                   label: 'Cédula',                       type: 'text',   visible: true  },
+    { def: 'name',                  label: 'Apellidos y Nombres',          type: 'text',   visible: true  },
+    { def: 'present',               label: 'Días Asistidos',               type: 'number', visible: true  },
+    { def: 'edad',                  label: 'Edad',                         type: 'number', visible: true  },
+    { def: 'parentGuardianName',    label: 'Representante Legal',          type: 'text',   visible: true  },
+    { def: 'parentGuardianMobile',  label: 'Contacto Representante Legal', type: 'text',   visible: true  },
+    { def: 'mobile',                label: 'Contacto del Estudiante',      type: 'text',   visible: false },
+    { def: 'address',               label: 'Dirección',                   type: 'text',   visible: false },
+    { def: 'fatherName',            label: 'Nombre del Padre',             type: 'text',   visible: false },
+    { def: 'fatherMobile',          label: 'Contacto del Padre',           type: 'text',   visible: false },
+    { def: 'motherName',            label: 'Nombre de la Madre',           type: 'text',   visible: false },
+    { def: 'motherMobile',          label: 'Contacto de la Madre',         type: 'text',   visible: false },
   ];
 
   dataSource = new MatTableDataSource<StudentRow>([]);
@@ -58,7 +90,7 @@ export class ListaNominaTeacherComponent implements OnInit {
   @ViewChild(MatSort)      set matSort(s: MatSort)      { this.dataSource.sort = s; }
   @ViewChild(MatPaginator) set matPaginator(p: MatPaginator) { this.dataSource.paginator = p; }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.http.get<any>(`${environment.apiUrl}/curso-lectivo/mi-tutor-alumnos`).subscribe({
@@ -81,9 +113,13 @@ export class ListaNominaTeacherComponent implements OnInit {
         const year         = cl.academicYear ? ` · ${cl.academicYear}` : '';
         this.cursoLabel = `${nivel}${especialidad}${paralelo}${jornada}${year}`;
 
-        this.dataSource.data = (data.estudiantes ?? []).map((s: StudentRow) => ({ ...s }));
+        this.dataSource.data = (data.estudiantes ?? []).map((s: any) => ({
+          ...s,
+          edad: calcularEdad(s.birthdate),
+        }));
         this.dataSource.filterPredicate = (row: StudentRow, filter: string) =>
-          Object.values(row).some(v => v != null && v.toString().toLowerCase().includes(filter));
+          Object.values(row).some(v =>
+            v != null && typeof v !== 'object' && v.toString().toLowerCase().includes(filter));
 
         this.loading = false;
       },
@@ -92,7 +128,20 @@ export class ListaNominaTeacherComponent implements OnInit {
   }
 
   getDisplayedColumns(): string[] {
-    return this.columnDefinitions.filter(c => c.visible).map(c => c.def);
+    return [...this.columnDefinitions.filter(c => c.visible).map(c => c.def), 'detalle'];
+  }
+
+  verDetalleAsistencia(row: StudentRow) {
+    this.dialog.open(StudentAttendanceDialogComponent, {
+      width: '420px',
+      data: {
+        studentName: row.name,
+        present: row.present,
+        absent: row.absent,
+        late: row.late,
+        excused: row.excused,
+      },
+    });
   }
 
   applyFilter(event: Event) {

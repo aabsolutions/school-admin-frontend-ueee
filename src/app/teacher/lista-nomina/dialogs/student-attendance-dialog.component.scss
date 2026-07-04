@@ -1,0 +1,24 @@
+.attendance-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.attendance-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+
+  mat-icon { font-size: 28px; height: 28px; width: 28px; margin-bottom: 4px; }
+  .value { font-size: 24px; font-weight: 600; }
+  .label { font-size: 13px; color: rgba(0, 0, 0, 0.6); }
+
+  .col-green  { color: #28a745; }
+  .col-red    { color: #dc3545; }
+  .col-orange { color: #fd7e14; }
+  .col-blue   { color: #007bff; }
+}

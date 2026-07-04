@@ -41,6 +41,17 @@ interface FlatPermNode {
 
 const ADMIN_ROLES = ['ADMIN', 'SUPERADMIN'];
 
+/** Roles cuyo árbol de permisos incluye rutas restringidas a ADMIN/SUPERADMIN
+ *  (roles custom se gestionan igual que ADMIN). Los roles fijos (TEACHER,
+ *  STUDENT, PARENT) en cambio solo ven su propio subárbol de rutas. */
+function targetRolesFor(roleName: string): string[] {
+  if (roleName === 'ADMIN' || roleName === 'SUPERADMIN') return ADMIN_ROLES;
+  const fixed = ['TEACHER', 'STUDENT', 'PARENT'];
+  if (fixed.includes(roleName)) return [roleName];
+  // Roles custom: mismo árbol que ADMIN
+  return ADMIN_ROLES;
+}
+
 @Component({
   selector: 'app-role-permissions',
   standalone: true,
@@ -96,16 +107,17 @@ export class RolePermissionsComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+    const targetRoles = targetRolesFor(this.data.role.name);
     this.http
       .get<{ routes: RouteInfo[] }>('assets/data/routes.json')
       .subscribe({
         next: (res) => {
-          const adminRoutes = res.routes.filter(
+          const roleRoutes = res.routes.filter(
             (r) =>
               r.groupTitle ||
-              r.role.some((role) => ADMIN_ROLES.includes(role))
+              r.role.some((role) => targetRoles.includes(role))
           );
-          this.dataSource.data = this.buildTree(adminRoutes);
+          this.dataSource.data = this.buildTree(roleRoutes, targetRoles);
           this.treeControl.expandAll();
           // Pre-select existing permissions
           this.data.role.sidebarPermissions.forEach((p) =>
@@ -116,21 +128,21 @@ export class RolePermissionsComponent implements OnInit {
       });
   }
 
-  private buildTree(routes: RouteInfo[]): PermNode[] {
+  private buildTree(routes: RouteInfo[], targetRoles: string[]): PermNode[] {
     return routes
       .filter((r) => {
         if (r.groupTitle) return false;
-        // Excluir ítems con roles específicos que no incluyen ADMIN/SUPERADMIN
-        // (ej: role: ["TEACHER"]) — son accesibles solo por ese rol, no por roles custom
+        // Excluir ítems con roles específicos que no incluyen ninguno de targetRoles
+        // (ej: role: ["TEACHER"] al configurar STUDENT)
         const hasRole = r.role && r.role[0] !== '';
-        if (hasRole && !r.role.some((role) => ADMIN_ROLES.includes(role))) return false;
+        if (hasRole && !r.role.some((role) => targetRoles.includes(role))) return false;
         return true;
       })
       .map((r) => ({
         title: r.title,
         path: r.path,
         groupTitle: r.groupTitle,
-        children: this.buildTree(r.submenu ?? []),
+        children: this.buildTree(r.submenu ?? [], targetRoles),
       }))
       .filter((n) => n.children.length > 0 || !!n.path); // descartar contenedores vacíos
   }

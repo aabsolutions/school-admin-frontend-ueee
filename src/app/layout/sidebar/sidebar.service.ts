@@ -7,6 +7,14 @@ import { Role } from '@core/models/role';
 
 const FIXED_ROLES = new Set<string>([Role.Teacher, Role.Student, Role.Parent]);
 
+// Landing route after login for each fixed role — always shown regardless of
+// sidebarPermissions configuration (mirrors the same exemption in auth.guard.ts).
+const BASE_DASHBOARD: Record<string, string> = {
+  [Role.Teacher]: '/teacher/dashboard',
+  [Role.Student]: '/student/dashboard',
+  [Role.Parent]: '/parent/dashboard',
+};
+
 @Injectable({ providedIn: 'root' })
 export class SidebarService {
   constructor(
@@ -27,9 +35,10 @@ export class SidebarService {
     const currentUser = this.store.get('currentUser');
     const userRole: string = currentUser?.roles?.[0]?.name ?? '';
     const permissions: string[] = this.store.get('sidebarPermissions') ?? [];
+    const permissionsConfigured: boolean = this.store.get('permissionsConfigured') ?? false;
 
     const filtered = routes
-      .map((item) => this.filterItem(item, userRole, permissions))
+      .map((item) => this.filterItem(item, userRole, permissions, permissionsConfigured))
       .filter((item): item is RouteInfo => item !== null);
 
     return this.removeOrphanedGroupTitles(filtered);
@@ -47,26 +56,36 @@ export class SidebarService {
   private filterItem(
     item: RouteInfo,
     userRole: string,
-    permissions: string[]
+    permissions: string[],
+    permissionsConfigured: boolean
   ): RouteInfo | null {
     // SuperAdmin: sees everything
     if (userRole === Role.SuperAdmin) {
       return item;
     }
 
-    // Teacher / Student / Parent: use static role[] array check (existing behavior)
+    // Teacher / Student / Parent: static role[] array check, PLUS sidebarPermissions
+    // once a SuperAdmin has explicitly saved a selection for this role.
+    // permissionsConfigured=false → not configured yet → legacy unrestricted-by-role behavior.
     if (FIXED_ROLES.has(userRole)) {
-      if (!item.role || item.role[0] === '') {
-        // Child item — inherit visibility
-        const filteredSubmenu = item.submenu
-          .map((sub) => this.filterItem(sub, userRole, permissions))
-          .filter((sub): sub is RouteInfo => sub !== null);
+      const hasRoleRestriction = !!item.role && item.role[0] !== '';
+      if (hasRoleRestriction && !item.role.includes(userRole)) return null;
+
+      const filteredSubmenu = item.submenu
+        .map((sub) => this.filterItem(sub, userRole, permissions, permissionsConfigured))
+        .filter((sub): sub is RouteInfo => sub !== null);
+
+      // Container (no own path, has children): visible only if a child survived
+      if (!item.path && item.submenu.length > 0) {
+        if (filteredSubmenu.length === 0) return null;
         return { ...item, submenu: filteredSubmenu };
       }
-      if (!item.role.includes(userRole)) return null;
-      const filteredSubmenu = item.submenu
-        .map((sub) => this.filterItem(sub, userRole, permissions))
-        .filter((sub): sub is RouteInfo => sub !== null);
+
+      // Leaf item: enforce configured permissions, if any
+      if (item.path && permissionsConfigured && !permissions.includes(item.path)) {
+        return null;
+      }
+
       return { ...item, submenu: filteredSubmenu };
     }
 
@@ -80,7 +99,7 @@ export class SidebarService {
     // Submenu container (path: "", has children): show only if at least one child is visible
     if (!item.path && item.submenu.length > 0) {
       const filteredSubmenu = item.submenu
-        .map((sub) => this.filterItem(sub, userRole, permissions))
+        .map((sub) => this.filterItem(sub, userRole, permissions, permissionsConfigured))
         .filter((sub): sub is RouteInfo => sub !== null);
       if (filteredSubmenu.length === 0) return null;
       return { ...item, submenu: filteredSubmenu };

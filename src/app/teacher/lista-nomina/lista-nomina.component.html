@@ -84,12 +84,27 @@
                               @case ('Female') { <span class="badge badge-solid-purple">Femenino</span> }
                               @default         { <span class="badge badge-solid-orange">{{ row.gender }}</span> }
                             }
+                          } @else if (column.type === 'number') {
+                            <span class="truncate-text">{{ row[column.def] ?? '—' }}</span>
                           } @else {
                             <span class="truncate-text">{{ row[column.def] || '—' }}</span>
                           }
                         </mat-cell>
                       </ng-container>
                     }
+
+                    <ng-container matColumnDef="detalle">
+                      <mat-header-cell *matHeaderCellDef>
+                        <span class="truncate-text">Detalle</span>
+                      </mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <span class="mobile-label">Detalle:</span>
+                        <button mat-icon-button matTooltip="Ver detalle de asistencia"
+                          (click)="verDetalleAsistencia(row)">
+                          <mat-icon class="material-icons-outlined">visibility</mat-icon>
+                        </button>
+                      </mat-cell>
+                    </ng-container>
 
                     <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
                     <mat-row *matRowDef="let row; columns: getDisplayedColumns();"></mat-row>
