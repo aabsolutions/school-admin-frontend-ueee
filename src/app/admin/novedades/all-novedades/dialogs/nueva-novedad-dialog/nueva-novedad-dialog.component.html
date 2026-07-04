@@ -1,0 +1,220 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">Nueva Novedad</div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="modal-close-button" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="form" (ngSubmit)="submit()">
+
+      <!-- Tipo + Fecha -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Tipo de novedad</mat-label>
+            <mat-select formControlName="tipo" required>
+              @for (t of tipoOptions; track t.value) {
+                <mat-option [value]="t.value">{{ t.label }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get('tipo')?.hasError('required') && form.get('tipo')?.touched) {
+              <mat-error>El tipo es requerido</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fecha" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (form.get('fecha')?.hasError('required') && form.get('fecha')?.touched) {
+              <mat-error>La fecha es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Curso Lectivo (solo Problema de Aula) -->
+      @if (requiresCursoLectivo) {
+        <div class="row">
+          <div class="col-12 mb-2">
+            <mat-form-field class="example-full-width mb-3" appearance="outline">
+              <mat-label>Curso Lectivo</mat-label>
+              <mat-select formControlName="cursoLectivoId" required>
+                @for (cl of cursosLectivos; track cl.id) {
+                  <mat-option [value]="cl.id">{{ cl.label }}</mat-option>
+                }
+              </mat-select>
+              @if (!form.get('cursoLectivoId')?.value) {
+                <mat-error>El curso lectivo es requerido</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </div>
+      }
+
+      <!-- Selector de estudiantes (Fuga / Robo / Indisciplina) -->
+      @if (requiresStudents) {
+        <div class="row mb-3">
+          <div class="col-12">
+            <label class="upload-label mb-2 d-block">
+              <mat-icon style="vertical-align:middle;margin-right:6px">groups</mat-icon>
+              <strong>Estudiantes involucrados</strong>
+              <span class="text-muted ms-1" style="font-size:12px">(al menos uno)</span>
+            </label>
+
+            @if (selectedStudents.length > 0) {
+              <mat-chip-set class="mb-2">
+                @for (s of selectedStudents; track s._id) {
+                  <mat-chip [removable]="true" (removed)="removeSelected(s._id)">
+                    {{ s.name }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                }
+              </mat-chip-set>
+            }
+
+            <mat-form-field appearance="outline" class="example-full-width mb-2">
+              <mat-label>Buscar estudiante (nombre o DNI)</mat-label>
+              <mat-icon matPrefix class="material-icons-outlined" style="margin-right:6px">search</mat-icon>
+              <input matInput [value]="studentSearchTerm" (input)="onStudentSearch($any($event.target).value)"
+                placeholder="Escriba al menos 2 caracteres...">
+            </mat-form-field>
+
+            @if (searchingStudents) {
+              <mat-progress-bar mode="indeterminate" class="mb-2"></mat-progress-bar>
+            }
+
+            @if (studentSearchResults.length > 0) {
+              <div style="max-height:220px;overflow-y:auto;border:1px solid #e0e0e0;border-radius:4px">
+                <table mat-table [dataSource]="studentSearchResults" style="width:100%">
+
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef style="width:48px">
+                      <mat-checkbox
+                        [checked]="isAllVisibleSelected()"
+                        [indeterminate]="isSomeVisibleSelected()"
+                        (change)="toggleAllVisible()"
+                        color="primary">
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox
+                        [checked]="selection.isSelected(row._id)"
+                        (change)="toggleStudent(row)"
+                        color="primary">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                    <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dni">
+                    <th mat-header-cell *matHeaderCellDef>DNI</th>
+                    <td mat-cell *matCellDef="let row">{{ row.dni || '—' }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="mobile">
+                    <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+                    <td mat-cell *matCellDef="let row">{{ row.mobile || '—' }}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedStudentColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedStudentColumns;"></tr>
+                </table>
+              </div>
+            } @else if (studentSearchTerm.trim().length >= 2 && !searchingStudents) {
+              <p class="text-muted mb-0" style="font-size:12px">Sin resultados para "{{ studentSearchTerm }}".</p>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Descripción -->
+      <div class="row">
+        <div class="col-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="descripcion" rows="4"
+              placeholder="Describa detalladamente lo sucedido..." required></textarea>
+            @if (form.get('descripcion')?.hasError('required') && form.get('descripcion')?.touched) {
+              <mat-error>La descripción es requerida</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Registrado por -->
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Registrado por</mat-label>
+            <input matInput formControlName="creadoPor" readonly>
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Evidencias -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <label class="upload-label mb-2 d-block">
+            <mat-icon style="vertical-align:middle;margin-right:6px">attach_file</mat-icon>
+            <strong>Evidencias</strong>
+            <span class="text-muted ms-1" style="font-size:12px">(imágenes, PDF, Word — máx. 10 MB c/u)</span>
+          </label>
+          <input type="file" #fileInput multiple accept="image/*,.pdf,.doc,.docx"
+            (change)="onFilesSelected($event)" style="display:none">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon> Adjuntar archivos
+          </button>
+
+          @if (selectedFiles.length > 0) {
+            <div class="file-list mt-2">
+              @for (file of selectedFiles; track file.name; let i = $index) {
+                <div class="file-chip d-flex align-items-center gap-1 mb-1">
+                  <mat-icon style="font-size:16px;height:16px;width:16px">
+                    {{ file.type.startsWith('image') ? 'image' : 'description' }}
+                  </mat-icon>
+                  <span class="text-truncate" style="max-width:200px;font-size:13px">{{ file.name }}</span>
+                  <span class="text-muted" style="font-size:11px">({{ (file.size / 1024).toFixed(0) }} KB)</span>
+                  <button mat-icon-button type="button" (click)="removeFile(i)"
+                    style="width:24px;height:24px;line-height:24px">
+                    <mat-icon style="font-size:14px;height:14px;width:14px">close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      @if (saving) {
+        <mat-progress-bar mode="indeterminate" class="mb-3"></mat-progress-bar>
+      }
+
+      <div class="row">
+        <div class="col-12">
+          <div class="example-button-row">
+            <button mat-flat-button class="formSubmitBtn"
+              [disabled]="!isValid || saving" type="submit">
+              Guardar Novedad
+            </button>
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" type="button" tabindex="-1">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

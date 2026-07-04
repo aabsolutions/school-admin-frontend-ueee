@@ -1,0 +1,84 @@
+<div class="detailContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <div class="modalTitle">Detalle de Novedad</div>
+      <div class="modalSubTitle">
+        <span class="badge" [ngClass]="getTipoConfig(novedad.tipo).color">
+          <mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle;margin-right:4px">
+            {{ getTipoConfig(novedad.tipo).icon }}
+          </mat-icon>
+          {{ getTipoConfig(novedad.tipo).label }}
+        </span>
+      </div>
+    </div>
+    <button mat-icon-button (click)="close()" class="modal-close-button" type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div mat-dialog-content class="p-4">
+
+    @if (novedad.tipo === 'ProblemaAula') {
+      <div class="mb-3">
+        <label class="detail-label">Curso Lectivo</label>
+        <div>{{ cursoDisplay(novedad.cursoLectivoId) }}</div>
+      </div>
+    } @else {
+      <div class="mb-3">
+        <label class="detail-label">Estudiantes involucrados</label>
+        @if (novedad.studentIds.length) {
+          <mat-chip-set>
+            @for (s of novedad.studentIds; track s._id) {
+              <mat-chip>{{ s.name }} @if (s.dni) { <span class="text-muted ms-1">({{ s.dni }})</span> }</mat-chip>
+            }
+          </mat-chip-set>
+        } @else {
+          <div class="text-muted">—</div>
+        }
+      </div>
+    }
+
+    <mat-divider class="mb-3"></mat-divider>
+
+    <div class="row mb-3">
+      <div class="col-6">
+        <label class="detail-label">Fecha</label>
+        <div>{{ novedad.fecha | date:'dd/MM/yyyy' }}</div>
+      </div>
+      <div class="col-6">
+        <label class="detail-label">Registrado por</label>
+        <div>{{ novedad.creadoPor }}</div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="detail-label">Descripción</label>
+      <div class="description-box">{{ novedad.descripcion }}</div>
+    </div>
+
+    @if (novedad.evidencias.length) {
+      <div class="mb-2">
+        <label class="detail-label">Evidencias</label>
+        <div class="d-flex flex-wrap gap-2 mt-1">
+          @for (url of novedad.evidencias; track url) {
+            <a [href]="getFileUrl(url)" target="_blank" rel="noopener" class="evidencia-chip">
+              @if (isImage(url)) {
+                <img [src]="getFileUrl(url)" class="evidencia-thumb">
+              } @else {
+                <mat-icon>description</mat-icon>
+              }
+              <span class="text-truncate" style="max-width:160px">{{ getFileName(url) }}</span>
+            </a>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="text-muted mt-3" style="font-size:12px">
+      Creado: {{ novedad.createdAt | date:'dd/MM/yyyy HH:mm' }}
+      @if (novedad.updatedAt && novedad.updatedAt !== novedad.createdAt) {
+        · Actualizado: {{ novedad.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+      }
+    </div>
+  </div>
+</div>

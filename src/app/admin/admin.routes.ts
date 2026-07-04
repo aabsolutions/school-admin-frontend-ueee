@@ -74,6 +74,11 @@ export const ADMIN_ROUTE: Route[] = [
       import('./dece/dece.routes').then((m) => m.DECE_ROUTE),
   },
   {
+    path: 'novedades',
+    loadChildren: () =>
+      import('./novedades/novedades.routes').then((m) => m.NOVEDADES_ROUTE),
+  },
+  {
     path: 'gestion-documental',
     loadChildren: () =>
       import('./gestion-documental/gestion-documental.routes').then(

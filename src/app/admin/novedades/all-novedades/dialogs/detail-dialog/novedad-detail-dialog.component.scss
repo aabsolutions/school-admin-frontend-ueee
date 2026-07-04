@@ -1,0 +1,34 @@
+.detail-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.description-box {
+  white-space: pre-wrap;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.evidencia-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 13px;
+}
+
+.evidencia-thumb {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 4px;
+}

@@ -1,0 +1,173 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="mb-3">Reporte de Novedades</h2>
+
+            <form [formGroup]="filterForm" (ngSubmit)="buscar()">
+              <div class="row">
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Tipo</mat-label>
+                    <mat-select formControlName="tipo">
+                      <mat-option value="">Todos</mat-option>
+                      @for (t of tipoOptions; track t.value) {
+                        <mat-option [value]="t.value">{{ t.label }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Desde</mat-label>
+                    <input matInput [matDatepicker]="pickerDesde" formControlName="fechaDesde">
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerDesde></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Hasta</mat-label>
+                    <input matInput [matDatepicker]="pickerHasta" formControlName="fechaHasta">
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerHasta></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Curso Lectivo</mat-label>
+                    <mat-select formControlName="cursoLectivoId">
+                      <mat-option value="">Todos</mat-option>
+                      @for (cl of cursosLectivos; track cl.id) {
+                        <mat-option [value]="cl.id">{{ cl.label }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-xl-6 col-lg-8 col-md-12 col-sm-12 mb-2">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Estudiante (nombre o DNI)</mat-label>
+                    <mat-icon matPrefix class="material-icons-outlined" style="margin-right:6px">search</mat-icon>
+                    <input matInput [formControl]="studentSearch" [matAutocomplete]="autoStudent"
+                      placeholder="Escriba nombre o DNI...">
+                    @if (selectedStudentId) {
+                      <button matSuffix mat-icon-button type="button" (click)="clearStudent()" tabindex="-1">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    }
+                    <mat-autocomplete #autoStudent="matAutocomplete" (optionSelected)="selectStudent($event.option.value)">
+                      @for (s of studentOptions; track s.id) {
+                        <mat-option [value]="s">{{ s.label }}</mat-option>
+                      }
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-6 col-lg-4 col-md-12 col-sm-12 mb-2 d-flex align-items-start gap-2" style="padding-top:8px">
+                  <button mat-flat-button color="primary" type="submit" [disabled]="loading">
+                    <mat-icon>search</mat-icon> Buscar
+                  </button>
+                  <button mat-stroked-button type="button" (click)="limpiarFiltros()" [disabled]="loading">
+                    <mat-icon>filter_alt_off</mat-icon> Limpiar
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            @if (loading) {
+              <div class="d-flex align-items-center gap-2 my-3">
+                <mat-spinner diameter="24"></mat-spinner>
+                <span>Generando reporte...</span>
+              </div>
+            }
+
+            @if (!loading && searched) {
+              <div class="mb-2 text-muted" style="font-size:13px">
+                {{ results.length }} novedad(es) encontrada(s)
+              </div>
+
+              <div class="overflow-auto">
+                <div class="responsive_table">
+                  <table mat-table [dataSource]="results" class="mat-cell advance-table">
+
+                    <ng-container matColumnDef="tipo">
+                      <mat-header-cell *matHeaderCellDef>Tipo</mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <span class="badge" [ngClass]="getTipoConfig(row.tipo).color">
+                          {{ getTipoConfig(row.tipo).label }}
+                        </span>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="involucrados">
+                      <mat-header-cell *matHeaderCellDef>Estudiantes / Curso</mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <span class="truncate-text">{{ involucradosLabel(row) }}</span>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="fecha">
+                      <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{ row.fecha | date:'dd/MM/yyyy' }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="descripcion">
+                      <mat-header-cell *matHeaderCellDef>Descripción</mat-header-cell>
+                      <mat-cell *matCellDef="let row">
+                        <span class="truncate-text" style="max-width:260px" [matTooltip]="row.descripcion">
+                          {{ row.descripcion }}
+                        </span>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="creadoPor">
+                      <mat-header-cell *matHeaderCellDef>Registrado por</mat-header-cell>
+                      <mat-cell *matCellDef="let row">{{ row.creadoPor }}</mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                      <mat-header-cell *matHeaderCellDef class="pr-0">Acciones</mat-header-cell>
+                      <mat-cell *matCellDef="let row" class="pr-0">
+                        <button mat-icon-button color="primary" matTooltip="Ver novedad" (click)="verDetalle(row)">
+                          <mat-icon>visibility</mat-icon>
+                        </button>
+                      </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                    <tr class="mat-row" *matNoDataRow>
+                      <td class="mat-cell" [attr.colspan]="displayedColumns.length"
+                        style="text-align:center;padding:32px">
+                        <div>
+                          <mat-icon style="font-size:48px;height:48px;width:48px;color:#ccc">summarize</mat-icon>
+                          <p class="mt-2 text-muted">No se encontraron novedades para los filtros seleccionados.</p>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
