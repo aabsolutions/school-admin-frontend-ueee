@@ -6,6 +6,7 @@ import { environment } from '@environments/environment';
 import {
   AttendanceAssignment,
   AttendanceConsolidated,
+  AttendanceConsolidatedBulkItem,
   AttendanceRecord,
   ChildAttendanceSummary,
   ReporteMasivoItem,
@@ -116,6 +117,19 @@ export class AsistenciasService {
     const params = this.buildParams({ cursoLectivoId, dateFrom, dateTo });
     return this.http
       .get<ApiOne<AttendanceConsolidated>>(`${this.BASE}/records/consolidated`, { params })
+      .pipe(
+        map((r) => r.data),
+        catchError(this.handleError),
+      );
+  }
+
+  getConsolidatedBulk(
+    dateFrom?: string,
+    dateTo?: string,
+  ): Observable<AttendanceConsolidatedBulkItem[]> {
+    const params = this.buildParams({ dateFrom, dateTo });
+    return this.http
+      .get<ApiOne<AttendanceConsolidatedBulkItem[]>>(`${this.BASE}/records/consolidated-bulk`, { params })
       .pipe(
         map((r) => r.data),
         catchError(this.handleError),

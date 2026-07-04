@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,9 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { TableExportUtil } from '@shared';
 import { AsistenciasService } from '@shared/services/asistencias.service';
+import { StudentAttendanceSummary } from '@shared/services/asistencias.model';
+import { DetalleEstudiantesDialogComponent } from './dialogs/detalle-estudiantes/detalle-estudiantes-dialog.component';
 
 interface CursoResumen {
   cursoLectivoId: string;
@@ -23,6 +24,7 @@ interface CursoResumen {
   attendanceRate: number;
   totalPresences: number;
   totalAbsences: number;
+  students: StudentAttendanceSummary[];
 }
 
 @Component({
@@ -39,6 +41,7 @@ interface CursoResumen {
     MatCardModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+    MatDialogModule,
     BreadcrumbComponent,
   ],
   templateUrl: './attendance-resumen-cursos.component.html',
@@ -59,7 +62,11 @@ export class AttendanceResumenCursosComponent implements OnInit {
   grandTotalAbsences = 0;
   grandTotalStudents = 0;
 
-  constructor(private svc: AsistenciasService, private snack: MatSnackBar) {}
+  constructor(
+    private svc: AsistenciasService,
+    private snack: MatSnackBar,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit() {
     this.svc.getCursoLectivos().subscribe((cl) => (this.cursoLectivos = cl));
@@ -74,26 +81,23 @@ export class AttendanceResumenCursosComponent implements OnInit {
     this.generated = false;
     this.dataSource.data = [];
 
-    const requests = this.cursoLectivos.map((cl) =>
-      this.svc
-        .getConsolidated(cl._id, this.dateFrom || undefined, this.dateTo || undefined)
-        .pipe(catchError(() => of(null))),
-    );
+    const cursoLectivoById = new Map(this.cursoLectivos.map((cl) => [cl._id, cl]));
 
-    forkJoin(requests).subscribe({
+    this.svc.getConsolidatedBulk(this.dateFrom || undefined, this.dateTo || undefined).subscribe({
       next: (results) => {
         const rows: CursoResumen[] = results
-          .map((r, i) => {
-            if (!r || r.totalDays === 0) return null;
-            const cl = this.cursoLectivos[i];
+          .map((r) => {
+            const cl = cursoLectivoById.get(r.cursoLectivoId);
+            if (!cl || r.totalDays === 0) return null;
             return {
-              cursoLectivoId: cl._id,
+              cursoLectivoId: r.cursoLectivoId,
               label: this.cursoLabel(cl),
               totalStudents: r.totalStudents,
               totalDays: r.totalDays,
               attendanceRate: r.attendanceRate,
               totalPresences: r.totalPresences,
               totalAbsences: r.totalAbsences,
+              students: r.students ?? [],
             } as CursoResumen;
           })
           .filter((r): r is CursoResumen => r !== null)
@@ -112,6 +116,13 @@ export class AttendanceResumenCursosComponent implements OnInit {
         this.snack.open('Error al generar el resumen', 'Cerrar', { duration: 4000 });
         this.isLoading = false;
       },
+    });
+  }
+
+  openDetail(row: CursoResumen) {
+    this.dialog.open(DetalleEstudiantesDialogComponent, {
+      width: '600px',
+      data: { cursoLabel: row.label, students: row.students },
     });
   }
 

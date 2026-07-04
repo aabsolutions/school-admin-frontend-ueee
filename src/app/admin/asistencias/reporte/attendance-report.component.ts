@@ -64,13 +64,34 @@ export class AttendanceReportComponent implements OnInit {
   constructor(private svc: AsistenciasService, private snack: MatSnackBar) {}
 
   ngOnInit() {
-    this.svc.getCursoLectivos().subscribe((cl) => (this.cursoLectivos = cl));
+    this.svc.getCursoLectivos().subscribe((cl) => (this.cursoLectivos = this.sortCursoLectivos(cl)));
+  }
+
+  private sortCursoLectivos(list: any[]): any[] {
+    return [...list].sort((a, b) => {
+      const jornadaA = a.cursoId?.jornada ?? '';
+      const jornadaB = b.cursoId?.jornada ?? '';
+      const byJornada = jornadaA.localeCompare(jornadaB, 'es');
+      if (byJornada !== 0) return byJornada;
+      return this.cursoLabel(a).localeCompare(this.cursoLabel(b), 'es');
+    });
+  }
+
+  private abbreviateEspecialidad(value: string): string {
+    const stopwords = new Set(['de', 'del', 'la', 'los', 'las', 'el', 'en', 'y']);
+    return value
+      .split(/\s+/)
+      .filter((w) => w.length > 0 && !stopwords.has(w.toLowerCase()))
+      .map((w) => (w.length <= 4 ? w : `${w.slice(0, 4)}.`))
+      .join(' ');
   }
 
   cursoLabel(cl: any): string {
     const c = cl.cursoId;
     if (!c) return cl.academicYear;
-    return `${c.nivel} ${c.paralelo} — ${cl.academicYear}`;
+    const especialidad = c.especialidad ? this.abbreviateEspecialidad(c.especialidad) : '';
+    const parts = [c.nivel, especialidad, c.paralelo, c.jornada].filter(Boolean);
+    return `${parts.join(' ')} — ${cl.academicYear}`;
   }
 
   search() {

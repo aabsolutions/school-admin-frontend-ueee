@@ -74,8 +74,14 @@ export interface AttendanceConsolidated {
   totalStudents: number;
   totalPresences: number;
   totalAbsences: number;
+  totalLate: number;
+  totalExcused: number;
   attendanceRate: number;
   students: StudentAttendanceSummary[];
+}
+
+export interface AttendanceConsolidatedBulkItem extends AttendanceConsolidated {
+  cursoLectivoId: string;
 }
 
 export interface StudentHistoryEntry {
