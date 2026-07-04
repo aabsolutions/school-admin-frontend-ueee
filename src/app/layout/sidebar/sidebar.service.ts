@@ -81,8 +81,13 @@ export class SidebarService {
         return { ...item, submenu: filteredSubmenu };
       }
 
-      // Leaf item: enforce configured permissions, if any
-      if (item.path && permissionsConfigured && !permissions.includes(item.path)) {
+      // Leaf item: enforce configured permissions, if any (own dashboard always exempt)
+      if (
+        item.path &&
+        permissionsConfigured &&
+        item.path !== BASE_DASHBOARD[userRole] &&
+        !permissions.includes(item.path)
+      ) {
         return null;
       }
 
