@@ -121,6 +121,11 @@ export const ADMIN_ROUTE: Route[] = [
       import('./roles/admin-roles.routes').then((m) => m.ROLES_ROUTE),
   },
   {
+    path: 'auditoria',
+    loadChildren: () =>
+      import('./auditoria/admin-auditoria.routes').then((m) => m.AUDITORIA_ROUTE),
+  },
+  {
     path: 'asistencias',
     loadChildren: () =>
       import('./asistencias/admin-asistencias.routes').then(

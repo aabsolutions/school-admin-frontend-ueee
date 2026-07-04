@@ -1,5 +1,5 @@
-import { AuthService } from '../service/auth.service';
 import { Injectable } from '@angular/core';
+import { AuthService } from '@core/service/auth.service';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -23,12 +23,13 @@ export class ErrorInterceptor implements HttpInterceptor {
         }
 
         const message =
-          err?.error?.message ||
-          err?.message ||
-          err?.statusText ||
-          'An unexpected error occurred';
+          err.status === 403
+            ? err?.error?.message || 'No tenés permisos para realizar esta acción'
+            : err?.error?.message || err?.message || err?.statusText || 'An unexpected error occurred';
 
-        return throwError(() => new Error(message));
+        // Preserve `.error`/`.status` so existing components reading err?.error?.message
+        // (the raw backend response shape) keep working — not just err.message.
+        return throwError(() => Object.assign(new Error(message), { error: err.error, status: err.status }));
       })
     );
   }

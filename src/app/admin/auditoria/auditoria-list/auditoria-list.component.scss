@@ -1,0 +1,26 @@
+.audit-row {
+  cursor: pointer;
+}
+
+.audit-row:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+mat-cell code.badge {
+  font-size: 11px;
+}
+
+.chip-success {
+  background-color: #2e7d32 !important;
+  color: #fff !important;
+}
+
+.chip-rejected {
+  background-color: #ed6c02 !important;
+  color: #fff !important;
+}
+
+.chip-error {
+  background-color: #d32f2f !important;
+  color: #fff !important;
+}

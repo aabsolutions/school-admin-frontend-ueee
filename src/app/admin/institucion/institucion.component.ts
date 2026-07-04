@@ -16,7 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
-import { InstitucionService } from './institucion.service';
+import { InstitucionService } from '@core';
 import { environment } from '@environments/environment';
 
 @Component({

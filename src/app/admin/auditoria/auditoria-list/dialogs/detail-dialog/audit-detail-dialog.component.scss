@@ -1,0 +1,37 @@
+.audit-detail-container {
+  padding: 8px 4px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+}
+
+.detail-body {
+  padding-top: 16px;
+}
+
+.field-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--mdc-theme-text-secondary-on-background, #6c757d);
+}
+
+.field-value {
+  margin: 2px 0 0;
+  word-break: break-word;
+}
+
+.changes-json {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 12px;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

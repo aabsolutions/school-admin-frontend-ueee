@@ -1,0 +1,86 @@
+<div class="audit-detail-container">
+  <div class="detail-header">
+    <h2 class="mb-0">Detalle de auditoría</h2>
+    <button mat-icon-button class="close-btn" matTooltip="Cerrar" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="detail-body">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <span class="field-label">Fecha</span>
+        <p class="field-value">{{ data.entry.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+      </div>
+      <div class="col-md-6">
+        <span class="field-label">Acción</span>
+        <p class="field-value"><code>{{ data.entry.action }}</code></p>
+      </div>
+
+      <div class="col-md-6">
+        <span class="field-label">Actor</span>
+        <p class="field-value">
+          {{ data.entry.actorUsername || '—' }}
+          <span *ngIf="data.entry.actorRole" class="text-muted d-block small">{{ data.entry.actorRole }}</span>
+        </p>
+      </div>
+      <div class="col-md-6">
+        <span class="field-label">Plataforma</span>
+        <p class="field-value">{{ data.entry.platform }}</p>
+      </div>
+
+      <div class="col-md-6">
+        <span class="field-label">Método / Ruta</span>
+        <p class="field-value">
+          <code *ngIf="data.entry.method">{{ data.entry.method }}</code> {{ data.entry.path || '—' }}
+        </p>
+      </div>
+      <div class="col-md-6">
+        <span class="field-label">Colección / ID objetivo</span>
+        <p class="field-value">{{ data.entry.targetCollection || '—' }} / {{ data.entry.targetId || '—' }}</p>
+      </div>
+
+      <div class="col-md-6">
+        <span class="field-label">Resultado</span>
+        <p class="field-value">
+          {{ data.entry.outcome }}
+          <span *ngIf="data.entry.statusCode" class="text-muted"> ({{ data.entry.statusCode }})</span>
+        </p>
+      </div>
+      <div class="col-md-6">
+        <span class="field-label">IP</span>
+        <p class="field-value">{{ data.entry.ip || '—' }}</p>
+      </div>
+
+      <div class="col-md-6" *ngIf="data.entry.errorMessage">
+        <span class="field-label">Mensaje de error</span>
+        <p class="field-value text-danger">{{ data.entry.errorMessage }}</p>
+      </div>
+      <div class="col-md-6" *ngIf="data.entry.requestId">
+        <span class="field-label">Request ID</span>
+        <p class="field-value">{{ data.entry.requestId }}</p>
+      </div>
+
+      <div class="col-md-6" *ngIf="data.entry.appVersion">
+        <span class="field-label">Versión de app</span>
+        <p class="field-value">{{ data.entry.appVersion }}</p>
+      </div>
+      <div class="col-md-6" *ngIf="data.entry.deviceInfo">
+        <span class="field-label">Dispositivo</span>
+        <p class="field-value">{{ data.entry.deviceInfo }}</p>
+      </div>
+
+      <div class="col-12" *ngIf="data.entry.userAgent">
+        <span class="field-label">User agent</span>
+        <p class="field-value small text-break">{{ data.entry.userAgent }}</p>
+      </div>
+
+      <div class="col-12" *ngIf="hasChanges">
+        <span class="field-label">Cambios</span>
+        <pre class="changes-json">{{ data.entry.changes | json }}</pre>
+      </div>
+    </div>
+  </div>
+</div>

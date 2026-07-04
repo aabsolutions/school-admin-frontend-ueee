@@ -710,6 +710,18 @@
       "role": ["SUPERADMIN"],
       "submenu": []
     },
+    {
+      "path": "/admin/auditoria",
+      "title": "Auditoría",
+      "iconType": "material-icons-outlined",
+      "icon": "history",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
 
     {
       "path": "",

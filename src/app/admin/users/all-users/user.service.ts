@@ -31,7 +31,6 @@ export class UserService {
   }
 
   addUser(user: AppUser & { password: string }): Observable<AppUser> {
-    console.log(user);
     return this.http.post<ApiOne<any>>(this.API_URL, user).pipe(
       map((r) => this.normalize(r.data)),
       catchError(this.handleError)

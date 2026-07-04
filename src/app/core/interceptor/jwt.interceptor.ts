@@ -13,11 +13,11 @@ export class JwtInterceptor implements HttpInterceptor {
     const shouldSkip = this.skipUrls.some((url) => request.url.includes(url));
     const bearerToken = this.tokenService.getBearerToken();
 
+    const setHeaders: Record<string, string> = { 'X-Client-Platform': 'web' };
     if (!shouldSkip && bearerToken) {
-      request = request.clone({
-        setHeaders: { Authorization: bearerToken },
-      });
+      setHeaders['Authorization'] = bearerToken;
     }
+    request = request.clone({ setHeaders });
 
     return next.handle(request);
   }

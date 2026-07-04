@@ -1,4 +1,4 @@
-import { ConfigService } from '../../config/config.service';
+import { ConfigService } from '@config';
 import { NgClass } from '@angular/common';
 import {
   Component,

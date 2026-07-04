@@ -92,7 +92,6 @@ export class StudentsService {
   }
 
   addStudent(student: Students): Observable<Students> {
-    console.log(student);
     return this.httpClient.post<ApiOne<any>>(this.API_URL, this.toPayload(student)).pipe(
       map((response) => this.normalize(response.data)),
       catchError(this.handleError)
