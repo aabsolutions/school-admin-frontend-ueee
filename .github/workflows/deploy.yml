@@ -1,0 +1,27 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build:prod
+
+      - name: Deploy to gh-pages
+        run: npx angular-cli-ghpages --dir=dist/smart/browser --repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aabsolutions/school-admin-frontend-ueee.git --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
