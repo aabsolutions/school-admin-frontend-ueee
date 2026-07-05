@@ -90,7 +90,7 @@ export class BulkImportDialogComponent {
         const rawRows: any[][] = utils.sheet_to_json(sheet, { header: 1, raw: false });
 
         if (rawRows.length < 2) {
-          this.parseError = 'El archivo no contiene datos. Verificá que haya al menos una fila de datos.';
+          this.parseError = 'El archivo no contiene datos. Verifica que haya al menos una fila de datos.';
           return;
         }
 
@@ -156,7 +156,7 @@ export class BulkImportDialogComponent {
         this.isSubmitting = false;
       },
       error: (err) => {
-        this.parseError = err?.message ?? 'Error al importar. Intentá de nuevo.';
+        this.parseError = err?.message ?? 'Error al importar. Intenta de nuevo.';
         this.isSubmitting = false;
       },
     });

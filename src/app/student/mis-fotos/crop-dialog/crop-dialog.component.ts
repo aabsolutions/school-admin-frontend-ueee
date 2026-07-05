@@ -44,7 +44,7 @@ export interface CropDialogResult {
                (dragover)="$event.preventDefault()"
                (drop)="onDrop($event)">
             <mat-icon class="drop-icon">add_photo_alternate</mat-icon>
-            <p>Arrastrá una imagen o hacé click para seleccionar</p>
+            <p>Arrastra una imagen o has click para seleccionar</p>
             <span class="drop-hint">JPG, PNG o WEBP · máx. 5 MB</span>
           </div>
         }

@@ -24,7 +24,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
         const message =
           err.status === 403
-            ? err?.error?.message || 'No tenés permisos para realizar esta acción'
+            ? err?.error?.message || 'No tienes permisos para realizar esta acción'
             : err?.error?.message || err?.message || err?.statusText || 'An unexpected error occurred';
 
         // Preserve `.error`/`.status` so existing components reading err?.error?.message
