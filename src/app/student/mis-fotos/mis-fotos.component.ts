@@ -81,7 +81,7 @@ export class MisFotosStudentComponent implements OnInit {
     ref.afterClosed().subscribe((result: CropDialogResult | undefined) => {
       if (!result) return;
       if (!this.profile) {
-        this.snackBar.open('No se pudo identificar tu perfil. Recargá la página.', '', {
+        this.snackBar.open('No se pudo identificar tu perfil. Recarga la página.', '', {
           duration: 4000, panelClass: 'snackbar-danger',
         });
         return;

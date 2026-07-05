@@ -106,7 +106,7 @@ export class BulkEnrollmentDialogComponent implements OnInit {
           const rows: any[] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
           if (rows.length < 2) {
-            this.previewError = 'El archivo no tiene datos. Verificá que tenga al menos una fila con DNIs.';
+            this.previewError = 'El archivo no tiene datos. Verifica que tenga al menos una fila con DNIs.';
             return;
           }
 
@@ -125,7 +125,7 @@ export class BulkEnrollmentDialogComponent implements OnInit {
 
           this.loadPreview(dnis);
         } catch (err) {
-          this.previewError = 'Error al leer el archivo. Verificá que sea un Excel válido.';
+          this.previewError = 'Error al leer el archivo. Verifica que sea un Excel válido.';
         }
       });
     };
