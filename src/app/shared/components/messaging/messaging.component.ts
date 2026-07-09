@@ -90,6 +90,10 @@ export class MessagingComponent implements OnInit, OnDestroy {
   loadConversations(): void {
     this.subs.sink = this.api.getConversations().subscribe((convs) => {
       this.conversations = convs;
+      // Unirse a TODOS los rooms de la bandeja, no solo al de la conversación
+      // abierta — si no, 'new-message' de conversaciones cerradas nunca llega
+      // y la bandeja solo se actualiza recargando la página.
+      convs.forEach((c) => this.socket.joinConversation(c._id));
     });
   }
 
