@@ -96,6 +96,10 @@ export class AllParentsComponent implements OnInit {
     this.router.navigate(['/admin/parents/edit-parent', id]);
   }
 
+  view(id: string) {
+    this.router.navigate(['/admin/parents/edit-parent', id], { queryParams: { readonly: 1 } });
+  }
+
   remove(id: string) {
     if (!confirm('¿Eliminár este padre de familia?')) return;
     this.api.remove(id).subscribe({

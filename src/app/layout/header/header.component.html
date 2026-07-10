@@ -5,7 +5,7 @@
         (click)="isNavbarCollapsed = !isNavbarCollapsed" aria-expanded="false"></a>
       <a href="#" onClick="return false;" class="bars" (click)="mobileMenuSidebarOpen($event,'overlay-open')"></a>
       <a class="navbar-brand" routerLink={{homePage}}>
-        <img src="assets/images/logo.png" alt="" />
+        <img [src]="logoUrl || 'assets/images/logo.png'" alt="" />
         <span class="logo-name">Smart</span>
       </a>
     </div>
@@ -32,7 +32,7 @@
           <button mat-icon-button [matMenuTriggerFor]="notificationMenu"
             [class.has-notifications]="unreadCount > 0"
             class="nav-notification-icons"
-            [matBadge]="unreadCount" [matBadgeHidden]="unreadCount === 0" matBadgeColor="warn" matBadgeSize="small">
+            [matBadge]="unreadBadge" [matBadgeHidden]="unreadCount === 0" matBadgeColor="warn" matBadgeSize="small">
             <i class="material-icons-outlined icon-color">notifications_active</i>
           </button>
           <mat-menu #notificationMenu="matMenu" class="nfc-menu">
@@ -78,26 +78,6 @@
           </mat-menu>
         </li>
         <!-- #END# Notifications-->
-        <li class="nav-item">
-          <button mat-icon-button [matMenuTriggerFor]="languagemenu" class="lang-dropdown nav-notification-icons"> @if
-            (flagvalue !== undefined) {
-            <img src="{{flagvalue}}" height="16">
-            }
-            @if (flagvalue === undefined) {
-            <img src="{{defaultFlag}}" height="16">
-            }</button>
-          <mat-menu #languagemenu="matMenu">
-            @for (item of listLang; track item) {
-            <div class="lang-item">
-              <button mat-menu-item class="dropdown-item lang-item-list"
-                (click)="setLanguage(item.text, item.lang, item.flag)"
-                [ngClass]="{'active': langStoreValue === item.lang}">
-                <img src="{{item.flag}}" class="flag-img" height="12"> <span class="align-middle">{{item.text}}</span>
-              </button>
-            </div>
-            }
-          </mat-menu>
-        </li>
         <li class="nav-item user_profile">
           <button mat-button [matMenuTriggerFor]="profilemenu">
             <div class="chip dropdown-toggle" ngbDropdownToggle class="pt-0">

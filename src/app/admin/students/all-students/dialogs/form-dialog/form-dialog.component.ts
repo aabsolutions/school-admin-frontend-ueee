@@ -56,6 +56,7 @@ export interface DialogData {
 })
 export class StudentsFormComponent {
   action: string;
+  readOnly: boolean;
   dialogTitle: string;
   stdForm: UntypedFormGroup;
   student: Students;
@@ -68,9 +69,11 @@ export class StudentsFormComponent {
     private dialog: MatDialog,
   ) {
     this.action = data.action;
-    this.dialogTitle = this.action === 'edit' ? data.student.name : 'New Student';
-    this.student = this.action === 'edit' ? data.student : new Students({});
+    this.readOnly = this.action === 'view';
+    this.dialogTitle = this.action !== 'add' ? data.student.name : 'New Student';
+    this.student = this.action !== 'add' ? data.student : new Students({});
     this.stdForm = this.createStudentForm();
+    if (this.readOnly) this.stdForm.disable();
   }
 
   private safeDate(value: any): string {

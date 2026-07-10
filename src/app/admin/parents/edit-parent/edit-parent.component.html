@@ -11,7 +11,7 @@
     <div class="row clearfix">
       <div class="col-12">
         <div class="card">
-          <div class="header"><h2>Editar Padre de Familia</h2></div>
+          <div class="header"><h2>{{ readOnly ? 'Detalle del Padre de Familia' : 'Editar Padre de Familia' }}</h2></div>
           <div class="body">
             <form class="m-4" [formGroup]="form" (ngSubmit)="onSubmit()">
 
@@ -90,13 +90,15 @@
 
               <div class="row">
                 <div class="col-12 mb-2">
+                  @if (!readOnly) {
                   <button mat-flat-button color="primary" class="btn-space"
                     [disabled]="form.invalid || isSaving" type="submit">
                     Guardar cambios
                   </button>
+                  }
                   <button type="button" mat-flat-button class="formCancelBtn"
                     routerLink="/admin/parents/all-parents">
-                    Cancelar
+                    {{ readOnly ? 'Volver' : 'Cancelar' }}
                   </button>
                 </div>
               </div>
@@ -113,10 +115,14 @@
           <div class="body">
             <mat-chip-set>
               @for (s of parent?.studentIds; track s._id) {
+                @if (readOnly) {
+                <mat-chip>{{ s.name }}</mat-chip>
+                } @else {
                 <mat-chip (removed)="unlinkStudent(s._id)">
                   {{ s.name }}
                   <button matChipRemove><mat-icon>cancel</mat-icon></button>
                 </mat-chip>
+                }
               }
             </mat-chip-set>
           </div>

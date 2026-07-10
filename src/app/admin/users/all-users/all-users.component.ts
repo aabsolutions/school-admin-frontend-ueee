@@ -25,6 +25,15 @@ import { UserFormDialogComponent } from './dialogs/form-dialog/form-dialog.compo
 import { UserDeleteComponent } from './dialogs/delete/delete.component';
 import { UserResetPasswordComponent } from './dialogs/reset-password/reset-password.component';
 
+type RoleCategory = 'CUSTOM' | 'TEACHER' | 'STUDENT' | 'PARENT';
+
+const ROLE_CATEGORY_RANK: Record<RoleCategory, number> = {
+  CUSTOM: 0,
+  TEACHER: 1,
+  STUDENT: 2,
+  PARENT: 3,
+};
+
 @Component({
   selector: 'app-all-users',
   templateUrl: './all-users.component.html',
@@ -51,6 +60,17 @@ import { UserResetPasswordComponent } from './dialogs/reset-password/reset-passw
 })
 export class AllUsersComponent implements OnInit, OnDestroy {
   displayedColumns = ['username', 'name', 'email', 'role', 'isActive', 'actions'];
+
+  roleFilterOptions: { value: 'ALL' | RoleCategory; label: string }[] = [
+    { value: 'ALL', label: 'All' },
+    { value: 'CUSTOM', label: 'Custom' },
+    { value: 'TEACHER', label: 'Teacher' },
+    { value: 'STUDENT', label: 'Student' },
+    { value: 'PARENT', label: 'Parent' },
+  ];
+  roleFilter: 'ALL' | RoleCategory = 'ALL';
+  private searchTerm = '';
+  private allUsers: AppUser[] = [];
 
   dataSource = new MatTableDataSource<AppUser>([]);
   isLoading = true;
@@ -79,10 +99,13 @@ export class AllUsersComponent implements OnInit, OnDestroy {
   loadData() {
     this.userService.getAllUsers().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
+        this.allUsers = data;
         this.isLoading = false;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = (item, property) =>
+          property === 'role' ? this.getRoleRank(item.role) : (item as unknown as Record<string, unknown>)[property] as string | number;
+        this.applyFilters();
       },
       error: (err) => {
         console.error(err);
@@ -92,8 +115,33 @@ export class AllUsersComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(event: Event) {
-    const val = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.dataSource.filter = val;
+    this.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.applyFilters();
+  }
+
+  filterByRole(category: 'ALL' | RoleCategory) {
+    this.roleFilter = category;
+    this.applyFilters();
+  }
+
+  private applyFilters() {
+    let filtered = this.allUsers;
+    if (this.roleFilter !== 'ALL') {
+      filtered = filtered.filter((u) => this.getRoleCategory(u.role) === this.roleFilter);
+    }
+    this.dataSource.data = [...filtered].sort((a, b) => this.getRoleRank(a.role) - this.getRoleRank(b.role));
+    this.dataSource.filter = this.searchTerm;
+  }
+
+  getRoleCategory(role: string): RoleCategory {
+    if (role === 'TEACHER') return 'TEACHER';
+    if (role === 'STUDENT') return 'STUDENT';
+    if (role === 'PARENT') return 'PARENT';
+    return 'CUSTOM';
+  }
+
+  getRoleRank(role: string): number {
+    return ROLE_CATEGORY_RANK[this.getRoleCategory(role)];
   }
 
   openDialog(action: 'add' | 'edit', user?: AppUser) {
@@ -107,14 +155,14 @@ export class AllUsersComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) return;
       if (action === 'add') {
-        this.dataSource.data = [result, ...this.dataSource.data];
+        this.allUsers = [result, ...this.allUsers];
       } else {
-        const idx = this.dataSource.data.findIndex((u) => u.id === result.id);
+        const idx = this.allUsers.findIndex((u) => u.id === result.id);
         if (idx !== -1) {
-          this.dataSource.data[idx] = result;
-          this.dataSource._updateChangeSubscription();
+          this.allUsers[idx] = result;
         }
       }
+      this.applyFilters();
       this.notify(action === 'add' ? 'snackbar-success' : 'black', `${action === 'add' ? 'User created' : 'User updated'} successfully`);
     });
   }
@@ -122,10 +170,10 @@ export class AllUsersComponent implements OnInit, OnDestroy {
   toggleStatus(user: AppUser) {
     this.userService.toggleStatus(user.id).subscribe({
       next: (updated) => {
-        const idx = this.dataSource.data.findIndex((u) => u.id === updated.id);
+        const idx = this.allUsers.findIndex((u) => u.id === updated.id);
         if (idx !== -1) {
-          this.dataSource.data[idx] = updated;
-          this.dataSource._updateChangeSubscription();
+          this.allUsers[idx] = updated;
+          this.applyFilters();
         }
       },
       error: console.error,
@@ -148,7 +196,8 @@ export class AllUsersComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (!confirmed) return;
-      this.dataSource.data = this.dataSource.data.filter((u) => u.id !== user.id);
+      this.allUsers = this.allUsers.filter((u) => u.id !== user.id);
+      this.applyFilters();
       this.notify('snackbar-danger', 'User deleted successfully');
     });
   }

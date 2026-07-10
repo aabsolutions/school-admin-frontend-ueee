@@ -16,6 +16,7 @@ import {
   InConfiguration,
   Role,
   AuthService,
+  InstitucionService,
 } from '@core';
 import { ProfilePhotoService } from '@core/service/profile-photo.service';
 import { NotificationsApiService, AppNotification } from '@core/service/notifications-api.service';
@@ -70,6 +71,8 @@ export class HeaderComponent
   isOpenSidebar?: boolean;
   docElement?: HTMLElement;
   isFullScreen = false;
+  logoUrl: string | null = null;
+  private readonly LOGO_CACHE_KEY = 'app_logo';
 
   notifications: AppNotification[] = [];
   unreadCount = 0;
@@ -86,6 +89,7 @@ export class HeaderComponent
     public profilePhotoService: ProfilePhotoService,
     private notificationsApi: NotificationsApiService,
     private notificationsSocket: NotificationsSocketService,
+    private institucionService: InstitucionService,
   ) {
     super();
   }
@@ -108,6 +112,20 @@ export class HeaderComponent
       (url) => (this.userImg = url)
     );
     this.docElement = document.documentElement;
+
+    const cachedLogo = localStorage.getItem(this.LOGO_CACHE_KEY);
+    if (cachedLogo) {
+      this.logoUrl = cachedLogo;
+    }
+    this.institucionService.get().subscribe({
+      next: (data) => {
+        if (data.logotipo) {
+          this.logoUrl = data.logotipo;
+          localStorage.setItem(this.LOGO_CACHE_KEY, data.logotipo);
+        }
+      },
+      error: () => {},
+    });
 
     if (userRole === Role.Admin || userRole === Role.SuperAdmin) {
       this.homePage = 'admin/dashboard/main';
@@ -152,6 +170,10 @@ export class HeaderComponent
     });
   }
 
+  get unreadBadge(): string {
+    return this.unreadCount > 9 ? '9+' : `${this.unreadCount}`;
+  }
+
   getIcon(type: string): string {
     return TYPE_ICON[type]?.icon ?? 'notifications';
   }
@@ -166,7 +188,6 @@ export class HeaderComponent
       this.unreadCount = Math.max(0, this.unreadCount - 1);
       this.notificationsApi.markRead(n._id).subscribe();
     }
-    if (n.link) this.router.navigate([n.link]);
   }
 
   markAllRead(): void {

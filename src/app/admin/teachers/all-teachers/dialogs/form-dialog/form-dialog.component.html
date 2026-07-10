@@ -393,8 +393,10 @@
     </mat-tab-group>
 
     <div class="example-button-row m-4">
+      @if (!readOnly) {
       <button mat-flat-button class="formSubmitBtn" [disabled]="!teacherForm.valid" (click)="submit()">Guardar</button>
-      <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">Cancelar</button>
+      }
+      <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">{{ readOnly ? 'Cerrar' : 'Cancelar' }}</button>
     </div>
   </div>
 </div>

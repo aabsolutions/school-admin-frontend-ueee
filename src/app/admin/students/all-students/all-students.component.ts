@@ -190,7 +190,11 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
     this.openDialog('edit', row);
   }
 
-  openDialog(action: 'add' | 'edit', data?: Students) {
+  viewCall(row: Students) {
+    this.openDialog('view', row);
+  }
+
+  openDialog(action: 'add' | 'edit' | 'view', data?: Students) {
     let varDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       varDirection = 'rtl';

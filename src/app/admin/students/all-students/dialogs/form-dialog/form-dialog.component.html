@@ -128,6 +128,7 @@
         </div>
       </div>
 
+      @if (!readOnly) {
       <div class="row mb-2">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
           <button type="button" mat-stroked-button color="accent" (click)="openAddParentDialog()">
@@ -135,12 +136,15 @@
           </button>
         </div>
       </div>
+      }
 
       <div class="row">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
           <div class="example-button-row">
+            @if (!readOnly) {
             <button mat-flat-button class="formSubmitBtn" [disabled]="!stdForm.valid" type="submit">Save</button>
-            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">Cancel</button>
+            }
+            <button mat-flat-button mat-dialog-close class="formCancelBtn" tabindex="-1">{{ readOnly ? 'Cerrar' : 'Cancel' }}</button>
           </div>
         </div>
       </div>

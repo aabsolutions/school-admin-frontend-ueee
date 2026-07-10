@@ -38,6 +38,11 @@ export const TEACHER_ROUTE: Route[] = [
     component: ListaNominaTeacherComponent,
   },
   {
+    path: 'incidencias-dia',
+    loadComponent: () =>
+      import('./incidencias-dia/incidencias-dia.component').then((m) => m.IncidenciasDiaComponent),
+  },
+  {
     path: 'ficha-medica',
     component: FichaMedicaTeacherComponent,
   },

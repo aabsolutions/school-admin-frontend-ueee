@@ -43,6 +43,7 @@ export class EditParentComponent implements OnInit {
   isSaving = false;
   isLoading = true;
   parentId = '';
+  readOnly = false;
 
   constructor(
     private fb: FormBuilder,
@@ -66,10 +67,12 @@ export class EditParentComponent implements OnInit {
 
   ngOnInit() {
     this.parentId = this.route.snapshot.paramMap.get('id') || '';
+    this.readOnly = this.route.snapshot.queryParamMap.get('readonly') === '1';
     this.api.getOne(this.parentId).subscribe({
       next: (p) => {
         this.parent = p;
         this.form.patchValue(p);
+        if (this.readOnly) this.form.disable();
         this.isLoading = false;
       },
       error: () => {

@@ -1,0 +1,163 @@
+<section class="content">
+  <div class="content-block">
+    @for (b of breadscrums; track b) {
+      <div class="block-header">
+        <app-breadcrumb [title]="b.title" [items]="b.items" [active_item]="b.active"></app-breadcrumb>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col-12">
+        <mat-card class="filter-card">
+          <mat-card-content class="filter-row">
+            <mat-form-field appearance="outline" class="date-field">
+              <mat-label>Fecha</mat-label>
+              <input matInput type="date" [ngModel]="selectedDate" (ngModelChange)="onDateChange($event)" />
+            </mat-form-field>
+            <button mat-stroked-button color="primary" (click)="goToday()" [disabled]="selectedDate === todayIso">
+              <mat-icon>today</mat-icon> Hoy
+            </button>
+            @if (cursoLabel) {
+              <span class="curso-label">{{ cursoLabel }}</span>
+            }
+          </mat-card-content>
+        </mat-card>
+
+        @if (loading) {
+          <div class="d-flex justify-content-center p-5">
+            <mat-progress-spinner color="primary" [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+          </div>
+        } @else if (!esTutor) {
+          <mat-card>
+            <mat-card-content class="p-5 text-center text-muted">
+              <mat-icon style="font-size:48px;height:48px;width:48px;color:#ccc">group_off</mat-icon>
+              <p class="mt-2">No estás asignado como tutor de ningún curso activo.</p>
+            </mat-card-content>
+          </mat-card>
+        } @else {
+
+          <div class="incidencias-grid">
+
+            <mat-card class="incidencia-card">
+              <mat-card-header>
+                <mat-icon class="section-icon absent">person_off</mat-icon>
+                <mat-card-title>Ausentes</mat-card-title>
+                <span class="count-badge">{{ data?.ausentes?.length ?? 0 }}</span>
+              </mat-card-header>
+              <mat-card-content>
+                @if (!data?.ausentes?.length) {
+                  <p class="empty-msg">Sin ausencias registradas.</p>
+                } @else {
+                  <ul class="incidencia-list">
+                    @for (a of data!.ausentes; track a.studentId) {
+                      <li>
+                        <span class="student-name">{{ a.name }}</span>
+                        @if (a.note) { <span class="note">— {{ a.note }}</span> }
+                      </li>
+                    }
+                  </ul>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="incidencia-card">
+              <mat-card-header>
+                <mat-icon class="section-icon late">schedule</mat-icon>
+                <mat-card-title>Atrasados</mat-card-title>
+                <span class="count-badge">{{ data?.atrasados?.length ?? 0 }}</span>
+              </mat-card-header>
+              <mat-card-content>
+                @if (!data?.atrasados?.length) {
+                  <p class="empty-msg">Sin atrasos registrados.</p>
+                } @else {
+                  <ul class="incidencia-list">
+                    @for (a of data!.atrasados; track a.studentId) {
+                      <li>
+                        <span class="student-name">{{ a.name }}</span>
+                        @if (a.note) { <span class="note">— {{ a.note }}</span> }
+                      </li>
+                    }
+                  </ul>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="incidencia-card">
+              <mat-card-header>
+                <mat-icon class="section-icon novedad">report_problem</mat-icon>
+                <mat-card-title>Novedades</mat-card-title>
+                <span class="count-badge">{{ data?.novedades?.length ?? 0 }}</span>
+              </mat-card-header>
+              <mat-card-content>
+                @if (!data?.novedades?.length) {
+                  <p class="empty-msg">Sin novedades registradas.</p>
+                } @else {
+                  <ul class="incidencia-list">
+                    @for (n of data!.novedades; track n._id) {
+                      <li>
+                        <mat-chip-set>
+                          <mat-chip>{{ n.tipo }}</mat-chip>
+                        </mat-chip-set>
+                        <span class="student-name">{{ novedadEstudiantes(n) || 'Curso completo' }}</span>
+                        <p class="desc">{{ n.descripcion }}</p>
+                      </li>
+                    }
+                  </ul>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="incidencia-card">
+              <mat-card-header>
+                <mat-icon class="section-icon expediente">folder_special</mat-icon>
+                <mat-card-title>Expediente Disciplinario</mat-card-title>
+                <span class="count-badge">{{ data?.expedientes?.length ?? 0 }}</span>
+              </mat-card-header>
+              <mat-card-content>
+                @if (!data?.expedientes?.length) {
+                  <p class="empty-msg">Sin registros hoy.</p>
+                } @else {
+                  <ul class="incidencia-list">
+                    @for (e of data!.expedientes; track e.studentId + e.tipo) {
+                      <li>
+                        <mat-chip-set>
+                          <mat-chip>{{ e.tipo }}</mat-chip>
+                        </mat-chip-set>
+                        <span class="student-name">{{ e.studentName }}</span>
+                        <p class="desc">{{ e.descripcion }}</p>
+                      </li>
+                    }
+                  </ul>
+                }
+              </mat-card-content>
+            </mat-card>
+
+            <mat-card class="incidencia-card">
+              <mat-card-header>
+                <mat-icon class="section-icon dece">psychology</mat-icon>
+                <mat-card-title>Atención DECE</mat-card-title>
+                <span class="count-badge">{{ data?.deceFlags?.length ?? 0 }}</span>
+              </mat-card-header>
+              <mat-card-content>
+                @if (!data?.deceFlags?.length) {
+                  <p class="empty-msg">Sin atenciones DECE hoy.</p>
+                } @else {
+                  <p class="dece-notice">
+                    <mat-icon inline="true">lock</mat-icon>
+                    Solo se muestra el estudiante — el detalle es confidencial y lo gestiona DECE.
+                  </p>
+                  <ul class="incidencia-list">
+                    @for (d of data!.deceFlags; track d.studentId) {
+                      <li><span class="student-name">{{ d.name }}</span></li>
+                    }
+                  </ul>
+                }
+              </mat-card-content>
+            </mat-card>
+
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</section>

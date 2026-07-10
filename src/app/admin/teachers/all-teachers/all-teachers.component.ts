@@ -254,7 +254,11 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     this.openDialog('edit', row);
   }
 
-  openDialog(action: 'add' | 'edit', data?: Teachers) {
+  viewCall(row: Teachers) {
+    this.openDialog('view', row);
+  }
+
+  openDialog(action: 'add' | 'edit' | 'view', data?: Teachers) {
     let varDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       varDirection = 'rtl';

@@ -63,6 +63,7 @@ export interface DialogData {
 })
 export class TeachersFormComponent implements OnInit {
   action: string;
+  readOnly: boolean;
   dialogTitle: string;
   teacherForm: UntypedFormGroup;
   medicalForm: UntypedFormGroup;
@@ -84,11 +85,17 @@ export class TeachersFormComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.action = data.action;
-    this.dialogTitle = this.action === 'edit' ? data.teachers.name : 'Nuevo Docente';
-    this.teachers = this.action === 'edit' ? data.teachers : new Teachers({});
+    this.readOnly = this.action === 'view';
+    this.dialogTitle = this.action !== 'add' ? data.teachers.name : 'Nuevo Docente';
+    this.teachers = this.action !== 'add' ? data.teachers : new Teachers({});
     this.teacherForm = this.createTeacherForm();
     this.medicalForm = this.createMedicalForm();
     this.familyForm = this.createFamilyForm();
+    if (this.readOnly) {
+      this.teacherForm.disable();
+      this.medicalForm.disable();
+      this.familyForm.disable();
+    }
   }
 
   ngOnInit() {

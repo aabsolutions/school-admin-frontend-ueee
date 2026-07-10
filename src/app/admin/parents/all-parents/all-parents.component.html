@@ -66,10 +66,13 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
                   <mat-cell *matCellDef="let row">
-                    <button *ngxPermissionsOnly="['edit-parent', 'SUPERADMIN']" mat-icon-button color="primary" (click)="edit(row._id)" title="Editar">
+                    <button *ngxPermissionsOnly="['/admin/parents/add-parent', 'SUPERADMIN']" mat-icon-button color="primary" (click)="edit(row._id)" title="Editar">
                       <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="remove(row._id)" title="Eliminar">
+                    <button *ngxPermissionsExcept="['/admin/parents/add-parent', 'SUPERADMIN']" mat-icon-button color="primary" (click)="view(row._id)" title="Ver detalle">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button *ngxPermissionsOnly="['SUPERADMIN']" mat-icon-button color="warn" (click)="remove(row._id)" title="Eliminar">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </mat-cell>
