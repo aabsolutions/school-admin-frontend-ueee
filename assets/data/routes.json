@@ -772,6 +772,18 @@
       "submenu": []
     },
     {
+      "path": "/teacher/incidencias-dia",
+      "title": "Incidencias del Día",
+      "iconType": "material-icons-outlined",
+      "icon": "warning_amber",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TEACHER"],
+      "submenu": []
+    },
+    {
       "path": "/teacher/lista-nomina",
       "title": "Nómina de Estudiantes",
       "iconType": "material-icons-outlined",
