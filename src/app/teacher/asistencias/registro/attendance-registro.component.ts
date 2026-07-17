@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { AsistenciasService } from '@shared/services/asistencias.service';
 import {
@@ -39,6 +40,7 @@ interface StudentRow extends StudentBasic {
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatChipsModule,
+    MatTooltipModule,
     BreadcrumbComponent,
   ],
   templateUrl: './attendance-registro.component.html',

@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ParentSingleSelectComponent } from '@shared/components/parent-selector/parent-single-select.component';
 import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
@@ -49,6 +50,7 @@ export interface DialogData {
     MatSelectModule,
     MatOptionModule,
     MatDatepickerModule,
+    MatCheckboxModule,
     MatDialogClose,
     ParentSingleSelectComponent,
     UppercaseDirective,
@@ -98,6 +100,8 @@ export class StudentsFormComponent {
       motherId:             [this._extractId(this.student.motherId)],
       guardianId:           [this._extractId(this.student.guardianId)],
       status:               [this.student.status || 'active'],
+      nee:                  [this.student.nee ?? false],
+      aulaEspecial:         [this.student.aulaEspecial ?? false],
     });
   }
 

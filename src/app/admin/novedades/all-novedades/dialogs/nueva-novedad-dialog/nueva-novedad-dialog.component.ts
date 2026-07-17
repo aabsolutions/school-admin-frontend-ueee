@@ -141,7 +141,7 @@ export class NuevaNovedadDialogComponent implements OnInit {
       return;
     }
     this.searchingStudents = true;
-    const params = new HttpParams().set('search', term.trim()).set('limit', '20');
+    const params = new HttpParams().set('search', term.trim()).set('limit', '20').set('status', 'active');
     this.http.get<any>(`${environment.apiUrl}/students`, { params }).subscribe({
       next: (r) => {
         this.studentSearchResults = (r.data?.data ?? []).map((s: any) => ({

@@ -60,7 +60,7 @@ export class NuevoCommunicadoComponent implements OnInit {
     this.studentSearch$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((q) => q ? this.studentsService.searchStudents(q) : of([])),
+      switchMap((q) => q ? this.studentsService.searchStudents(q, 'active') : of([])),
     ).subscribe((results: any[]) => {
       this.studentSuggestions = results;
     });

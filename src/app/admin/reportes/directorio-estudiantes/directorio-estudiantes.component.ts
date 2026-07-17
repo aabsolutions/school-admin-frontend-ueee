@@ -55,7 +55,7 @@ export class DirectorioEstudiantesComponent implements OnInit {
   // Filtros
   filterName          = '';
   filterGender        = '';
-  filterStatus        = '';
+  filterStatus        = 'active';
   filterResidenceZone = '';
   filterAgeMin: number | null = null;
   filterAgeMax: number | null = null;

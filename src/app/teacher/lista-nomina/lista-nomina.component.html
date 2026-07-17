@@ -76,7 +76,15 @@
                         </mat-header-cell>
                         <mat-cell *matCellDef="let row">
                           <span class="mobile-label">{{ column.label }}:</span>
-                          @if (column.type === 'date') {
+                          @if (column.def === 'name') {
+                            <span class="truncate-text">{{ row.name }}</span>
+                            @if (row.nee) {
+                              <mat-icon class="material-icons-outlined nee-icon" matTooltip="NEE (Necesidades Educativas Especiales)">accessibility_new</mat-icon>
+                            }
+                            @if (row.aulaEspecial) {
+                              <mat-icon class="material-icons-outlined aula-especial-icon" matTooltip="Aula Especial">meeting_room</mat-icon>
+                            }
+                          } @else if (column.type === 'date') {
                             <span class="truncate-text">{{ row[column.def] | date:'dd/MM/yyyy' }}</span>
                           } @else if (column.type === 'gender') {
                             @switch (row.gender) {
@@ -107,7 +115,10 @@
                     </ng-container>
 
                     <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: getDisplayedColumns();"></mat-row>
+                    <mat-row *matRowDef="let row; columns: getDisplayedColumns();"
+                      [ngClass]="getRowClass(row)"
+                      [matTooltip]="getRowTooltip(row)"
+                      matTooltipPosition="above"></mat-row>
 
                     <tr class="mat-row" *matNoDataRow>
                       <td class="mat-cell" [attr.colspan]="getDisplayedColumns().length"

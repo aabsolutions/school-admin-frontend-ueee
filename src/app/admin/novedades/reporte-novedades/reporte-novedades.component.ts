@@ -91,7 +91,7 @@ export class ReporteNovedadesComponent implements OnInit {
         this.studentOptions = [];
         return;
       }
-      const params = new HttpParams().set('search', val.trim()).set('limit', '20');
+      const params = new HttpParams().set('search', val.trim()).set('limit', '20').set('status', 'active');
       this.http.get<any>(`${environment.apiUrl}/students`, { params }).subscribe({
         next: (r) => {
           this.studentOptions = (r.data?.data ?? []).map((s: any) => ({

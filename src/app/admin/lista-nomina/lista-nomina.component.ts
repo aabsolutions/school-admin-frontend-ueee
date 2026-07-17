@@ -51,6 +51,9 @@ interface StudentRow {
   birthdate: string;
   status: string;
   mobile: string;
+  studentStatus: string;
+  nee: boolean;
+  aulaEspecial: boolean;
 }
 
 @Component({
@@ -83,6 +86,7 @@ export class ListaNominaComponent implements OnInit {
   selectedCurso: CursoLectivoItem | null = null;
   loadingCursos   = true;
   loadingStudents = false;
+  loadingExportAll = false;
   hasSearched     = false;
 
   // Tabla de estudiantes
@@ -93,6 +97,7 @@ export class ListaNominaComponent implements OnInit {
     { def: 'birthdate', label: 'Fecha de Nac.',       type: 'date', visible: true  },
     { def: 'status',    label: 'Estado',              type: 'text', visible: false },
     { def: 'mobile',    label: 'Contacto',            type: 'text', visible: true  },
+    { def: 'studentStatus', label: 'Estado Estudiante', type: 'text', visible: false },
   ];
 
   dataSource = new MatTableDataSource<StudentRow>([]);
@@ -167,17 +172,23 @@ export class ListaNominaComponent implements OnInit {
 
     this.http.get<any>(`${environment.apiUrl}/enrollments?cursoLectivoId=${cl.id}&status=enrolled&limit=500`).subscribe({
       next: r => {
-        const rows: StudentRow[] = r.data.data.map((e: any) => {
-          const s = e.studentId ?? {};
-          return {
-            dni:       s.dni       ?? '—',
-            name:      s.name      ?? '—',
-            gender:    s.gender    ?? '—',
-            birthdate: s.birthdate ?? '',
-            status:    e.status    ?? '',
-            mobile:    s.mobile    ?? '—',
-          };
-        });
+        const rows: StudentRow[] = r.data.data
+          .map((e: any): StudentRow => {
+            const s = e.studentId ?? {};
+            return {
+              dni:           s.dni       ?? '—',
+              name:          s.name      ?? '—',
+              gender:        s.gender    ?? '—',
+              birthdate:     s.birthdate ?? '',
+              status:        e.status    ?? '',
+              mobile:        s.mobile    ?? '—',
+              studentStatus: s.status    ?? 'active',
+              nee:           s.nee          ?? false,
+              aulaEspecial:  s.aulaEspecial ?? false,
+            };
+          })
+          // Solo se listan estudiantes activos; los suspendidos se mantienen visibles (resaltados)
+          .filter((row: StudentRow) => row.studentStatus === 'active' || row.studentStatus === 'suspended');
 
         // Ordenar alfabéticamente por nombre
         rows.sort((a, b) => a.name.localeCompare(b.name));
@@ -205,14 +216,17 @@ export class ListaNominaComponent implements OnInit {
     if (!this.selectedCurso || !this.dataSource.filteredData.length) return;
 
     const visibleCols = this.columnDefinitions.filter(c => c.visible);
+    const curso = this.cursoLabelFor(this.selectedCurso);
     const data = this.dataSource.filteredData.map(s => {
-      const row: Record<string, string> = {};
+      const row: Record<string, string> = { Curso: curso };
       visibleCols.forEach(col => {
         const val = (s as any)[col.def];
         row[col.label] = col.type === 'date' && val
           ? new Date(val).toLocaleDateString('es-EC')
           : (val ?? '');
       });
+      row['NEE'] = s.nee ? 'Sí' : 'No';
+      row['Aula Especial'] = s.aulaEspecial ? 'Sí' : 'No';
       return row;
     });
 
@@ -223,9 +237,83 @@ export class ListaNominaComponent implements OnInit {
 
   exportPdf() { window.print(); }
 
+  exportAllXls() {
+    if (!this.filteredCursos.length || this.loadingExportAll) return;
+    this.loadingExportAll = true;
+
+    const cursosMap = new Map(this.filteredCursos.map(cl => [cl.id, cl]));
+    const visibleCols = this.columnDefinitions.filter(c => c.visible);
+
+    this.http.get<any>(`${environment.apiUrl}/enrollments?status=enrolled&limit=5000`).subscribe({
+      next: r => {
+        const entries: { curso: string; name: string; row: Record<string, string> }[] = [];
+
+        (r.data.data as any[]).forEach(e => {
+          const clId = e.cursoLectivoId?._id ?? e.cursoLectivoId?.id;
+          const cl = cursosMap.get(clId);
+          if (!cl) return;
+
+          const s = e.studentId ?? {};
+          const studentStatus = s.status ?? 'active';
+          // Solo se exportan estudiantes activos; los suspendidos se mantienen (marcados)
+          if (studentStatus !== 'active' && studentStatus !== 'suspended') return;
+
+          const studentRow: StudentRow = {
+            dni:           s.dni       ?? '—',
+            name:          s.name      ?? '—',
+            gender:        s.gender    ?? '—',
+            birthdate:     s.birthdate ?? '',
+            status:        e.status    ?? '',
+            mobile:        s.mobile    ?? '—',
+            studentStatus,
+            nee:           s.nee          ?? false,
+            aulaEspecial:  s.aulaEspecial ?? false,
+          };
+
+          const curso = this.cursoLabelFor(cl);
+          const row: Record<string, string> = { Curso: curso };
+          visibleCols.forEach(col => {
+            const val = (studentRow as any)[col.def];
+            row[col.label] = col.type === 'date' && val
+              ? new Date(val).toLocaleDateString('es-EC')
+              : (val ?? '');
+          });
+          row['NEE'] = studentRow.nee ? 'Sí' : 'No';
+          row['Aula Especial'] = studentRow.aulaEspecial ? 'Sí' : 'No';
+          entries.push({ curso, name: studentRow.name, row });
+        });
+
+        entries.sort((a, b) => a.curso.localeCompare(b.curso) || a.name.localeCompare(b.name));
+
+        const date = new Date().toISOString().slice(0, 10);
+        TableExportUtil.exportToExcel(entries.map(en => en.row), `nomina_cursos_${date}`);
+        this.loadingExportAll = false;
+      },
+      error: () => { this.loadingExportAll = false; },
+    });
+  }
+
+  private cursoLabelFor(c: CursoLectivoItem): string {
+    return `${c.nivel} — ${c.especialidad} — Paralelo ${c.paralelo} — ${c.jornada} | Año ${c.academicYear}`;
+  }
+
   get cursoLabel(): string {
     if (!this.selectedCurso) return '';
-    const c = this.selectedCurso;
-    return `${c.nivel} — ${c.especialidad} — Paralelo ${c.paralelo} — ${c.jornada} | Año ${c.academicYear}`;
+    return this.cursoLabelFor(this.selectedCurso);
+  }
+
+  // Prioridad de resaltado de fila: Suspendido > NEE > Aula Especial
+  getRowClass(row: StudentRow): string {
+    if (row.studentStatus === 'suspended') return 'row-suspended';
+    if (row.nee) return 'row-nee';
+    if (row.aulaEspecial) return 'row-aula-especial';
+    return '';
+  }
+
+  getRowTooltip(row: StudentRow): string {
+    if (row.studentStatus === 'suspended') return 'Estudiante suspendido';
+    if (row.nee) return 'NEE (Necesidades Educativas Especiales)';
+    if (row.aulaEspecial) return 'Aula Especial';
+    return '';
   }
 }

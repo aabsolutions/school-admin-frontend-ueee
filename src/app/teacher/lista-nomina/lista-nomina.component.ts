@@ -37,6 +37,9 @@ interface StudentRow {
   absent: number;
   late: number;
   excused: number;
+  status: string;
+  nee: boolean;
+  aulaEspecial: boolean;
 }
 
 function calcularEdad(birthdate: string | null): number | null {
@@ -113,10 +116,13 @@ export class ListaNominaTeacherComponent implements OnInit {
         const year         = cl.academicYear ? ` · ${cl.academicYear}` : '';
         this.cursoLabel = `${nivel}${especialidad}${paralelo}${jornada}${year}`;
 
-        this.dataSource.data = (data.estudiantes ?? []).map((s: any) => ({
-          ...s,
-          edad: calcularEdad(s.birthdate),
-        }));
+        this.dataSource.data = (data.estudiantes ?? [])
+          // Solo se listan estudiantes activos; los suspendidos se mantienen visibles (resaltados)
+          .filter((s: any) => (s.status ?? 'active') === 'active' || s.status === 'suspended')
+          .map((s: any) => ({
+            ...s,
+            edad: calcularEdad(s.birthdate),
+          }));
         this.dataSource.filterPredicate = (row: StudentRow, filter: string) =>
           Object.values(row).some(v =>
             v != null && typeof v !== 'object' && v.toString().toLowerCase().includes(filter));
@@ -159,6 +165,8 @@ export class ListaNominaTeacherComponent implements OnInit {
           ? new Date(val).toLocaleDateString('es-EC')
           : (val ?? '');
       });
+      row['NEE'] = s.nee ? 'Sí' : 'No';
+      row['Aula Especial'] = s.aulaEspecial ? 'Sí' : 'No';
       return row;
     });
     const fileName = `nomina_${this.cursoLabel}`.replace(/[\s|·—]+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
@@ -166,4 +174,19 @@ export class ListaNominaTeacherComponent implements OnInit {
   }
 
   exportPdf() { window.print(); }
+
+  // Prioridad de resaltado de fila: Suspendido > NEE > Aula Especial
+  getRowClass(row: StudentRow): string {
+    if (row.status === 'suspended') return 'row-suspended';
+    if (row.nee) return 'row-nee';
+    if (row.aulaEspecial) return 'row-aula-especial';
+    return '';
+  }
+
+  getRowTooltip(row: StudentRow): string {
+    if (row.status === 'suspended') return 'Estudiante suspendido';
+    if (row.nee) return 'NEE (Necesidades Educativas Especiales)';
+    if (row.aulaEspecial) return 'Aula Especial';
+    return '';
+  }
 }

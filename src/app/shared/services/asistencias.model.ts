@@ -24,6 +24,8 @@ export interface StudentBasic {
   _id: string;
   name: string;
   dni?: string;
+  nee?: boolean;
+  aulaEspecial?: boolean;
 }
 
 export interface AttendanceAssignment {

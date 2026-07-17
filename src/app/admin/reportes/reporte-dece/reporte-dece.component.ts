@@ -110,7 +110,7 @@ export class ReporteDeceComponent implements OnInit, OnDestroy {
           return [];
         }
         this.searchingStudents = true;
-        const params = new HttpParams().set('search', term).set('limit', '15');
+        const params = new HttpParams().set('search', term).set('limit', '15').set('status', 'active');
         return this.http.get<any>(`${environment.apiUrl}/students`, { params });
       }),
     ).subscribe({

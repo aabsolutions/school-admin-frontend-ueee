@@ -53,6 +53,12 @@
                     <td>
                       <strong>{{ student.name }}</strong>
                       @if (student.dni) { <small class="text-muted ms-1">{{ student.dni }}</small> }
+                      @if (student.nee) {
+                        <mat-icon class="material-icons-outlined" style="font-size:16px;width:16px;height:16px;vertical-align:middle;margin-left:4px;color:#7b1fa2" matTooltip="NEE (Necesidades Educativas Especiales)">accessibility_new</mat-icon>
+                      }
+                      @if (student.aulaEspecial) {
+                        <mat-icon class="material-icons-outlined" style="font-size:16px;width:16px;height:16px;vertical-align:middle;margin-left:4px;color:#1565c0" matTooltip="Aula Especial">meeting_room</mat-icon>
+                      }
                     </td>
                     <td style="min-width:160px">
                       <mat-form-field appearance="outline" class="w-100" style="font-size:13px">

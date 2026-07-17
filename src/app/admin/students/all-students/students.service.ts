@@ -55,6 +55,8 @@ export class StudentsService {
       fatherId: raw.fatherId ?? null,
       motherId: raw.motherId ?? null,
       guardianId: raw.guardianId ?? null,
+      nee: raw.nee ?? false,
+      aulaEspecial: raw.aulaEspecial ?? false,
     };
   }
 
@@ -70,6 +72,8 @@ export class StudentsService {
       birthdate: student.birthdate || undefined,
       address: student.address,
       status: student.status,
+      nee: student.nee ?? false,
+      aulaEspecial: student.aulaEspecial ?? false,
       img: student.img,
       fatherId: this._toId(student.fatherId),
       motherId: this._toId(student.motherId),
@@ -80,8 +84,10 @@ export class StudentsService {
     return payload;
   }
 
-  getAllStudents(): Observable<Students[]> {
-    return this.httpClient.get<ApiList<any>>(this.API_URL, { params: { limit: '10000', sortBy: 'name', sortOrder: 'asc' } }).pipe(
+  getAllStudents(status?: string): Observable<Students[]> {
+    const params: Record<string, string> = { limit: '10000', sortBy: 'name', sortOrder: 'asc' };
+    if (status) params['status'] = status;
+    return this.httpClient.get<ApiList<any>>(this.API_URL, { params }).pipe(
       map((response) => {
         const students = response.data.data.map((s) => this.normalize(s));
         this.dataChange.next(students);
@@ -127,8 +133,9 @@ export class StudentsService {
     );
   }
 
-  searchStudents(q: string): Observable<any[]> {
-    const params = new HttpParams().set('search', q).set('limit', '20');
+  searchStudents(q: string, status?: string): Observable<any[]> {
+    let params = new HttpParams().set('search', q).set('limit', '20');
+    if (status) params = params.set('status', status);
     return this.httpClient.get<any>(this.API_URL, { params }).pipe(
       map((r) => r.data?.data ?? []),
       catchError(() => throwError(() => new Error('Search failed'))),

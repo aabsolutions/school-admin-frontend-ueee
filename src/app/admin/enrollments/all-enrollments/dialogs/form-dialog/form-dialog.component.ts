@@ -68,7 +68,7 @@ export class EnrollmentFormComponent {
     });
 
     if (this.action === 'add') {
-      this.http.get<any>(`${environment.apiUrl}/students?limit=500`).subscribe({
+      this.http.get<any>(`${environment.apiUrl}/students?limit=500&status=active`).subscribe({
         next: r => {
           this.allStudents = r.data.data.map((s: any) => ({
             id: s._id ?? s.id,

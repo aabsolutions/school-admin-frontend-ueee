@@ -106,6 +106,8 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
     { def: 'motherName', label: 'Madre', type: 'text', visible: false },
     { def: 'motherMobile', label: 'Tel. Madre', type: 'text', visible: false },
     { def: 'status', label: 'Status', type: 'text', visible: false },
+    { def: 'nee', label: 'NEE', type: 'boolean', visible: false },
+    { def: 'aulaEspecial', label: 'Aula Especial', type: 'boolean', visible: false },
     { def: 'actions', label: 'Actions', type: 'actionBtn', visible: true },
   ];
 
@@ -317,6 +319,8 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
       Madre: x.motherName,
       'Tel. Madre': x.motherMobile,
       Status: x.status,
+      NEE: x.nee ? 'Sí' : 'No',
+      'Aula Especial': x.aulaEspecial ? 'Sí' : 'No',
     }));
 
     TableExportUtil.exportToExcel(exportData, 'student_export');

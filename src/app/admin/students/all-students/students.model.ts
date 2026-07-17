@@ -22,6 +22,8 @@ export class Students {
   motherId: any;
   guardianId: any;
   status: string;
+  nee: boolean;
+  aulaEspecial: boolean;
   edad?: number | null;
 
   constructor(students: Partial<Students>) {
@@ -48,6 +50,8 @@ export class Students {
     this.motherId = students.motherId ?? null;
     this.guardianId = students.guardianId ?? null;
     this.status = students.status || 'active';
+    this.nee = students.nee ?? false;
+    this.aulaEspecial = students.aulaEspecial ?? false;
   }
 
   public getRandomID(): number {

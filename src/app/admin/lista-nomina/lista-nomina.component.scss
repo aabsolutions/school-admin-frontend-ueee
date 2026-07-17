@@ -54,6 +54,38 @@
   mat-icon { font-size: 13px; width: 13px; height: 13px; }
 }
 
+.nee-icon, .aula-especial-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+.nee-icon { color: #7b1fa2; }
+.aula-especial-icon { color: #1565c0; }
+
+.row-suspended {
+  background: rgba(211, 47, 47, 0.08);
+  border-left: 3px solid #d32f2f;
+
+  &:hover { background: rgba(211, 47, 47, 0.14); }
+}
+
+.row-nee {
+  background: rgba(13, 27, 76, 0.08);
+  border-left: 3px solid #0d1b4c;
+
+  &:hover { background: rgba(13, 27, 76, 0.14); }
+}
+
+.row-aula-especial {
+  background: rgba(230, 81, 0, 0.08);
+  border-left: 3px solid #e65100;
+
+  &:hover { background: rgba(230, 81, 0, 0.14); }
+}
+
 /* ── Estilos de impresión ── */
 .print-header { display: none; }
 

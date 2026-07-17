@@ -66,7 +66,7 @@ export class NuevoExpedienteDialogComponent implements OnInit, OnDestroy {
           return [];
         }
         this.searching = true;
-        const params = new HttpParams().set('search', term).set('limit', '20');
+        const params = new HttpParams().set('search', term).set('limit', '20').set('status', 'active');
         return this.http.get<any>(`${environment.apiUrl}/students`, { params });
       }),
     ).subscribe({
