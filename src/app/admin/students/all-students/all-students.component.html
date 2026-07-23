@@ -21,6 +21,26 @@
                   <input id="search-input" placeholder="Search" type="text" #filter (keyup)="applyFilter($event)"
                     class="browser-default search-field" aria-label="Search box">
                 </li>
+                <li>
+                  <mat-form-field appearance="outline" class="nee-aula-filter">
+                    <mat-label>NEE</mat-label>
+                    <mat-select [(ngModel)]="filterNee" (selectionChange)="onNeeAulaFilterChange()">
+                      <mat-option value="all">Todos</mat-option>
+                      <mat-option value="yes">Sí</mat-option>
+                      <mat-option value="no">No</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </li>
+                <li>
+                  <mat-form-field appearance="outline" class="nee-aula-filter">
+                    <mat-label>Aula Especial</mat-label>
+                    <mat-select [(ngModel)]="filterAula" (selectionChange)="onNeeAulaFilterChange()">
+                      <mat-option value="all">Todos</mat-option>
+                      <mat-option value="yes">Sí</mat-option>
+                      <mat-option value="no">No</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </li>
               </ul>
             </div>
             <div class="right">
@@ -85,6 +105,12 @@
                     <span class="truncate-text">
                       {{ row.name }}
                     </span>
+                    @if (row.nee) {
+                      <mat-icon class="material-icons-outlined nee-icon" matTooltip="NEE (Necesidades Educativas Especiales)">accessibility_new</mat-icon>
+                    }
+                    @if (row.aulaEspecial) {
+                      <mat-icon class="material-icons-outlined aula-especial-icon" matTooltip="Aula Especial">meeting_room</mat-icon>
+                    }
                   </mat-cell>
                 </ng-container>
                 } @else {
@@ -223,7 +249,8 @@
                   </mat-cell>
                 </ng-container>
                 <mat-header-row *matHeaderRowDef="getDisplayedColumns()"></mat-header-row>
-                <mat-row [@rowsAnimation]="" *matRowDef="let row; columns: getDisplayedColumns();" matRipple>
+                <mat-row [@rowsAnimation]="" *matRowDef="let row; columns: getDisplayedColumns();"
+                  [ngClass]="getRowClass(row)" matRipple>
                 </mat-row>
               </table>
               <!-- Loading spinner -->

@@ -96,26 +96,35 @@ export class DirectorioEstudiantesComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<any>(`${environment.apiUrl}/students?limit=1000`).subscribe({
+    // Directorio = estudiantes matriculados (enrollment 'enrolled') en el
+    // período lectivo actual (cursoLectivo.status === 'active'), no el total
+    // histórico de la colección students.
+    this.http.get<any>(`${environment.apiUrl}/enrollments?status=enrolled&limit=5000`).subscribe({
       next: (res) => {
-        this.allStudents = (res.data?.data ?? []).map((s: any) => ({
-          dni:                  s.dni                  ?? '—',
-          name:                 s.name                 ?? '—',
-          email:                s.email                ?? '—',
-          gender:               s.gender               ?? '—',
-          birthdate:            s.birthdate             ?? '',
-          age:                  s.birthdate ? this.calcAge(s.birthdate) : 0,
-          mobile:               s.mobile               ?? '—',
-          residenceZone:        s.residenceZone         ?? '—',
-          address:              s.address               ?? '—',
-          parentGuardianName:   s.parentGuardianName    ?? '—',
-          parentGuardianMobile: s.parentGuardianMobile  ?? '—',
-          fatherName:           s.fatherName            ?? '—',
-          fatherMobile:         s.fatherMobile          ?? '—',
-          motherName:           s.motherName            ?? '—',
-          motherMobile:         s.motherMobile          ?? '—',
-          status:               s.status               ?? '—',
-        }));
+        const enrollments = (res.data?.data ?? []).filter(
+          (e: any) => e.cursoLectivoId?.status === 'active'
+        );
+        this.allStudents = enrollments.map((e: any) => {
+          const s = e.studentId ?? {};
+          return {
+            dni:                  s.dni                  ?? '—',
+            name:                 s.name                 ?? '—',
+            email:                s.email                ?? '—',
+            gender:               s.gender               ?? '—',
+            birthdate:            s.birthdate             ?? '',
+            age:                  s.birthdate ? this.calcAge(s.birthdate) : 0,
+            mobile:               s.mobile               ?? '—',
+            residenceZone:        s.residenceZone         ?? '—',
+            address:              s.address               ?? '—',
+            parentGuardianName:   s.parentGuardianName    ?? '—',
+            parentGuardianMobile: s.parentGuardianMobile  ?? '—',
+            fatherName:           s.fatherName            ?? '—',
+            fatherMobile:         s.fatherMobile          ?? '—',
+            motherName:           s.motherName            ?? '—',
+            motherMobile:         s.motherMobile          ?? '—',
+            status:               s.status               ?? '—',
+          };
+        });
         this.loading = false;
       },
       error: () => { this.loading = false; },

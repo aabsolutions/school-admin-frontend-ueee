@@ -48,11 +48,16 @@
               <tbody>
                 @for (student of students; track student._id; let i = $index) {
                   <tr [class.table-danger]="student.status === 'absent'"
-                      [class.table-warning]="student.status === 'late'">
+                      [class.table-warning]="student.status === 'late'"
+                      [style.background]="student.studentStatus === 'suspended' ? 'rgba(211, 47, 47, 0.08)' : null"
+                      [style.borderLeft]="student.studentStatus === 'suspended' ? '3px solid #d32f2f' : null">
                     <td>{{ i + 1 }}</td>
                     <td>
                       <strong>{{ student.name }}</strong>
                       @if (student.dni) { <small class="text-muted ms-1">{{ student.dni }}</small> }
+                      @if (student.studentStatus === 'suspended') {
+                        <span class="badge" style="background:#ffcdd2;color:#b71c1c;font-size:10px;margin-left:4px" matTooltip="Estudiante suspendido">Suspendido</span>
+                      }
                       @if (student.nee) {
                         <mat-icon class="material-icons-outlined" style="font-size:16px;width:16px;height:16px;vertical-align:middle;margin-left:4px;color:#7b1fa2" matTooltip="NEE (Necesidades Educativas Especiales)">accessibility_new</mat-icon>
                       }

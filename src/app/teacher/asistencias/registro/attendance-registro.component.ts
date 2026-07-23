@@ -23,6 +23,9 @@ import {
 interface StudentRow extends StudentBasic {
   status: AttendanceStatus;
   note: string;
+  // Estado del estudiante (active/suspended) — distinto de `status`, que acá
+  // es el estado de asistencia (present/absent/late/excused).
+  studentStatus: string;
 }
 
 @Component({
@@ -74,8 +77,9 @@ export class AttendanceRegistroComponent implements OnInit {
     this.svc.getMyAssignment().subscribe({
       next: (a: any) => {
         this.assignment = a;
-        this.students = (a.students ?? []).map((s: StudentBasic) => ({
+        this.students = (a.students ?? []).map((s: any) => ({
           ...s,
+          studentStatus: s.status ?? 'active',
           status: 'present' as AttendanceStatus,
           note: '',
         }));

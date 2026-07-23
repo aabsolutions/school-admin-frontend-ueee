@@ -117,6 +117,10 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
   isLoading = true;
   private destroy$ = new Subject<void>();
 
+  searchText = '';
+  filterNee: 'all' | 'yes' | 'no' = 'all';
+  filterAula: 'all' | 'yes' | 'no' = 'all';
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('filter') filter!: ElementRef;
@@ -162,10 +166,16 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
         this.dataSource.data = data.map(s => { s.edad = calcAge(s.birthdate); return s; });
         this.isLoading = false;
         this.refreshTable();
-        this.dataSource.filterPredicate = (row: Students, filter: string) =>
-          Object.values(row).some((value) =>
-            value != null && value.toString().toLowerCase().includes(filter)
+        this.dataSource.filterPredicate = (row: Students, filter: string) => {
+          const f = JSON.parse(filter);
+          const searchMatch = !f.search || Object.values(row).some((value) =>
+            value != null && value.toString().toLowerCase().includes(f.search)
           );
+          const neeMatch = f.nee === 'all' || (f.nee === 'yes' ? row.nee : !row.nee);
+          const aulaMatch = f.aula === 'all' || (f.aula === 'yes' ? row.aulaEspecial : !row.aulaEspecial);
+          return searchMatch && neeMatch && aulaMatch;
+        };
+        this.updateFilter();
       },
       error: (err) => console.error(err),
     });
@@ -178,10 +188,28 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
-    this.dataSource.filter = filterValue;
+    this.searchText = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.updateFilter();
+  }
+
+  onNeeAulaFilterChange() {
+    this.updateFilter();
+  }
+
+  private updateFilter() {
+    this.dataSource.filter = JSON.stringify({
+      search: this.searchText,
+      nee: this.filterNee,
+      aula: this.filterAula,
+    });
+    if (this.dataSource.paginator) this.dataSource.paginator.firstPage();
+  }
+
+  // Prioridad de resaltado de fila: NEE > Aula Especial
+  getRowClass(row: Students): string {
+    if (row.nee) return 'row-nee';
+    if (row.aulaEspecial) return 'row-aula-especial';
+    return '';
   }
 
   addNew() {
