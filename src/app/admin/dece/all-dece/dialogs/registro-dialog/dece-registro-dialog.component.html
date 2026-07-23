@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <!-- Registrado por -->
+      <!-- Registrado por + Confidencial -->
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
           <mat-form-field class="example-full-width mb-3" appearance="outline">
@@ -63,7 +63,23 @@
             <mat-icon matSuffix>lock</mat-icon>
           </mat-form-field>
         </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2 d-flex align-items-center">
+          <mat-checkbox formControlName="confidencial">
+            <mat-icon style="font-size:16px;height:16px;width:16px;vertical-align:middle;margin-right:4px">lock</mat-icon>
+            Caso confidencial
+          </mat-checkbox>
+        </div>
       </div>
+      @if (form.get('confidencial')?.value) {
+        <div class="row">
+          <div class="col-12 mb-2">
+            <div class="alert alert-warning py-2 px-3 mb-0" style="font-size:12.5px">
+              <mat-icon style="font-size:16px;height:16px;width:16px;vertical-align:middle;margin-right:4px">info</mat-icon>
+              Este registro quedará oculto en el listado. Solo se podrá ver ingresando la contraseña maestra DECE.
+            </div>
+          </div>
+        </div>
+      }
 
       <!-- Evidencias -->
       <div class="row mb-3">

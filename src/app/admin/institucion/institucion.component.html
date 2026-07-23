@@ -267,6 +267,45 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- ── Contraseña maestra DECE confidencial (solo SuperAdmin) ── -->
+      @if (isSuperAdmin) {
+        <mat-card class="mb-4">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="me-2 align-middle">lock</mat-icon>
+              Contraseña DECE Confidencial
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="pt-3">
+            <p class="text-muted small mb-3">
+              Contraseña maestra requerida para visualizar casos DECE marcados como confidenciales.
+              @if (deceConfidencialPasswordConfigured) {
+                <span class="text-success"><mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle">check_circle</mat-icon> Configurada</span>
+              } @else {
+                <span class="text-danger"><mat-icon style="font-size:14px;height:14px;width:14px;vertical-align:middle">warning</mat-icon> No configurada</span>
+              }
+            </p>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 mb-2">
+                <mat-form-field class="w-100" appearance="outline">
+                  <mat-label>{{ deceConfidencialPasswordConfigured ? 'Nueva contraseña' : 'Definir contraseña' }}</mat-label>
+                  <input matInput type="password" [(ngModel)]="deceConfidencialPassword"
+                    [ngModelOptions]="{standalone: true}" minlength="6" placeholder="Mínimo 6 caracteres">
+                </mat-form-field>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 mb-2 d-flex align-items-start">
+                <button mat-flat-button color="primary" type="button"
+                  [disabled]="!deceConfidencialPassword || deceConfidencialPassword.length < 6 || savingDecePassword"
+                  (click)="saveDeceConfidencialPassword()">
+                  @if (savingDecePassword) { <mat-spinner diameter="18" style="display:inline-block;margin-right:6px" /> }
+                  {{ deceConfidencialPasswordConfigured ? 'Actualizar contraseña' : 'Guardar contraseña' }}
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+
       <!-- ── Botón guardar ── -->
       <div class="d-flex justify-content-end mb-4">
         <button mat-flat-button color="primary" type="submit" [disabled]="saving || form.invalid">

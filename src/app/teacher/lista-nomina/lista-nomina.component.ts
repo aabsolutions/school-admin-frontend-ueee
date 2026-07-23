@@ -185,7 +185,7 @@ export class ListaNominaTeacherComponent implements OnInit {
 
   getRowTooltip(row: StudentRow): string {
     if (row.status === 'suspended') return 'Estudiante suspendido';
-    if (row.nee) return 'NEE (Necesidades Educativas Especiales)';
+    if (row.nee) return 'NEE (Necesidades Educativas Específicas)';
     if (row.aulaEspecial) return 'Aula Especial';
     return '';
   }

@@ -11,6 +11,7 @@ import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/service/auth.service';
 import { DeceService } from '../../dece.service';
@@ -32,6 +33,7 @@ interface TeacherOption { id: string; name: string; }
     MatButtonModule, MatIconModule, MatDialogContent, MatDialogClose,
     MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule,
     MatDatepickerModule, MatNativeDateModule, MatProgressBarModule, MatProgressSpinnerModule,
+    MatCheckboxModule,
   ],
 })
 export class DeceRegistroDialogComponent implements OnInit {
@@ -53,10 +55,11 @@ export class DeceRegistroDialogComponent implements OnInit {
     const reg = data.registro;
     const currentUserName = auth.currentUserValue?.name ?? '';
     this.form = this.fb.group({
-      tipo:        [reg?.tipo        ?? '',         Validators.required],
-      fecha:       [reg?.fecha ? new Date(reg.fecha) : new Date(), Validators.required],
-      descripcion: [reg?.descripcion ?? '',         Validators.required],
-      creadoPor:   [{ value: reg?.creadoPor ?? currentUserName, disabled: true }, Validators.required],
+      tipo:         [reg?.tipo        ?? '',         Validators.required],
+      fecha:        [reg?.fecha ? new Date(reg.fecha) : new Date(), Validators.required],
+      descripcion:  [reg?.descripcion ?? '',         Validators.required],
+      creadoPor:    [{ value: reg?.creadoPor ?? currentUserName, disabled: true }, Validators.required],
+      confidencial: [reg?.confidencial ?? false],
     });
   }
 
@@ -72,12 +75,13 @@ export class DeceRegistroDialogComponent implements OnInit {
   submit() {
     if (!this.form.valid) return;
     this.uploading = true;
-    const { tipo, fecha, descripcion, creadoPor } = this.form.getRawValue();
+    const { tipo, fecha, descripcion, creadoPor, confidencial } = this.form.getRawValue();
     const fd = new FormData();
-    fd.append('tipo',        tipo);
-    fd.append('fecha',       (fecha as Date).toISOString());
-    fd.append('descripcion', descripcion);
-    fd.append('creadoPor',   creadoPor);
+    fd.append('tipo',         tipo);
+    fd.append('fecha',        (fecha as Date).toISOString());
+    fd.append('descripcion',  descripcion);
+    fd.append('creadoPor',    creadoPor);
+    fd.append('confidencial', String(!!confidencial));
     this.selectedFiles.forEach(f => fd.append('files', f));
 
     const request$ = this.isEditMode

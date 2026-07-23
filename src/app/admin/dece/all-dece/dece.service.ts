@@ -35,6 +35,12 @@ export class DeceService {
     );
   }
 
+  revealRegistro(expedienteId: string, registroId: string, password: string): Observable<DeceRegistro> {
+    return this.http.post<ApiOne<DeceRegistro>>(
+      `${API}/${expedienteId}/registros/${registroId}/reveal`, { password },
+    ).pipe(map(r => r.data));
+  }
+
   addRegistro(expedienteId: string, formData: FormData): Observable<DeceRegistro> {
     return this.http.post<ApiOne<DeceRegistro>>(`${API}/${expedienteId}/registros`, formData).pipe(
       map(r => r.data),

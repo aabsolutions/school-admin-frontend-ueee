@@ -30,6 +30,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { environment } from '@environments/environment';
 import { UppercaseDirective } from '@shared/directives/uppercase.directive';
+import { AuthService } from '@core/service/auth.service';
 import { forkJoin, switchMap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -82,10 +83,11 @@ export class TeachersFormComponent implements OnInit {
     public teachersService: TeachersService,
     private fb: UntypedFormBuilder,
     private http: HttpClient,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
   ) {
     this.action = data.action;
-    this.readOnly = this.action === 'view';
+    this.readOnly = this.action !== 'add' && !this.authService.hasSidebarPermission('teachers:edit');
     this.dialogTitle = this.action !== 'add' ? data.teachers.name : 'Nuevo Docente';
     this.teachers = this.action !== 'add' ? data.teachers : new Teachers({});
     this.teacherForm = this.createTeacherForm();

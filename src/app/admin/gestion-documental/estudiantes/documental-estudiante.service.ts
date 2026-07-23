@@ -5,9 +5,18 @@ import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 
 const API = `${environment.apiUrl}/documental-estudiante`;
+const TIPOS_API = `${environment.apiUrl}/tipos-documento-especial`;
 
 interface ApiList<T> { data: { data: T[]; total: number; page: number; limit: number } }
 interface ApiOne<T>  { data: T }
+
+export interface DocumentoEspecialItem {
+  _id: string;
+  nombre: string;
+  url: string;
+  descripcion?: string;
+  fecha: string;
+}
 
 export interface DocumentalEstudiante {
   _id: string;
@@ -28,10 +37,16 @@ export interface DocumentalEstudiante {
   copiaCedulaRepresentante: boolean;
   certificadoParticipacion: boolean;
   notas?: string;
+  documentosEspeciales?: DocumentoEspecialItem[];
   student?: { name: string; dni: string; email: string; img: string };
 }
 
 export const NIVEL_BACH = ['1RO BACH', '2DO BACH', '3RO BACH'];
+
+export interface TipoDocumentoEspecial {
+  _id: string;
+  nombre: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class DocumentalEstudianteService {
@@ -62,5 +77,49 @@ export class DocumentalEstudianteService {
     return this.http
       .get<ApiOne<DocumentalEstudiante>>(`${API}/me`)
       .pipe(map(r => r.data));
+  }
+
+  /** Documentos especiales */
+  uploadDocumentoEspecial(studentId: string, formData: FormData): Observable<DocumentalEstudiante> {
+    return this.http
+      .post<ApiOne<DocumentalEstudiante>>(`${API}/student/${studentId}/documentos-especiales`, formData)
+      .pipe(map(r => r.data));
+  }
+
+  addDocumentoEspecialUrl(studentId: string, payload: { nombre: string; url: string; descripcion?: string }): Observable<DocumentalEstudiante> {
+    return this.http
+      .post<ApiOne<DocumentalEstudiante>>(`${API}/student/${studentId}/documentos-especiales/url`, payload)
+      .pipe(map(r => r.data));
+  }
+
+  deleteDocumentoEspecial(studentId: string, docId: string): Observable<DocumentalEstudiante> {
+    return this.http
+      .delete<ApiOne<DocumentalEstudiante>>(`${API}/student/${studentId}/documentos-especiales/${docId}`)
+      .pipe(map(r => r.data));
+  }
+
+  /** Catálogo de tipos de documento especial */
+  getTiposDocumentoEspecial(): Observable<TipoDocumentoEspecial[]> {
+    return this.http
+      .get<ApiOne<TipoDocumentoEspecial[]>>(TIPOS_API)
+      .pipe(map(r => r.data));
+  }
+
+  createTipoDocumentoEspecial(nombre: string): Observable<TipoDocumentoEspecial> {
+    return this.http
+      .post<ApiOne<TipoDocumentoEspecial>>(TIPOS_API, { nombre })
+      .pipe(map(r => r.data));
+  }
+
+  updateTipoDocumentoEspecial(id: string, nombre: string): Observable<TipoDocumentoEspecial> {
+    return this.http
+      .put<ApiOne<TipoDocumentoEspecial>>(`${TIPOS_API}/${id}`, { nombre })
+      .pipe(map(r => r.data));
+  }
+
+  deleteTipoDocumentoEspecial(id: string): Observable<void> {
+    return this.http
+      .delete<ApiOne<void>>(`${TIPOS_API}/${id}`)
+      .pipe(map(() => undefined));
   }
 }

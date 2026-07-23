@@ -1,12 +1,14 @@
 export interface DeceRegistro {
   _id: string;
   expedienteId: string;
-  tipo: string;
+  /** null cuando confidencial=true y aún no se reveló con la contraseña maestra */
+  tipo: string | null;
   fecha: string;
-  descripcion: string;
+  descripcion: string | null;
   evidencias: string[];
   creadoPor: string;
   createdAt: string;
+  confidencial?: boolean;
 }
 
 export interface DeceStudentInfo {

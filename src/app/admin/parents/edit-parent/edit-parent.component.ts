@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { ParentsApiService, Parent } from '../parents-api.service';
 import { UppercaseDirective } from '@shared/directives/uppercase.directive';
+import { AuthService } from '@core/service/auth.service';
 
 @Component({
   selector: 'app-edit-parent',
@@ -51,6 +52,7 @@ export class EditParentComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
+    private authService: AuthService,
   ) {
     this.form = this.fb.group({
       name:           ['', Validators.required],
@@ -67,7 +69,7 @@ export class EditParentComponent implements OnInit {
 
   ngOnInit() {
     this.parentId = this.route.snapshot.paramMap.get('id') || '';
-    this.readOnly = this.route.snapshot.queryParamMap.get('readonly') === '1';
+    this.readOnly = !this.authService.hasSidebarPermission('parents:edit');
     this.api.getOne(this.parentId).subscribe({
       next: (p) => {
         this.parent = p;

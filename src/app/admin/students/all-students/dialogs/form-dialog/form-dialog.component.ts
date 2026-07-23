@@ -30,8 +30,7 @@ import { ParentSingleSelectComponent } from '@shared/components/parent-selector/
 import { UppercaseDirective } from '@shared/directives/uppercase.directive';
 
 export interface DialogData {
-  id: string | number;
-  action: string;
+  action: 'add';
   student: Students;
 }
 
@@ -57,9 +56,7 @@ export interface DialogData {
   ],
 })
 export class StudentsFormComponent {
-  action: string;
-  readOnly: boolean;
-  dialogTitle: string;
+  dialogTitle = 'New Student';
   stdForm: UntypedFormGroup;
   student: Students;
   constructor(
@@ -70,12 +67,8 @@ export class StudentsFormComponent {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
   ) {
-    this.action = data.action;
-    this.readOnly = this.action === 'view';
-    this.dialogTitle = this.action !== 'add' ? data.student.name : 'New Student';
-    this.student = this.action !== 'add' ? data.student : new Students({});
+    this.student = new Students({});
     this.stdForm = this.createStudentForm();
-    if (this.readOnly) this.stdForm.disable();
   }
 
   private safeDate(value: any): string {
@@ -84,7 +77,6 @@ export class StudentsFormComponent {
   }
 
   createStudentForm(): UntypedFormGroup {
-    const isAdd = this.action === 'add';
     return this.fb.group({
       id:                   [this.student.id],
       img:                  [this.student.img],
@@ -115,18 +107,10 @@ export class StudentsFormComponent {
   submit() {
     if (this.stdForm.valid) {
       const formData = this.stdForm.getRawValue();
-
-      if (this.action === 'edit') {
-        this.studentsService.updateStudent(formData).subscribe({
-          next: (response) => this.dialogRef.close(response),
-          error: (err) => this.showError(err.message),
-        });
-      } else {
-        this.studentsService.addStudent(formData).subscribe({
-          next: (response) => this.dialogRef.close(response),
-          error: (err) => this.showError(err.message),
-        });
-      }
+      this.studentsService.addStudent(formData).subscribe({
+        next: (response) => this.dialogRef.close(response),
+        error: (err) => this.showError(err.message),
+      });
     }
   }
 

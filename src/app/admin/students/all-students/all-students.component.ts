@@ -18,6 +18,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { StudentsFormComponent } from './dialogs/form-dialog/form-dialog.component';
 import { StudentsDeleteComponent } from './dialogs/delete/delete.component';
+import { StudentProfileComponent } from '../student-profile/student-profile.component';
+import { AuthService } from '@core/service/auth.service';
 import { BulkImportDialogComponent, BulkImportColumn } from '@shared/components/bulk-import/bulk-import-dialog.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { StudentsService } from './students.service';
@@ -138,8 +140,13 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public studentsService: StudentsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
   ) {}
+
+  get canEditStudents(): boolean {
+    return this.authService.hasSidebarPermission('students:edit');
+  }
 
   ngOnInit() {
     this.loadData();
@@ -216,56 +223,35 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
     this.openDialog('add');
   }
 
-  editCall(row: Students) {
-    this.openDialog('edit', row);
+  openProfile(row: Students) {
+    const dialogRef = this.dialog.open(StudentProfileComponent, {
+      width: '70vw',
+      maxWidth: '100vw',
+      data: { studentId: row.id },
+      autoFocus: false,
+    });
+    dialogRef.afterClosed().subscribe(() => this.refresh());
   }
 
-  viewCall(row: Students) {
-    this.openDialog('view', row);
-  }
-
-  openDialog(action: 'add' | 'edit' | 'view', data?: Students) {
-    let varDirection: Direction;
-    if (localStorage.getItem('isRtl') === 'true') {
-      varDirection = 'rtl';
-    } else {
-      varDirection = 'ltr';
-    }
+  openDialog(action: 'add') {
+    const varDirection: Direction = localStorage.getItem('isRtl') === 'true' ? 'rtl' : 'ltr';
     const dialogRef = this.dialog.open(StudentsFormComponent, {
       width: '60vw',
       maxWidth: '100vw',
-      data: { student: data, action },
+      data: { student: new Students({}), action },
       direction: varDirection,
       autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        if (action === 'add') {
-          this.dataSource.data = [result, ...this.dataSource.data];
-        } else {
-          this.updateRecord(result);
-        }
+        this.dataSource.data = [result, ...this.dataSource.data];
         this.refreshTable();
-        this.showNotification(
-          action === 'add' ? 'snackbar-success' : 'black',
-          `${action === 'add' ? 'Add' : 'Edit'} Record Successfully...!!!`,
-          'bottom',
-          'center'
-        );
+        this.showNotification('snackbar-success', 'Add Record Successfully...!!!', 'bottom', 'center');
       }
     });
   }
 
-  private updateRecord(updatedRecord: Students) {
-    const index = this.dataSource.data.findIndex(
-      (record) => record.id === updatedRecord.id
-    );
-    if (index !== -1) {
-      this.dataSource.data[index] = updatedRecord;
-      this.dataSource._updateChangeSubscription();
-    }
-  }
 
   deleteItem(row: Students) {
     const dialogRef = this.dialog.open(StudentsDeleteComponent, {

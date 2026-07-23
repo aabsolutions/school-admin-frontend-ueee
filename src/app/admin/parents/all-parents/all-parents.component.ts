@@ -16,6 +16,7 @@ import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.co
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { ParentsApiService, Parent } from '../parents-api.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { AuthService } from '@core/service/auth.service';
 
 @Component({
   selector: 'app-all-parents',
@@ -56,7 +57,12 @@ export class AllParentsComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private authService: AuthService,
   ) {}
+
+  get canEditParents(): boolean {
+    return this.authService.hasSidebarPermission('parents:edit');
+  }
 
   ngOnInit() {
     this.loadData();
@@ -92,12 +98,8 @@ export class AllParentsComponent implements OnInit {
     this.loadData();
   }
 
-  edit(id: string) {
+  openProfile(id: string) {
     this.router.navigate(['/admin/parents/edit-parent', id]);
-  }
-
-  view(id: string) {
-    this.router.navigate(['/admin/parents/edit-parent', id], { queryParams: { readonly: 1 } });
   }
 
   remove(id: string) {

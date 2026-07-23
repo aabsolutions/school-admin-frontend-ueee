@@ -106,7 +106,7 @@
                       {{ row.name }}
                     </span>
                     @if (row.nee) {
-                      <mat-icon class="material-icons-outlined nee-icon" matTooltip="NEE (Necesidades Educativas Especiales)">accessibility_new</mat-icon>
+                      <mat-icon class="material-icons-outlined nee-icon" matTooltip="NEE (Necesidades Educativas Específicas)">accessibility_new</mat-icon>
                     }
                     @if (row.aulaEspecial) {
                       <mat-icon class="material-icons-outlined aula-especial-icon" matTooltip="Aula Especial">meeting_room</mat-icon>
@@ -228,13 +228,9 @@
                 <ng-container matColumnDef="actions">
                   <mat-header-cell class="pr-0" *matHeaderCellDef>Actions</mat-header-cell>
                   <mat-cell *matCellDef="let row; let i=index;" class="pr-0">
-                    <button *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']" mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="editCall(row)"
-                      class="tbl-action-btn">
-                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
-                    </button>
-                    <button *ngxPermissionsExcept="['/admin/students/add-student', 'SUPERADMIN']" mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="viewCall(row)"
-                      class="tbl-action-btn" matTooltip="Ver detalle">
-                      <app-feather-icons [icon]="'eye'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                    <button mat-icon-button color="accent" (click)="$event.stopPropagation()" (click)="openProfile(row)"
+                      class="tbl-action-btn" [matTooltip]="canEditStudents ? 'Ver / editar estudiante' : 'Ver detalle'">
+                      <app-feather-icons [icon]="canEditStudents ? 'edit' : 'eye'" [class]="'tbl-fav-edit'"></app-feather-icons>
                     </button>
                     <a *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']"
                        mat-icon-button color="primary"
@@ -270,9 +266,9 @@
                     <mat-icon>add_box</mat-icon>
                     <span>Add Record</span>
                   </button>
-                  <button *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']" mat-menu-item (click)="editCall(item)">
+                  <button mat-menu-item (click)="openProfile(item)">
                     <mat-icon>create</mat-icon>
-                    <span>Edit Record</span>
+                    <span>Ver / Editar</span>
                   </button>
                   <button *ngxPermissionsOnly="['SUPERADMIN']" mat-menu-item (click)="deleteItem(item)">
                     <mat-icon>delete</mat-icon>

@@ -104,15 +104,6 @@ export class StudentsService {
     );
   }
 
-  updateStudent(student: Students): Observable<Students> {
-    return this.httpClient
-      .put<ApiOne<any>>(`${this.API_URL}/${student.id}`, this.toPayload(student))
-      .pipe(
-        map((response) => this.normalize(response.data)),
-        catchError(this.handleError)
-      );
-  }
-
   deleteStudent(id: string | number): Observable<string | number> {
     return this.httpClient.delete<void>(`${this.API_URL}/${id}`).pipe(
       map(() => id),
@@ -144,6 +135,27 @@ export class StudentsService {
 
   getStudentWithSiblings(id: string): Observable<any> {
     return this.httpClient.get<ApiOne<any>>(`${this.API_URL}/${id}`).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  updateGeneralInfo(id: string, dto: Record<string, any>): Observable<any> {
+    return this.httpClient.put<ApiOne<any>>(`${this.API_URL}/${id}`, dto).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  updateMedicalInfo(id: string, dto: Record<string, any>): Observable<any> {
+    return this.httpClient.patch<ApiOne<any>>(`${this.API_URL}/${id}/medical`, dto).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  updateFamilyInfo(id: string, dto: Record<string, any>): Observable<any> {
+    return this.httpClient.patch<ApiOne<any>>(`${this.API_URL}/${id}/family`, dto).pipe(
       map((r) => r.data),
       catchError(this.handleError),
     );

@@ -88,6 +88,20 @@ export class TeachersService {
     );
   }
 
+  getTeacherById(id: string): Observable<any> {
+    return this.httpClient.get<ApiOne<any>>(`${this.API_URL}/${id}`).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  updateTeacherGeneral(id: string, payload: Record<string, any>): Observable<any> {
+    return this.httpClient.put<ApiOne<any>>(`${this.API_URL}/${id}`, payload).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
   updateTeacher(teacher: Teachers): Observable<Teachers> {
     return this.httpClient
       .put<ApiOne<any>>(`${this.API_URL}/${teacher.id}`, this.toPayload(teacher))

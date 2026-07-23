@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>
+  <mat-icon style="vertical-align:middle;margin-right:8px">settings</mat-icon>
+  Gestionar tipos de documento
+</h2>
+
+@if (loading || saving) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+
+<mat-dialog-content style="min-width:420px; max-height:60vh; overflow-y:auto;">
+<div class="p-2">
+
+  @if (!loading && tipos.length === 0) {
+    <p class="text-muted text-center py-3">Sin tipos de documento registrados</p>
+  }
+
+  <div class="list-group mb-3">
+    @for (tipo of tipos; track tipo._id) {
+      <div class="list-group-item d-flex align-items-center gap-2">
+        @if (editingId === tipo._id) {
+          <mat-form-field appearance="outline" class="flex-grow-1 mb-0">
+            <input matInput [(ngModel)]="editingNombre" (keyup.enter)="saveEdit(tipo)">
+          </mat-form-field>
+          <button mat-icon-button color="primary" (click)="saveEdit(tipo)" matTooltip="Guardar">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-icon-button (click)="cancelEdit()" matTooltip="Cancelar">
+            <mat-icon>close</mat-icon>
+          </button>
+        } @else {
+          <span class="flex-grow-1">{{ tipo.nombre }}</span>
+          <button mat-icon-button color="primary" (click)="startEdit(tipo)" matTooltip="Renombrar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="eliminar(tipo)" matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="d-flex gap-2 align-items-start">
+    <mat-form-field appearance="outline" class="flex-grow-1 mb-0">
+      <mat-label>Nuevo tipo de documento</mat-label>
+      <input matInput [(ngModel)]="nuevoNombre" placeholder="Ej: Informe psicopedagógico" (keyup.enter)="crear()">
+    </mat-form-field>
+    <button mat-mini-fab color="primary" (click)="crear()" [disabled]="!nuevoNombre.trim() || saving" matTooltip="Agregar">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
+</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cerrar</button>
+</mat-dialog-actions>

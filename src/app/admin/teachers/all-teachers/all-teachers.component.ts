@@ -41,6 +41,7 @@ import { Direction } from '@angular/cdk/bidi';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { AuthService } from '@core/service/auth.service';
 
 function calcAge(birthdate: string | undefined): number | null {
   if (!birthdate) return null;
@@ -153,7 +154,8 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     public httpClient: HttpClient,
     public dialog: MatDialog,
     public teachersService: TeachersService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -250,15 +252,15 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     this.openDialog('add');
   }
 
-  editCall(row: Teachers) {
+  openProfile(row: Teachers) {
     this.openDialog('edit', row);
   }
 
-  viewCall(row: Teachers) {
-    this.openDialog('view', row);
+  get canEditTeachers(): boolean {
+    return this.authService.hasSidebarPermission('teachers:edit');
   }
 
-  openDialog(action: 'add' | 'edit' | 'view', data?: Teachers) {
+  openDialog(action: 'add' | 'edit', data?: Teachers) {
     let varDirection: Direction;
     if (localStorage.getItem('isRtl') === 'true') {
       varDirection = 'rtl';

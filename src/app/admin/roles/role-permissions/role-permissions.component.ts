@@ -41,6 +41,17 @@ interface FlatPermNode {
 
 const ADMIN_ROLES = ['ADMIN', 'SUPERADMIN'];
 
+/** Granular action permissions — not tied to a sidebar route, checked directly by
+ *  backend guards (e.g. StudentRoleGuard) against sidebarPermissions. Only assignable
+ *  to custom (non-system) roles; system roles (ADMIN/SUPERADMIN/TEACHER/...) have
+ *  fixed behavior defined by the role hierarchy instead. */
+export interface ActionPermission { key: string; label: string; }
+export const ACTION_PERMISSIONS: ActionPermission[] = [
+  { key: 'students:edit', label: 'Modificar estudiantes' },
+  { key: 'teachers:edit', label: 'Modificar docentes' },
+  { key: 'parents:edit', label: 'Modificar padres' },
+];
+
 /** Roles cuyo árbol de permisos incluye rutas restringidas a ADMIN/SUPERADMIN
  *  (roles custom se gestionan igual que ADMIN). Los roles fijos (TEACHER,
  *  STUDENT, PARENT) en cambio solo ven su propio subárbol de rutas. */
@@ -96,6 +107,20 @@ export class RolePermissionsComponent implements OnInit {
 
   loading = false;
   saving = false;
+
+  readonly actionPermissions = ACTION_PERMISSIONS;
+
+  get showActionPermissions(): boolean {
+    return !this.data.role.isSystem;
+  }
+
+  actionPermissionChecked(key: string): boolean {
+    return this.selection.isSelected(key);
+  }
+
+  toggleActionPermission(key: string): void {
+    this.selection.toggle(key);
+  }
 
   constructor(
     private http: HttpClient,

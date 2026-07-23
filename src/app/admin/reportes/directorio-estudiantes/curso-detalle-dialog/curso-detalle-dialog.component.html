@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Detalle del Curso</h2>
+
+<mat-dialog-content>
+  @if (loading) {
+    <div class="d-flex justify-content-center py-4">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (!curso) {
+    <p class="text-muted">No se pudo cargar la información del curso.</p>
+  } @else {
+    <div class="curso-header mb-3">
+      <h3 class="mb-0">
+        {{ curso.nivel }}{{ curso.especialidad ? ' ' + curso.especialidad : '' }} "{{ curso.paralelo }}"
+      </h3>
+      <p class="text-muted small mb-0">{{ curso.subnivel }} — Jornada {{ curso.jornada }} — Año {{ curso.academicYear }}</p>
+    </div>
+
+    <div class="detail-row">
+      <mat-icon class="detail-icon">groups</mat-icon>
+      <div>
+        <span class="detail-label">Cantidad de estudiantes</span>
+        <span class="detail-value">{{ cantidadEstudiantes }}</span>
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <mat-icon class="detail-icon">person</mat-icon>
+      <div>
+        <span class="detail-label">Tutor</span>
+        <span class="detail-value">{{ curso.tutor?.name ?? 'Sin asignar' }}</span>
+        @if (curso.tutor) {
+          <span class="detail-sub">{{ curso.tutor.email }} · {{ curso.tutor.mobile }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <mat-icon class="detail-icon">psychology</mat-icon>
+      <div>
+        <span class="detail-label">DECE encargado</span>
+        <span class="detail-value">{{ curso.dece?.name ?? 'Sin asignar' }}</span>
+        @if (curso.dece) {
+          <span class="detail-sub">{{ curso.dece.email }} · {{ curso.dece.mobile }}</span>
+        }
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <mat-icon class="detail-icon">shield_person</mat-icon>
+      <div>
+        <span class="detail-label">Inspector</span>
+        <span class="detail-value">{{ curso.inspector?.name ?? 'Sin asignar' }}</span>
+        @if (curso.inspector) {
+          <span class="detail-sub">{{ curso.inspector.email }} · {{ curso.inspector.mobile }}</span>
+        }
+      </div>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="null">Cerrar</button>
+</mat-dialog-actions>

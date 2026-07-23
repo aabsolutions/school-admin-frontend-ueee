@@ -1,3 +1,38 @@
+export interface StudentMedicalInfo {
+  bloodType?: string;
+  hasAllergies?: boolean;
+  allergiesDetail?: string;
+  hasChronicCondition?: boolean;
+  chronicConditionDetail?: string;
+  currentMedications?: string;
+  hasDisability?: boolean;
+  disabilityDetail?: string;
+  hasConadis?: boolean;
+  conadisNumber?: string;
+  doctorName?: string;
+  doctorPhone?: string;
+  healthInsurance?: string;
+  policyNumber?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  emergencyContactRelation?: string;
+  medicalNotes?: string;
+}
+
+export interface StudentFamilyInfo {
+  familySituation?: string;
+  livesWithWhom?: string;
+  fatherOccupation?: string;
+  fatherEducationLevel?: string;
+  motherOccupation?: string;
+  motherEducationLevel?: string;
+  numberOfSiblings?: number;
+  studentBirthOrder?: number;
+  socioeconomicLevel?: string;
+  housingType?: string;
+  familyNotes?: string;
+}
+
 export class Students {
   id: string | number;
   img: string;
@@ -25,6 +60,8 @@ export class Students {
   nee: boolean;
   aulaEspecial: boolean;
   edad?: number | null;
+  medicalInfo: StudentMedicalInfo;
+  familyInfo: StudentFamilyInfo;
 
   constructor(students: Partial<Students>) {
     this.id = students.id || this.getRandomID();
@@ -52,6 +89,8 @@ export class Students {
     this.status = students.status || 'active';
     this.nee = students.nee ?? false;
     this.aulaEspecial = students.aulaEspecial ?? false;
+    this.medicalInfo = students.medicalInfo ?? {};
+    this.familyInfo = students.familyInfo ?? {};
   }
 
   public getRandomID(): number {

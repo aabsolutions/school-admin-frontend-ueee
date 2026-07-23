@@ -52,4 +52,12 @@ export class InstitucionService {
     form.append('file', file);
     return this.http.post<any>(`${this.API}/cover-image`, form).pipe(map((r) => r.data ?? r));
   }
+
+  getDeceConfidencialPasswordStatus(): Observable<{ configured: boolean }> {
+    return this.http.get<any>(`${this.API}/dece-confidencial-password/status`).pipe(map((r) => r.data ?? r));
+  }
+
+  setDeceConfidencialPassword(password: string): Observable<{ configured: boolean }> {
+    return this.http.put<any>(`${this.API}/dece-confidencial-password`, { password }).pipe(map((r) => r.data ?? r));
+  }
 }

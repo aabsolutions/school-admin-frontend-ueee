@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeceExpediente, DeceRegistro, DeceStudentInfo, DECE_TIPO_CONFIG } from '../../dece.model';
 import { DeceService } from '../../dece.service';
 import { DeceRegistroDialogComponent } from '../registro-dialog/dece-registro-dialog.component';
+import { DeceConfidencialPasswordDialogComponent } from '../confidencial-password-dialog/dece-confidencial-password-dialog.component';
 import { LocalStorageService } from '@shared/services';
 
 export interface DeceDetailDialogData { expediente: DeceExpediente }
@@ -76,6 +77,31 @@ export class DeceDetailDialogComponent implements OnInit {
     });
   }
 
+  /** true si el registro es confidencial y aún no fue revelado con la contraseña maestra */
+  isLocked(registro: DeceRegistro): boolean {
+    return !!registro.confidencial && registro.descripcion === null;
+  }
+
+  /** Pide la contraseña maestra DECE; si es correcta, revela el registro (y opcionalmente abre edición) */
+  unlockRegistro(registro: DeceRegistro, thenEdit = false) {
+    const ref = this.dialog.open(DeceConfidencialPasswordDialogComponent, {
+      width: '380px', autoFocus: true,
+      data: { expedienteId: this.data.expediente._id, registroId: registro._id },
+    });
+    ref.afterClosed().subscribe((full?: DeceRegistro) => {
+      if (!full) return;
+      const idx = this.registros.findIndex(r => r._id === full._id);
+      if (idx !== -1) this.registros[idx] = full;
+      if (thenEdit) this.openRegistroDialog(full);
+    });
+  }
+
+  /** Punto de entrada del botón editar: si está bloqueado, primero pide contraseña */
+  editRegistro(registro: DeceRegistro) {
+    if (this.isLocked(registro)) { this.unlockRegistro(registro, true); return; }
+    this.openRegistroDialog(registro);
+  }
+
   openRegistroDialog(registro?: DeceRegistro) {
     const ref = this.dialog.open(DeceRegistroDialogComponent, {
       width: '600px', maxWidth: '100vw', autoFocus: false,
@@ -139,11 +165,11 @@ export class DeceDetailDialogComponent implements OnInit {
     });
   }
 
-  getTipoClass(tipo: string): string {
-    return this.tipoConfig[tipo]?.color ?? 'badge-solid-default';
+  getTipoClass(tipo: string | null): string {
+    return (tipo && this.tipoConfig[tipo]?.color) ?? 'badge-solid-default';
   }
 
-  getTipoIcon(tipo: string): string {
-    return this.tipoConfig[tipo]?.icon ?? 'info';
+  getTipoIcon(tipo: string | null): string {
+    return (tipo && this.tipoConfig[tipo]?.icon) ?? 'info';
   }
 }

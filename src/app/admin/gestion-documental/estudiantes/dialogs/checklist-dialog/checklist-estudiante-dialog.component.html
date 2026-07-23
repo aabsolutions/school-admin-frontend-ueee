@@ -1,11 +1,15 @@
 <h2 mat-dialog-title>
   <mat-icon style="vertical-align:middle;margin-right:8px">checklist</mat-icon>
-  Documentos Académicos — {{ data.studentName }}
+  Documentos — {{ data.studentName }}
 </h2>
 
-@if (saving) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
+@if (saving || uploading) { <mat-progress-bar mode="indeterminate"></mat-progress-bar> }
 
-<mat-dialog-content style="min-width:480px; max-height:70vh; overflow-y:auto;">
+<mat-dialog-content style="min-width:560px; max-height:72vh; overflow-y:auto;">
+<mat-tab-group>
+
+<mat-tab label="📋 Checklist Académico">
+<div class="p-3">
 
   <!-- Resumen -->
   <div class="mb-3" style="display:flex; align-items:center; gap:12px;">
@@ -96,11 +100,108 @@
     <textarea matInput [(ngModel)]="form.notas" rows="2" placeholder="Notas adicionales..."></textarea>
   </mat-form-field>
 
+  <div class="d-flex justify-content-end mt-2">
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
+      <mat-icon>save</mat-icon> Guardar
+    </button>
+  </div>
+
+</div>
+</mat-tab>
+
+<!-- Tab: Documentos Especiales -->
+<mat-tab label="📁 Documentos Especiales">
+  <div class="p-3">
+    @if (documentosEspeciales.length === 0) {
+      <p class="text-muted text-center py-3">Sin documentos especiales cargados</p>
+    } @else {
+      <div class="list-group mb-3">
+        @for (doc of documentosEspeciales; track doc._id) {
+          <div class="list-group-item d-flex align-items-center gap-2">
+            <mat-icon class="text-muted">description</mat-icon>
+            <div class="flex-grow-1">
+              <div class="fw-semibold">{{ doc.nombre }}</div>
+              @if (doc.descripcion) {
+                <small class="text-muted">{{ doc.descripcion }}</small>
+              }
+              <small class="text-muted d-block">{{ doc.fecha | date:'dd/MM/yyyy' }}</small>
+            </div>
+            <button mat-icon-button color="primary" (click)="openUrl(doc.url)" matTooltip="Ver archivo">
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteDocEspecial(doc._id)"
+              [disabled]="deletingId === doc._id" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+    }
+
+    <mat-divider class="mb-3"></mat-divider>
+
+    <!-- Toggle modo -->
+    <mat-button-toggle-group [(ngModel)]="uploadMode" (change)="onModeChange()" class="mb-3 w-100">
+      <mat-button-toggle value="file" class="flex-grow-1">
+        <mat-icon>upload_file</mat-icon> Subir archivo
+      </mat-button-toggle>
+      <mat-button-toggle value="url" class="flex-grow-1">
+        <mat-icon>link</mat-icon> Registrar URL
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <div class="d-flex gap-2 align-items-start mb-2">
+      <mat-form-field appearance="outline" class="flex-grow-1 mb-0">
+        <mat-label>Nombre del documento</mat-label>
+        <mat-select [(ngModel)]="uploadNombre">
+          @for (tipo of tiposDocumento; track tipo._id) {
+            <mat-option [value]="tipo.nombre">{{ tipo.nombre }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <button *ngxPermissionsOnly="['SUPERADMIN']" mat-icon-button (click)="gestionarTipos()" matTooltip="Gestionar nombres" type="button">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100 mb-2">
+      <mat-label>Descripción (opcional)</mat-label>
+      <input matInput [(ngModel)]="uploadDescripcion" placeholder="Descripción breve...">
+    </mat-form-field>
+
+    <!-- Modo: archivo -->
+    @if (uploadMode === 'file') {
+      <div class="mb-3">
+        <label class="btn btn-outline-secondary" style="cursor:pointer">
+          <mat-icon style="vertical-align:middle">upload_file</mat-icon>
+          {{ selectedFile ? selectedFile.name : 'Seleccionar archivo' }}
+          <input type="file" hidden
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
+            (change)="onFileSelected($event)">
+        </label>
+      </div>
+      <button mat-raised-button color="primary" (click)="uploadEspecial()" [disabled]="uploading || !selectedFile">
+        <mat-icon>cloud_upload</mat-icon> Subir documento
+      </button>
+    }
+
+    <!-- Modo: URL -->
+    @if (uploadMode === 'url') {
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>URL del documento</mat-label>
+        <input matInput [(ngModel)]="uploadUrl" placeholder="https://...">
+        <mat-icon matSuffix>link</mat-icon>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="saveUrlEspecial()" [disabled]="uploading || !uploadUrl.trim() || !uploadNombre.trim()">
+        <mat-icon>save</mat-icon> Guardar referencia
+      </button>
+    }
+  </div>
+</mat-tab>
+
+</mat-tab-group>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()" [disabled]="saving">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="save()" [disabled]="saving">
-    <mat-icon>save</mat-icon> Guardar
-  </button>
+  <button mat-button (click)="cancel()">Cerrar</button>
 </mat-dialog-actions>

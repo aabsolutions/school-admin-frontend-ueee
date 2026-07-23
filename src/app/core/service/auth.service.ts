@@ -35,6 +35,18 @@ export class AuthService {
     return this.change$;
   }
 
+  /**
+   * Checks a granular action permission (not tied to a sidebar route), stored alongside
+   * route paths in RoleConfig.sidebarPermissions. SUPERADMIN/ADMIN always bypass,
+   * mirroring the backend guards (e.g. StudentRoleGuard).
+   */
+  hasSidebarPermission(permission: string): boolean {
+    const role = (this.currentUserValue as any)?.roles?.[0]?.name ?? '';
+    if (role === 'SUPERADMIN' || role === 'ADMIN') return true;
+    const permissions: string[] = this.store.get('sidebarPermissions') ?? [];
+    return permissions.includes(permission);
+  }
+
   login(username: string, password: string, rememberMe = false) {
     return this.loginService.login(username, password, rememberMe).pipe(
       switchMap((response) => {

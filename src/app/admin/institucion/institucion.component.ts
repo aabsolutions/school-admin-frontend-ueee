@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { InstitucionService } from '@core';
 import { environment } from '@environments/environment';
+import { LocalStorageService } from '@shared/services';
 
 @Component({
   selector: 'app-institucion',
@@ -47,11 +48,17 @@ export class InstitucionComponent implements OnInit {
   docenteSearch = '';
   autoridadNombre = '';
 
+  isSuperAdmin = false;
+  deceConfidencialPassword = '';
+  deceConfidencialPasswordConfigured = false;
+  savingDecePassword = false;
+
   constructor(
     private fb: FormBuilder,
     private service: InstitucionService,
     private http: HttpClient,
     private snackBar: MatSnackBar,
+    private store: LocalStorageService,
   ) {
     this.form = this.fb.group({
       nombre: [''],
@@ -71,6 +78,14 @@ export class InstitucionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const roleNames: string[] = JSON.parse(this.store.get('roleNames') ?? '[]');
+    this.isSuperAdmin = roleNames.includes('SUPERADMIN');
+    if (this.isSuperAdmin) {
+      this.service.getDeceConfidencialPasswordStatus().subscribe({
+        next: (r) => { this.deceConfidencialPasswordConfigured = r.configured; },
+      });
+    }
+
     this.loading = true;
     this.service.get().subscribe({
       next: (data) => {
@@ -184,6 +199,25 @@ export class InstitucionComponent implements OnInit {
       error: () => {
         this.saving = false;
         this.snackBar.open('Error al guardar', '', { duration: 3000, panelClass: 'snackbar-danger' });
+      },
+    });
+  }
+
+  saveDeceConfidencialPassword(): void {
+    if (!this.deceConfidencialPassword || this.deceConfidencialPassword.length < 6 || this.savingDecePassword) return;
+    this.savingDecePassword = true;
+    this.service.setDeceConfidencialPassword(this.deceConfidencialPassword).subscribe({
+      next: () => {
+        this.savingDecePassword = false;
+        this.deceConfidencialPasswordConfigured = true;
+        this.deceConfidencialPassword = '';
+        this.snackBar.open('Contraseña DECE confidencial actualizada', '', {
+          duration: 3000, panelClass: 'snackbar-success', verticalPosition: 'bottom', horizontalPosition: 'center',
+        });
+      },
+      error: () => {
+        this.savingDecePassword = false;
+        this.snackBar.open('Error al guardar la contraseña', '', { duration: 3000, panelClass: 'snackbar-danger' });
       },
     });
   }

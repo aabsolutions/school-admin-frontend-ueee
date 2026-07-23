@@ -16,12 +16,17 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BreadcrumbComponent } from '@shared/components/breadcrumb/breadcrumb.component';
 import { TableShowHideColumnComponent } from '@shared/components/table-show-hide-column/table-show-hide-column.component';
 import { TableExportUtil } from '@shared';
 import { environment } from '@environments/environment';
+import { TeachersService } from '../../teachers/all-teachers/teachers.service';
+import { Teachers } from '../../teachers/all-teachers/teachers.model';
+import { TeachersFormComponent } from '../../teachers/all-teachers/dialogs/form-dialog/form-dialog.component';
 
 interface TeacherRow {
+  id: string;
   _departmentId: string;
   dni: string;
   name: string;
@@ -47,7 +52,7 @@ interface TeacherRow {
     CommonModule, FormsModule, DatePipe, BreadcrumbComponent, TableShowHideColumnComponent,
     MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule,
     MatButtonModule, MatIconModule, MatTableModule, MatSortModule, MatPaginatorModule,
-    MatProgressSpinnerModule, MatTooltipModule, MatDividerModule,
+    MatProgressSpinnerModule, MatTooltipModule, MatDividerModule, MatDialogModule,
   ],
 })
 export class DirectorioDocentesComponent implements OnInit {
@@ -91,6 +96,7 @@ export class DirectorioDocentesComponent implements OnInit {
     { def: 'laboralDependency',     label: 'Dependencia Laboral', type: 'text',   visible: false },
     { def: 'salarialCategory',      label: 'Cat. Salarial',       type: 'text',   visible: false },
     { def: 'status',                label: 'Estado',              type: 'status', visible: true  },
+    { def: 'actions',               label: 'Acciones',            type: 'actionBtn', visible: true },
   ];
 
   dataSource = new MatTableDataSource<TeacherRow>([]);
@@ -98,7 +104,11 @@ export class DirectorioDocentesComponent implements OnInit {
   @ViewChild(MatSort)      set matSort(s: MatSort)      { this.dataSource.sort = s; }
   @ViewChild(MatPaginator) set matPaginator(p: MatPaginator) { this.dataSource.paginator = p; }
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private dialog: MatDialog,
+    private teachersService: TeachersService,
+  ) {}
 
   ngOnInit() {
     forkJoin({
@@ -112,6 +122,7 @@ export class DirectorioDocentesComponent implements OnInit {
         }));
 
         this.allTeachers = (teachers.data?.data ?? []).map((t: any) => ({
+          id:                   (t.id ?? t._id ?? '').toString(),
           _departmentId:        (t.departmentId?._id ?? t.departmentId?.id ?? '').toString(),
           dni:                  t.dni                    ?? '—',
           name:                 t.name                   ?? '—',
@@ -169,6 +180,20 @@ export class DirectorioDocentesComponent implements OnInit {
     this.filterExpMax            = null;
     this.dataSource.data         = [];
     this.hasSearched             = false;
+  }
+
+  verDetalle(row: TeacherRow) {
+    if (!row.id) return;
+    this.teachersService.getTeacherById(row.id).subscribe({
+      next: (fullTeacher) => {
+        this.dialog.open(TeachersFormComponent, {
+          width: '70vw',
+          maxWidth: '100vw',
+          data: { teachers: new Teachers(fullTeacher), action: 'edit' },
+          autoFocus: false,
+        });
+      },
+    });
   }
 
   applyFilter(event: Event) {

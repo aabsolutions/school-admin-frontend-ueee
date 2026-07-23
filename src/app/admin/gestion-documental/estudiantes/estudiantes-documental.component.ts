@@ -101,8 +101,8 @@ export class EstudiantesDocumentalComponent implements OnInit {
     this.svc.getOrCreate(student._id).subscribe({
       next: record => {
         this.dialog.open(ChecklistEstudianteDialogComponent, {
-          width: '600px',
-          data: { record, studentName: student.name },
+          width: '680px',
+          data: { record, studentId: student._id, studentName: student.name },
         });
       },
       error: () => {
