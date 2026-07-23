@@ -1,1 +1,0 @@
-import"./chunk-WWX6BADO.js";var e=[{path:"",loadComponent:()=>import("./chunk-7JPVHLTT.js").then(o=>o.AllNovedadesComponent)},{path:"reporte",loadComponent:()=>import("./chunk-RAE43Q2Y.js").then(o=>o.ReporteNovedadesComponent)}];export{e as NOVEDADES_ROUTE};
