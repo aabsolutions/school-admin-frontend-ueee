@@ -8,13 +8,9 @@
   max-width: 40px;
 }
 :host ::ng-deep .mat-column-name {
-  min-width: 220px;
-  flex: 2 1 auto;
-}
-:host ::ng-deep .mat-column-name span.truncate-text {
-  overflow: visible;
-  white-space: normal;
-  text-overflow: unset;
+  flex: 0 0 260px;
+  min-width: 260px;
+  max-width: 260px;
 }
 :host ::ng-deep .mat-column-gender {
   max-width: 90px;
