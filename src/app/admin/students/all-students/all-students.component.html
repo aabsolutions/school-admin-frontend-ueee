@@ -55,6 +55,9 @@
                 <button *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']" mat-icon-button (click)="openBulkImport()" class="tbl-header-btn col-blue" matTooltip="Alta Masiva">
                   <mat-icon>upload_file</mat-icon>
                 </button>
+                <button *ngIf="canEditStudents" mat-icon-button (click)="openBulkUpdate()" class="tbl-header-btn col-blue" matTooltip="Actualización Masiva">
+                  <mat-icon>edit_note</mat-icon>
+                </button>
                 <button *ngxPermissionsOnly="['/admin/students/add-student', 'SUPERADMIN']" mat-icon-button (click)="addNew()" class="tbl-header-btn col-green" matTooltip="Add">
                   <mat-icon>add_circle_outline</mat-icon>
                 </button>

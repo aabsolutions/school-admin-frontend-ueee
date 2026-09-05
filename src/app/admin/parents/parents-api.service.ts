@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
+import { BulkUpdateFieldDef, BulkUpdatePreviewRow, BulkUpdateResult } from '@shared/components/bulk-update/bulk-update-dialog.component';
 
 export interface Parent {
   _id: string;
@@ -83,6 +84,18 @@ export class ParentsApiService {
 
   checkBulkDuplicates(dnis: string[], emails: string[]): Observable<BulkCheckResult> {
     return this.http.post<any>(`${this.base}/check-bulk`, { dnis, emails }).pipe(map((r) => r.data));
+  }
+
+  getBulkUpdateFields(): Observable<BulkUpdateFieldDef[]> {
+    return this.http.get<any>(`${this.base}/bulk-update/fields`).pipe(map((r) => r.data));
+  }
+
+  bulkUpdatePreview(fields: string[], records: { dni: string; values: Record<string, any> }[]): Observable<BulkUpdatePreviewRow[]> {
+    return this.http.post<any>(`${this.base}/bulk-update/preview`, { fields, records }).pipe(map((r) => r.data));
+  }
+
+  bulkUpdateApply(records: { id: string; changes: Record<string, any> }[]): Observable<BulkUpdateResult> {
+    return this.http.post<any>(`${this.base}/bulk-update/apply`, { records }).pipe(map((r) => r.data));
   }
 }
 

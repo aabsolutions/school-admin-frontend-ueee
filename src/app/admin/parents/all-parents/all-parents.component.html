@@ -14,6 +14,9 @@
               <a *ngxPermissionsOnly="['/admin/parents/add-parent', 'SUPERADMIN']" mat-stroked-button color="primary" routerLink="/admin/parents/bulk-import">
                 <mat-icon>upload_file</mat-icon> Importar masivo
               </a>
+              <button *ngIf="canEditParents" mat-stroked-button color="primary" (click)="openBulkUpdate()">
+                <mat-icon>edit_note</mat-icon> Actualización masiva
+              </button>
               <a *ngxPermissionsOnly="['/admin/parents/add-parent', 'SUPERADMIN']" mat-flat-button color="primary" routerLink="/admin/parents/add-parent">
                 <mat-icon>add</mat-icon> Nuevo Padre
               </a>

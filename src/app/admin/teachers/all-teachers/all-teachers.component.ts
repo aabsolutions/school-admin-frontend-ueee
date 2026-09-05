@@ -19,6 +19,7 @@ import { Subject } from 'rxjs';
 import { TeachersFormComponent } from './dialogs/form-dialog/form-dialog.component';
 import { TeachersDeleteComponent } from './dialogs/delete/delete.component';
 import { BulkImportDialogComponent, BulkImportColumn } from '@shared/components/bulk-import/bulk-import-dialog.component';
+import { BulkUpdateDialogComponent } from '@shared/components/bulk-update/bulk-update-dialog.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { TeachersService } from './teachers.service';
 import { Teachers } from './teachers.model';
@@ -390,6 +391,27 @@ export class AllTeachersComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result?.successCount > 0) this.loadData();
+    });
+  }
+
+  openBulkUpdate() {
+    this.teachersService.getBulkUpdateFields().subscribe((fieldCatalog) => {
+      const dialogRef = this.dialog.open(BulkUpdateDialogComponent, {
+        width: '900px',
+        maxWidth: '95vw',
+        disableClose: true,
+        data: {
+          entityName: 'Docentes',
+          fieldCatalog,
+          previewFn: (fields: string[], records: { dni: string; values: Record<string, any> }[]) =>
+            this.teachersService.bulkUpdatePreview(fields, records),
+          applyFn: (records: { id: string; changes: Record<string, any> }[]) =>
+            this.teachersService.bulkUpdateApply(records),
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result?.successCount > 0) this.loadData();
+      });
     });
   }
 

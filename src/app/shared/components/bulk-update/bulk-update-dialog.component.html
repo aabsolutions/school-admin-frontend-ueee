@@ -1,0 +1,236 @@
+<h2 mat-dialog-title>
+  <mat-icon style="vertical-align: middle; margin-right: 8px;">edit_note</mat-icon>
+  Actualización Masiva — {{ config.entityName }}
+</h2>
+
+<mat-dialog-content>
+
+  <!-- Step indicator -->
+  <div class="step-indicator">
+    <span [class.active]="step === 'select-fields'" [class.done]="step !== 'select-fields'">
+      <mat-icon>checklist</mat-icon> Seleccionar campos
+    </span>
+    <mat-icon class="sep">chevron_right</mat-icon>
+    <span [class.active]="step === 'upload'" [class.done]="step === 'preview' || step === 'result'">
+      <mat-icon>cloud_upload</mat-icon> Cargar archivo
+    </span>
+    <mat-icon class="sep">chevron_right</mat-icon>
+    <span [class.active]="step === 'preview'" [class.done]="step === 'result'">
+      <mat-icon>table_view</mat-icon> Previsualizar
+    </span>
+    <mat-icon class="sep">chevron_right</mat-icon>
+    <span [class.active]="step === 'result'">
+      <mat-icon>check_circle</mat-icon> Resultado
+    </span>
+  </div>
+
+  <!-- ─── STEP 1: Select fields ─────────────────────────────────────── -->
+  @if (step === 'select-fields') {
+    <div class="step-content select-fields-step">
+      <p><strong>Paso 1:</strong> Elegí qué campos querés actualizar. Solo esos aparecerán en la plantilla.</p>
+      <div class="field-list">
+        @for (field of config.fieldCatalog; track field.key) {
+          <mat-checkbox
+            [checked]="isFieldSelected(field.key)"
+            (change)="toggleField(field.key)"
+            [matTooltip]="'Ejemplo: ' + field.example"
+          >
+            {{ field.label }}
+          </mat-checkbox>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ─── STEP 2: Upload ─────────────────────────────────────────────── -->
+  @if (step === 'upload') {
+    <div class="step-content upload-step">
+      <div class="instructions">
+        <p>
+          <strong>Paso 2:</strong> Descarga la plantilla con las columnas seleccionadas
+          (<strong>Cédula</strong> identifica el registro a actualizar).
+        </p>
+        <button mat-stroked-button color="primary" (click)="downloadTemplate()">
+          <mat-icon>download</mat-icon> Descargar Plantilla
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="upload-area">
+        <p><strong>Paso 3:</strong> Completa la plantilla y subí el archivo.</p>
+        <label class="file-label" for="bulk-update-file-input">
+          <mat-icon>attach_file</mat-icon>
+          @if (fileName) {
+            {{ fileName }}
+          } @else {
+            Seleccionar archivo .xlsx
+          }
+        </label>
+        <input
+          id="bulk-update-file-input"
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          (change)="onFileSelected($event)"
+          style="display: none"
+        />
+      </div>
+
+      @if (parseError) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon> {{ parseError }}
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ─── STEP 3: Preview / diff ────────────────────────────────────── -->
+  @if (step === 'preview') {
+    <div class="step-content">
+      @if (isLoadingPreview) {
+        <div class="loading-area">
+          <mat-spinner diameter="36"></mat-spinner>
+          <p>Generando previsualización...</p>
+        </div>
+      } @else {
+        <div class="preview-summary">
+          <span class="badge total">{{ previewRows.length }} filas detectadas</span>
+          @if (excludedCount > 0) {
+            <span class="badge invalid">{{ excludedCount }} se omitirán</span>
+          }
+          <span class="badge valid">{{ applicableRows.length }} se actualizarán</span>
+        </div>
+
+        <div class="table-container">
+          <table mat-table [dataSource]="previewRows" class="preview-table">
+            <ng-container matColumnDef="dni">
+              <th mat-header-cell *matHeaderCellDef>Cédula</th>
+              <td mat-cell *matCellDef="let row">{{ row.dni }}</td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Nombre</th>
+              <td mat-cell *matCellDef="let row">{{ row.name || '—' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="changes">
+              <th mat-header-cell *matHeaderCellDef>Cambios</th>
+              <td mat-cell *matCellDef="let row">
+                @if (row.changes.length) {
+                  <div class="diff-list">
+                    @for (c of row.changes; track c.field) {
+                      <div class="diff-item">
+                        <span class="diff-label">{{ c.label }}:</span>
+                        <span class="diff-old">{{ c.oldValue || '—' }}</span>
+                        <mat-icon class="diff-arrow">arrow_forward</mat-icon>
+                        <span class="diff-new">{{ c.newValue }}</span>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <span class="no-changes">—</span>
+                }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="_status">
+              <th mat-header-cell *matHeaderCellDef>Estado</th>
+              <td mat-cell *matCellDef="let row">
+                @if (row.found && row.hasChanges && !row.error) {
+                  <span class="row-ok"><mat-icon>check</mat-icon> {{ rowStatusLabel(row) }}</span>
+                } @else {
+                  <span class="row-invalid"><mat-icon>error</mat-icon> {{ rowStatusLabel(row) }}</span>
+                }
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['dni','name','changes','_status']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['dni','name','changes','_status']"
+                [class.invalid-row]="!(row.found && row.hasChanges && !row.error)"></tr>
+          </table>
+        </div>
+      }
+
+      @if (parseError) {
+        <div class="error-banner">
+          <mat-icon>error_outline</mat-icon> {{ parseError }}
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ─── STEP 4: Result ────────────────────────────────────────────── -->
+  @if (step === 'result' && result) {
+    <div class="step-content result-step">
+      <div class="result-cards">
+        <div class="result-card success">
+          <mat-icon>check_circle</mat-icon>
+          <span class="count">{{ result.successCount }}</span>
+          <span class="label">Actualizados</span>
+        </div>
+        <div class="result-card error" [class.zero]="result.failureCount === 0">
+          <mat-icon>cancel</mat-icon>
+          <span class="count">{{ result.failureCount }}</span>
+          <span class="label">Fallidos</span>
+        </div>
+        <div class="result-card neutral">
+          <mat-icon>summarize</mat-icon>
+          <span class="count">{{ result.total }}</span>
+          <span class="label">Total</span>
+        </div>
+      </div>
+
+      @if (result.failed.length > 0) {
+        <div class="failed-list">
+          <h4>Errores por fila:</h4>
+          <table mat-table [dataSource]="result.failed" class="errors-table">
+            <ng-container matColumnDef="row">
+              <th mat-header-cell *matHeaderCellDef>Fila</th>
+              <td mat-cell *matCellDef="let f">{{ f.row }}</td>
+            </ng-container>
+            <ng-container matColumnDef="error">
+              <th mat-header-cell *matHeaderCellDef>Error</th>
+              <td mat-cell *matCellDef="let f" class="error-msg">{{ f.error }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['row','error']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['row','error']"></tr>
+          </table>
+        </div>
+        <button mat-stroked-button color="warn" (click)="downloadErrorReport()">
+          <mat-icon>download</mat-icon> Descargar reporte de errores
+        </button>
+      }
+    </div>
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  @if (step === 'select-fields') {
+    <button mat-button (click)="close()">Cancelar</button>
+    <button mat-raised-button color="primary" [disabled]="!canProceedToUpload" (click)="goToUpload()">
+      Siguiente <mat-icon>arrow_forward</mat-icon>
+    </button>
+  }
+  @if (step === 'upload') {
+    <button mat-button (click)="goBackToFields()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
+  }
+  @if (step === 'preview') {
+    <button mat-button (click)="goBackToUpload()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="isLoadingPreview || applicableRows.length === 0 || isSubmitting"
+      (click)="submitUpdate()"
+    >
+      <mat-icon>{{ isSubmitting ? 'hourglass_empty' : 'save' }}</mat-icon>
+      {{ isSubmitting ? 'Actualizando...' : 'Actualizar ' + applicableRows.length + ' registros' }}
+    </button>
+  }
+  @if (step === 'result') {
+    <button mat-raised-button color="primary" (click)="close()">
+      <mat-icon>done</mat-icon> Cerrar
+    </button>
+  }
+</mat-dialog-actions>

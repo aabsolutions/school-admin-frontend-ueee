@@ -17,6 +17,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
 import { ParentsApiService, Parent } from '../parents-api.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { AuthService } from '@core/service/auth.service';
+import { BulkUpdateDialogComponent } from '@shared/components/bulk-update/bulk-update-dialog.component';
 
 @Component({
   selector: 'app-all-parents',
@@ -100,6 +101,27 @@ export class AllParentsComponent implements OnInit {
 
   openProfile(id: string) {
     this.router.navigate(['/admin/parents/edit-parent', id]);
+  }
+
+  openBulkUpdate() {
+    this.api.getBulkUpdateFields().subscribe((fieldCatalog) => {
+      const dialogRef = this.dialog.open(BulkUpdateDialogComponent, {
+        width: '900px',
+        maxWidth: '95vw',
+        disableClose: true,
+        data: {
+          entityName: 'Padres de Familia',
+          fieldCatalog,
+          previewFn: (fields: string[], records: { dni: string; values: Record<string, any> }[]) =>
+            this.api.bulkUpdatePreview(fields, records),
+          applyFn: (records: { id: string; changes: Record<string, any> }[]) =>
+            this.api.bulkUpdateApply(records),
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result?.successCount > 0) this.loadData();
+      });
+    });
   }
 
   remove(id: string) {

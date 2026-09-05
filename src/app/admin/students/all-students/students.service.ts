@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { catchError, map } from 'rxjs/operators';
 import { Students } from './students.model';
 import { environment } from '@environments/environment';
+import { BulkUpdateFieldDef, BulkUpdatePreviewRow, BulkUpdateResult } from '@shared/components/bulk-update/bulk-update-dialog.component';
 
 interface ApiList<T> { data: { data: T[] } }
 interface ApiOne<T>  { data: T }
@@ -121,6 +122,27 @@ export class StudentsService {
     return this.httpClient.post<any>(`${this.API_URL}/bulk`, { records }).pipe(
       map(res => res.data),
       catchError(this.handleError)
+    );
+  }
+
+  getBulkUpdateFields(): Observable<BulkUpdateFieldDef[]> {
+    return this.httpClient.get<any>(`${this.API_URL}/bulk-update/fields`).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  bulkUpdatePreview(fields: string[], records: { dni: string; values: Record<string, any> }[]): Observable<BulkUpdatePreviewRow[]> {
+    return this.httpClient.post<any>(`${this.API_URL}/bulk-update/preview`, { fields, records }).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
+    );
+  }
+
+  bulkUpdateApply(records: { id: string; changes: Record<string, any> }[]): Observable<BulkUpdateResult> {
+    return this.httpClient.post<any>(`${this.API_URL}/bulk-update/apply`, { records }).pipe(
+      map((r) => r.data),
+      catchError(this.handleError),
     );
   }
 

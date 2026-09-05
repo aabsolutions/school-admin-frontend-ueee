@@ -21,6 +21,7 @@ import { StudentsDeleteComponent } from './dialogs/delete/delete.component';
 import { StudentProfileComponent } from '../student-profile/student-profile.component';
 import { AuthService } from '@core/service/auth.service';
 import { BulkImportDialogComponent, BulkImportColumn } from '@shared/components/bulk-import/bulk-import-dialog.component';
+import { BulkUpdateDialogComponent } from '@shared/components/bulk-update/bulk-update-dialog.component';
 import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { StudentsService } from './students.service';
 import { Students } from './students.model';
@@ -313,6 +314,27 @@ export class AllStudentsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result?.successCount > 0) this.loadData();
+    });
+  }
+
+  openBulkUpdate() {
+    this.studentsService.getBulkUpdateFields().subscribe((fieldCatalog) => {
+      const dialogRef = this.dialog.open(BulkUpdateDialogComponent, {
+        width: '900px',
+        maxWidth: '95vw',
+        disableClose: true,
+        data: {
+          entityName: 'Estudiantes',
+          fieldCatalog,
+          previewFn: (fields: string[], records: { dni: string; values: Record<string, any> }[]) =>
+            this.studentsService.bulkUpdatePreview(fields, records),
+          applyFn: (records: { id: string; changes: Record<string, any> }[]) =>
+            this.studentsService.bulkUpdateApply(records),
+        },
+      });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result?.successCount > 0) this.loadData();
+      });
     });
   }
 
